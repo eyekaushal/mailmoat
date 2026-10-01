@@ -348,7 +348,7 @@ Claude updates this table at the end of every block. New sessions resume from th
 | Block | Status | Notes |
 |---|---|---|
 | B00 | ✅ | Scaffold done 1 Oct. Node 24 via `.nvmrc`; added `.prettierignore` (Markdown hand-formatted). Waiting for first commit. |
-| B01 | ☐ | |
+| B01 | ✅ | CI (lint, format, test, audit; Node from .nvmrc), PR template, Reader/Drafter import-boundary rule + 6 tests. CI needs token Workflows permission to push. |
 | B02 | ☐ | |
 | B03 | ☐ | |
 | B04 | ☐ | |
