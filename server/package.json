@@ -6,6 +6,7 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "@mailmoat/shared": "0.1.0"
+    "@mailmoat/shared": "0.1.0",
+    "zod": "^4.6.5"
   }
 }
