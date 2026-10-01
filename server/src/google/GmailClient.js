@@ -1,6 +1,16 @@
 import { gmail } from '@googleapis/gmail';
 import { HistoryExpiredError } from '../core/errors.js';
 
+const METADATA_HEADERS = [
+  'From',
+  'To',
+  'Cc',
+  'Subject',
+  'Date',
+  'List-Unsubscribe',
+  'List-Unsubscribe-Post',
+];
+
 /**
  * Small Gmail API surface used by mailmoat. Everything else in the app talks to this class,
  * never to the Google SDK directly. Message content returned here is untrusted.
@@ -91,6 +101,32 @@ export class GmailClient {
       labelIds: data.labelIds ?? [],
       internalDate: new Date(Number(data.internalDate)),
       raw: Buffer.from(data.raw, 'base64url'),
+    };
+  }
+
+  /**
+   * Headers only — cheap enough for backfilling thousands of messages.
+   * @returns {Promise<{ id: string, threadId: string, labelIds: string[], internalDate: Date, headers: Record<string, string> }>}
+   *   header names are lower-cased
+   */
+  async getMessageMetadata(id) {
+    const { data } = await this.#users().messages.get({
+      userId: 'me',
+      id,
+      format: 'metadata',
+      metadataHeaders: METADATA_HEADERS,
+    });
+    const headers = {};
+    for (const { name, value } of data.payload?.headers ?? []) {
+      const key = name.toLowerCase();
+      headers[key] = headers[key] ? `${headers[key]}, ${value}` : value;
+    }
+    return {
+      id: data.id,
+      threadId: data.threadId,
+      labelIds: data.labelIds ?? [],
+      internalDate: new Date(Number(data.internalDate)),
+      headers,
     };
   }
 
