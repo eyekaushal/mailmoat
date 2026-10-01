@@ -19,5 +19,24 @@ export default [
       'no-var': 'error',
     },
   },
+  {
+    // Security invariant 1: the quarantined Reader/Drafter reads attacker text, so it must
+    // never be able to reach tools, Google write access or memory (SECURITY_APPROACH §7.3).
+    files: ['server/src/security/reader/**/*.js'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['**/agent/**', '**/actions/**', '**/google/**', '**/MemoryRepository*'],
+              message:
+                'Reader/Drafter are quarantined: no tools, Google or memory access (SECURITY_APPROACH §7.3).',
+            },
+          ],
+        },
+      ],
+    },
+  },
   prettier,
 ];
