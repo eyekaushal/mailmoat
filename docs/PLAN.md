@@ -353,7 +353,7 @@ Claude updates this table at the end of every block. New sessions resume from th
 | B03 | ✅ | GoogleAuth (loopback + PKCE S256, one-time 10-min state, rejects partial grants, encrypted refresh token, rotation, revoke), GmailClient, CalendarClient, `npm run connect:google`, setup guide. Scopes: dropped gmail.settings.basic, added calendar.freebusy. 60 tests. Live connect pending user run. |
 | B04 | ✅ | GmailSync (history polling, pending queue + retries, expired-history recovery), Backfill (sent 365d, received 30d, metadata only), MessageImporter, EmailMetadataMapper (subject hashed, receive time not Date header), Contact/Sender/Email repos, Scheduler, migration 002, `npm run dev:sync`. **B07 note:** "known contact" = sentCount > 0; received-only is attacker-controllable. 80 tests. |
 | B05 | ✅ | MimeParser (postal-mime → `ParsedEmail`, attachment metadata only, `IngestError` on failure), AuthResultsParser (only the **first** `Authentication-Results` counts and only if `mx.google.com`; otherwise untrusted `none`; comments stripped), LinkExtractor (parse5; href + visible text/img alt, `<area>`, plain-text URLs, punycode host). Added `parse5`. 104 tests. |
-| B06 | ☐ | |
+| B06 | ✅ | HiddenContentDetector (parse5 walk with CSS inheritance: display/visibility/opacity/tiny font/offscreen/clipped/colour≈background incl. `bgcolor`/`<font color>`; `<style>` simple selectors + `@media`; prose comments; long alt/title; zero-width + bidi in body/subject/display name), TextNormalizer (strip invisibles → NFKC → controls → whitespace; Reader cap 12k chars), EmailIngestor (`IngestedEmail`; Reader text = visible only; body SHA-256). 142 tests. |
 | B07 | ☐ | |
 | B08 | ☐ | |
 | B09 | ☐ | |
