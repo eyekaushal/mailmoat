@@ -349,7 +349,7 @@ Claude updates this table at the end of every block. New sessions resume from th
 |---|---|---|
 | B00 | ✅ | Scaffold done 1 Oct. Node 24 via `.nvmrc`; added `.prettierignore` (Markdown hand-formatted). Waiting for first commit. |
 | B01 | ✅ | CI (lint, format, test, audit; Node from .nvmrc), PR template, Reader/Drafter import-boundary rule + 6 tests. CI needs token Workflows permission to push. |
-| B02 | ☐ | |
+| B02 | ✅ | Logger (redaction), errors, Config (loopback-only), KeyProvider (0600 key file; keychain = later), SecretStore (AES-256-GCM + name AAD), Database (`node:sqlite`, no native dep), Migrator, full v1 schema (append-only audit log, user-only memory), 2 repos. 41 tests. |
 | B03 | ☐ | |
 | B04 | ☐ | |
 | B05 | ☐ | |

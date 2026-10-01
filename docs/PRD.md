@@ -394,7 +394,7 @@ UI is built with React; design and implementation of screens is done in the UI p
 | Frontend | **React 19 + Vite** | Requested; fast dev server; simple build served by Express. |
 | Styling | **Tailwind CSS** | Fast, consistent UI; works well for the Fable 5 UI phase. |
 | Client data | `fetch` wrapper + **SWR** | Simple caching and revalidation (same pattern as Inbox Zero). |
-| Database | **SQLite** via `better-sqlite3` | Local-first, zero setup, synchronous and simple. |
+| Database | **SQLite** via Node's built-in `node:sqlite` | Local-first, zero setup, no native dependency to install or audit. |
 | Validation | **Zod** | Reader/Planner schemas, API input validation, config. |
 | LLM | **`@anthropic-ai/sdk`** | Official SDK; structured outputs via `output_config.format`. |
 | Google | **`googleapis`** (Gmail, Calendar) + `google-auth-library` | Official clients; loopback OAuth with PKCE. |
