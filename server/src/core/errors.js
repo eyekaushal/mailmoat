@@ -30,3 +30,12 @@ export class HistoryExpiredError extends MailmoatError {}
 
 /** A raw message could not be parsed; the pipeline must treat the email as suspicious. */
 export class IngestError extends MailmoatError {}
+
+/** A model call failed (network, timeout, API error). Callers must fail closed. */
+export class LlmError extends MailmoatError {}
+
+/** The model declined to answer (`stop_reason: refusal`), even after any fallback. */
+export class LlmRefusalError extends LlmError {}
+
+/** The model answered, but not with output that passes our schema. Never trust partial output. */
+export class LlmOutputError extends LlmError {}

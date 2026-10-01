@@ -6,6 +6,7 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.131.0",
     "@googleapis/calendar": "^20.0.1",
     "@googleapis/gmail": "^22.0.1",
     "@mailmoat/shared": "0.1.0",
