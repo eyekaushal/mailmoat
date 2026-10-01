@@ -47,6 +47,10 @@ describe('EmailMetadataMapper', () => {
     expect(JSON.stringify(record)).not.toContain('Quick question');
   });
 
+  it('keeps recipient display names for contact history', () => {
+    expect(mapper.toRecord(metadata()).recipientNames).toEqual({ 'team@acme-corp.com': 'Team' });
+  });
+
   it('marks sent mail as outbound', () => {
     expect(mapper.toRecord(metadata({ labelIds: ['SENT'] })).direction).toBe('outbound');
   });

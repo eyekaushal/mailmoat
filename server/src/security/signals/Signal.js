@@ -8,7 +8,7 @@
  * @property {string} reason plain English, shown to the user
  *
  * @typedef {object} SignalContext
- * @property {Pick<import('../../db/repositories/ContactRepository.js').ContactRepository, 'get'|'hasSentToDomain'>} contacts
+ * @property {Pick<import('../../db/repositories/ContactRepository.js').ContactRepository, 'get'|'hasSentToDomain'|'sentDomains'|'namedContacts'>} contacts
  * @property {{ claims_to_be: string } | null} readerForm null until the Reader has run
  */
 

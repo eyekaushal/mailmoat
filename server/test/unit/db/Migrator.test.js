@@ -9,7 +9,11 @@ import { Migrator } from '../../../src/db/Migrator.js';
 describe('Migrator', () => {
   it('applies the v1 schema once and is idempotent', () => {
     const db = new Database(':memory:');
-    expect(new Migrator(db).migrate()).toEqual(['001_init.sql', '002_processing_queue.sql']);
+    expect(new Migrator(db).migrate()).toEqual([
+      '001_init.sql',
+      '002_processing_queue.sql',
+      '003_contact_names.sql',
+    ]);
     expect(new Migrator(db).migrate()).toEqual([]);
     const tables = db.all("SELECT name FROM sqlite_master WHERE type = 'table'").map((t) => t.name);
     expect(tables).toEqual(expect.arrayContaining(['emails', 'verdicts', 'secrets', 'audit_log']));

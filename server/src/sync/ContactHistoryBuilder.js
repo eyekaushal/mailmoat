@@ -24,7 +24,9 @@ export class ContactHistoryBuilder {
 
     if (record.direction === 'outbound') {
       for (const address of new Set(record.toAddrs)) {
-        if (address !== self) this.#contacts.recordSent(address, at);
+        // Names come only from the user's own sent mail, so an attacker cannot set them.
+        if (address !== self)
+          this.#contacts.recordSent(address, at, record.recipientNames[address]);
       }
       return;
     }

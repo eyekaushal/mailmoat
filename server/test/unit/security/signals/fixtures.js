@@ -27,12 +27,13 @@ export function ingestedEmail(overrides = {}) {
 
 /**
  * In-memory stand-in for ContactRepository.
- * @param {Record<string, { sentCount?: number, receivedCount?: number, trusted?: boolean }>} known
+ * @param {Record<string, { name?: string, sentCount?: number, receivedCount?: number, trusted?: boolean }>} known
  */
 export function signalContext(known = {}, readerForm = null) {
   const contacts = Object.entries(known).map(([address, fields]) => ({
     address,
     domain: address.split('@').pop(),
+    name: null,
     sentCount: 0,
     receivedCount: 0,
     trusted: false,
@@ -43,6 +44,10 @@ export function signalContext(known = {}, readerForm = null) {
       get: (address) => contacts.find((contact) => contact.address === address.toLowerCase()),
       hasSentToDomain: (domain) =>
         contacts.some((contact) => contact.domain === domain && contact.sentCount > 0),
+      sentDomains: () => [
+        ...new Set(contacts.filter((c) => c.sentCount > 0).map((contact) => contact.domain)),
+      ],
+      namedContacts: () => contacts.filter((contact) => contact.sentCount > 0 && contact.name),
     },
     readerForm,
   };
