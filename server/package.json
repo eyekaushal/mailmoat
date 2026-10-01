@@ -6,7 +6,10 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
+    "@googleapis/calendar": "^20.0.1",
+    "@googleapis/gmail": "^22.0.1",
     "@mailmoat/shared": "0.1.0",
+    "google-auth-library": "^11.1.0",
     "zod": "^4.6.5"
   }
 }

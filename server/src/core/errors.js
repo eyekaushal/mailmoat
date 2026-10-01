@@ -18,3 +18,12 @@ export class SecretStoreError extends MailmoatError {}
 
 /** A database migration failed. */
 export class MigrationError extends MailmoatError {}
+
+/** The Google sign-in flow failed or returned something unsafe/incomplete. */
+export class GoogleAuthError extends MailmoatError {}
+
+/** An operation needs a Google account but none is connected. */
+export class NotConnectedError extends MailmoatError {}
+
+/** Gmail no longer has history that far back; sync must restart from a fresh history ID. */
+export class HistoryExpiredError extends MailmoatError {}
