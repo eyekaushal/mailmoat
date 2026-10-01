@@ -140,7 +140,7 @@ Each requirement has an ID for traceability in `PLAN.md` and tests. "AC" = accep
 | F1.2 | The key field is write-only: after saving, only a masked form (`sk-ant-…abcd`) is ever shown; the key is never returned to the browser. |
 | F1.3 | Secrets (Anthropic key, Google refresh token) are encrypted at rest (see `SECURITY_APPROACH.md §9`). |
 | F1.4 | The wizard links to a step-by-step guide for creating a Google Cloud OAuth client ("Desktop app" type) and explains the consent-screen publishing status (in "Testing" status Google refresh tokens expire after 7 days; switching to "In production" for personal use avoids that, with Google's unverified-app warning). |
-| F1.5 | Google connection uses the OAuth loopback redirect to `127.0.0.1` with PKCE and requests only: `gmail.modify`, `gmail.settings.basic`, `calendar.events`, `openid`, `email`. |
+| F1.5 | Google connection uses the OAuth loopback redirect to `127.0.0.1` with PKCE and requests only: `gmail.modify`, `calendar.events`, `calendar.freebusy`, `openid`, `email` (no Gmail settings scope: Block is app-side). |
 | F1.6 | Settings also include: model choice for Planner (default `claude-opus-5-5`, alternative `claude-sonnet-5-5`), polling interval (default 60 s), "auto-archive DANGEROUS mail" (default off), trusted senders list, disconnect buttons. |
 | F1.7 | A `.env` file may supply the same values for developers; values saved in the UI take precedence. `.env` is gitignored. |
 
