@@ -348,10 +348,10 @@ Claude updates this table at the end of every block. New sessions resume from th
 | Block | Status | Notes |
 |---|---|---|
 | B00 | ✅ | Scaffold done 1 Oct. Node 24 via `.nvmrc`; added `.prettierignore` (Markdown hand-formatted). Waiting for first commit. |
-| B01 | ☐ | |
-| B02 | ☐ | |
-| B03 | ☐ | |
-| B04 | ☐ | |
+| B01 | ✅ | CI (lint, format, test, audit; Node from .nvmrc), PR template, Reader/Drafter import-boundary rule + 6 tests. CI needs token Workflows permission to push. |
+| B02 | ✅ | Logger (redaction), errors, Config (loopback-only), KeyProvider (0600 key file; keychain = later), SecretStore (AES-256-GCM + name AAD), Database (`node:sqlite`, no native dep), Migrator, full v1 schema (append-only audit log, user-only memory), 2 repos. 41 tests. |
+| B03 | ✅ | GoogleAuth (loopback + PKCE S256, one-time 10-min state, rejects partial grants, encrypted refresh token, rotation, revoke), GmailClient, CalendarClient, `npm run connect:google`, setup guide. Scopes: dropped gmail.settings.basic, added calendar.freebusy. 60 tests. Live connect pending user run. |
+| B04 | ✅ | GmailSync (history polling, pending queue + retries, expired-history recovery), Backfill (sent 365d, received 30d, metadata only), MessageImporter, EmailMetadataMapper (subject hashed, receive time not Date header), Contact/Sender/Email repos, Scheduler, migration 002, `npm run dev:sync`. **B07 note:** "known contact" = sentCount > 0; received-only is attacker-controllable. 80 tests. |
 | B05 | ☐ | |
 | B06 | ☐ | |
 | B07 | ☐ | |

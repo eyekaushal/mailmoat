@@ -491,7 +491,7 @@ mailmoat runs on the user's machine: an Express API plus a React UI served from 
 | DNS rebinding (evil.com re-pointed to 127.0.0.1) | Reject any request whose `Host` header is not `localhost:<port>` or `127.0.0.1:<port>`. |
 | Secrets on disk (Anthropic key, Google refresh token; Slack tokens in v2) | Encrypted at rest (AES-256-GCM) with a key held in the OS keychain where available, otherwise a key file with `0600` permissions. Never logged. |
 | API key exposure in the UI | Write-only field: after saving, the UI shows only `sk-ant-…abcd`; the key is never returned to the browser. A "Test key" button calls the backend. |
-| Over-broad Google access | Scopes: `gmail.modify` (read, label, draft, send), `gmail.settings.basic` (filters for Block), `calendar.events`. No full-mail-delete scope; no Drive; no Contacts write. |
+| Over-broad Google access | Scopes: `gmail.modify` (read, label, draft, send), `calendar.events` (create approved meetings), `calendar.freebusy` (busy times only). No Gmail settings scope (Block is app-side). No full-mail-delete scope; no Drive; no Contacts write. |
 | Logs leaking mail content | Structured logger with redaction of bodies, subjects and addresses at info level; full detail only at an explicit debug level. |
 | Supply-chain risk | Minimal dependencies, lockfile committed, `npm audit` in CI, no install-time scripts from unknown packages, Dependabot alerts on the repo. |
 | Slack spoofing (v2) | Socket Mode (no public endpoint); only the connecting user's Slack ID can issue commands or approve. |
