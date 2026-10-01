@@ -14,6 +14,7 @@ import { IngestError } from '../../core/errors.js';
  * @property {string | null} disposition
  * @property {number} size decoded bytes
  * @property {boolean} inline referenced from the HTML by Content-ID
+ * @property {boolean} encrypted a password-protected ZIP (malware hides from scanners this way)
  */
 
 /**
@@ -61,8 +62,31 @@ export class MimeParser {
         disposition: attachment.disposition,
         size: attachment.content.byteLength,
         inline: Boolean(attachment.related),
+        encrypted:
+          this.#isZip(attachment) && this.#isEncryptedZip(new Uint8Array(attachment.content)),
       })),
     };
+  }
+
+  /** Only ZIPs are scanned: random bytes inside a PDF or image could look like a ZIP header. */
+  #isZip(attachment) {
+    return /\.zip$/i.test(attachment.filename ?? '') || /zip/.test(attachment.mimeType);
+  }
+
+  /**
+   * Checks every ZIP local file header (`PK\x03\x04`) for the "encrypted" flag (bit 0 at offset 6).
+   * Scanning all headers matters: the first entry may be an unencrypted decoy.
+   */
+  #isEncryptedZip(bytes) {
+    for (let i = 0; i + 7 < bytes.length; i += 1) {
+      const isHeader =
+        bytes[i] === 0x50 &&
+        bytes[i + 1] === 0x4b &&
+        bytes[i + 2] === 0x03 &&
+        bytes[i + 3] === 0x04;
+      if (isHeader && (bytes[i + 6] & 1) === 1) return true;
+    }
+    return false;
   }
 
   /** Flattens address groups and drops entries without a usable address. */

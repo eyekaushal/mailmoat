@@ -5,7 +5,8 @@
  * @property {string} id e.g. `S1`
  * @property {string} name e.g. `AUTH_DMARC_FAIL`
  * @property {Severity} severity
- * @property {string} reason plain English, shown to the user
+ * @property {string} reason plain English for the user. May quote attacker-controlled text
+ *   (domains, filenames), so it is display-only and must never reach the Planner.
  *
  * @typedef {object} SignalContext
  * @property {Pick<import('../../db/repositories/ContactRepository.js').ContactRepository, 'get'|'hasSentToDomain'|'sentDomains'|'namedContacts'>} contacts

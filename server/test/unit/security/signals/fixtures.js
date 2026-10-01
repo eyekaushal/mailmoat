@@ -52,3 +52,15 @@ export function signalContext(known = {}, readerForm = null) {
     readerForm,
   };
 }
+
+/** A link as LinkExtractor produces it. */
+export function link(href, text = href, source = 'html') {
+  let host = null;
+  try {
+    const url = new URL(href);
+    if (url.protocol === 'http:' || url.protocol === 'https:') host = url.hostname;
+  } catch {
+    // Unparseable: host stays null, as in LinkExtractor.
+  }
+  return { href, text, source, host };
+}

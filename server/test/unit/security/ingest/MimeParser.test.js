@@ -70,8 +70,33 @@ describe('MimeParser', () => {
         disposition: 'attachment',
         size: 13,
         inline: false,
+        encrypted: false,
       },
     ]);
+  });
+
+  it('flags a password-protected ZIP behind an unencrypted first entry', async () => {
+    const entry = (flags) => {
+      const header = Buffer.alloc(30);
+      header.writeUInt32LE(0x04034b50, 0);
+      header.writeUInt16LE(flags, 6);
+      return header;
+    };
+    const zip = (flags) =>
+      [
+        'Content-Type: multipart/mixed; boundary="z"',
+        '',
+        '--z',
+        'Content-Type: application/zip; name="docs.zip"',
+        'Content-Disposition: attachment; filename="docs.zip"',
+        'Content-Transfer-Encoding: base64',
+        '',
+        Buffer.concat([entry(0), Buffer.from('data'), entry(flags)]).toString('base64'),
+        '--z--',
+        '',
+      ].join('\r\n');
+    expect((await parser.parse(Buffer.from(zip(1)))).attachments[0].encrypted).toBe(true);
+    expect((await parser.parse(Buffer.from(zip(0)))).attachments[0].encrypted).toBe(false);
   });
 
   it('handles a minimal message with no body parts or sender', async () => {
