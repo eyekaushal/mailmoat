@@ -1,0 +1,12 @@
+{
+  "name": "@mailmoat/shared",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Schemas and constants shared by the mailmoat server and web app.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    "./constants/*": "./src/constants/*.js",
+    "./schemas/*": "./src/schemas/*.js"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "@mailmoat/server",
+  "version": "0.1.0",
+  "private": true,
+  "description": "mailmoat local API, Gmail sync, security pipeline, agent and policy engine.",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "@mailmoat/shared": "0.1.0"
+  }
+}

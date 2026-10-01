@@ -1,0 +1,11 @@
+{
+  "name": "@mailmoat/web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "mailmoat React dashboard (built in the UI phase).",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "@mailmoat/shared": "0.1.0"
+  }
+}

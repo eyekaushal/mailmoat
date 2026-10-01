@@ -1,0 +1,3 @@
+# Docs are hand-formatted; Prettier would only re-pad tables
+*.md
+package-lock.json
