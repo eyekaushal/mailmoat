@@ -20,7 +20,8 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "connect:google": "node --env-file-if-exists=.env server/scripts/connect-google.js"
+    "connect:google": "node --env-file-if-exists=.env server/scripts/connect-google.js",
+    "dev:sync": "node --env-file-if-exists=.env server/scripts/dev-sync.js"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
