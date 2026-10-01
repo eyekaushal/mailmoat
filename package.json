@@ -22,7 +22,8 @@
     "format:check": "prettier --check .",
     "connect:google": "node --env-file-if-exists=.env server/scripts/connect-google.js",
     "dev:sync": "node --env-file-if-exists=.env server/scripts/dev-sync.js",
-    "llm:smoke": "node --env-file-if-exists=.env server/scripts/llm-smoke.js"
+    "llm:smoke": "node --env-file-if-exists=.env server/scripts/llm-smoke.js",
+    "reader:sample": "node --env-file-if-exists=.env server/scripts/reader-sample.js"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
