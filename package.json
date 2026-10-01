@@ -19,7 +19,8 @@
     "test:watch": "vitest",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "connect:google": "node --env-file-if-exists=.env server/scripts/connect-google.js"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
