@@ -352,7 +352,7 @@ Claude updates this table at the end of every block. New sessions resume from th
 | B02 | ✅ | Logger (redaction), errors, Config (loopback-only), KeyProvider (0600 key file; keychain = later), SecretStore (AES-256-GCM + name AAD), Database (`node:sqlite`, no native dep), Migrator, full v1 schema (append-only audit log, user-only memory), 2 repos. 41 tests. |
 | B03 | ✅ | GoogleAuth (loopback + PKCE S256, one-time 10-min state, rejects partial grants, encrypted refresh token, rotation, revoke), GmailClient, CalendarClient, `npm run connect:google`, setup guide. Scopes: dropped gmail.settings.basic, added calendar.freebusy. 60 tests. Live connect pending user run. |
 | B04 | ✅ | GmailSync (history polling, pending queue + retries, expired-history recovery), Backfill (sent 365d, received 30d, metadata only), MessageImporter, EmailMetadataMapper (subject hashed, receive time not Date header), Contact/Sender/Email repos, Scheduler, migration 002, `npm run dev:sync`. **B07 note:** "known contact" = sentCount > 0; received-only is attacker-controllable. 80 tests. |
-| B05 | ☐ | |
+| B05 | ✅ | MimeParser (postal-mime → `ParsedEmail`, attachment metadata only, `IngestError` on failure), AuthResultsParser (only the **first** `Authentication-Results` counts and only if `mx.google.com`; otherwise untrusted `none`; comments stripped), LinkExtractor (parse5; href + visible text/img alt, `<area>`, plain-text URLs, punycode host). Added `parse5`. 104 tests. |
 | B06 | ☐ | |
 | B07 | ☐ | |
 | B08 | ☐ | |

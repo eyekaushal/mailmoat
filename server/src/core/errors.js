@@ -27,3 +27,6 @@ export class NotConnectedError extends MailmoatError {}
 
 /** Gmail no longer has history that far back; sync must restart from a fresh history ID. */
 export class HistoryExpiredError extends MailmoatError {}
+
+/** A raw message could not be parsed; the pipeline must treat the email as suspicious. */
+export class IngestError extends MailmoatError {}

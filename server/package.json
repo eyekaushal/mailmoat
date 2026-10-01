@@ -10,6 +10,7 @@
     "@googleapis/gmail": "^22.0.1",
     "@mailmoat/shared": "0.1.0",
     "google-auth-library": "^11.1.0",
+    "parse5": "^8.0.1",
     "postal-mime": "^4.0.2",
     "zod": "^4.6.5"
   }
