@@ -19,6 +19,7 @@
 9. [Testing strategy](#9-testing-strategy)
 10. [Definition of done](#10-definition-of-done)
 11. [Progress tracker](#11-progress-tracker)
+12. [v1.1 Distribution (after v1.0.0)](#12-v11-distribution-after-v100)
 
 ---
 
@@ -51,7 +52,10 @@ Hours are Claude-Code-paced estimates including your review time. **Total ≈ 37
 
 **Things you do in parallel (not Claude):**
 - **Day 1 morning:** create the Google Cloud project + OAuth client (guide in B03) and a test Gmail account; create an Anthropic API key with a small spend limit.
+- **Day 3 (before B23):** in the Google Cloud project from B03, set the OAuth consent screen to **In production** (do **not** submit for verification) and hand over the client ID/secret for mailmoat's built-in config (`DISTRIBUTION.md` §1). Save the Happenstance reference screenshots to `notes/ux-references/` for B25.
 - **Day 4:** live smoke test on Kaushal's own account; record the demo video.
+
+> **Status 3 Oct:** about one branch behind (attack lab not started). Remaining v1 work ≈ 21 h against ~20 h available — if a day overruns, cut strictly from §6. Distribution decisions from 3 Oct (shared Google client, guided setup) add ~1 h to B23/B25; the Mac app and website are **v1.1** (§12), not v1.
 
 ---
 
@@ -139,9 +143,9 @@ Fixes after release: `bugfix/<desc>` branches → `v1.0.1`.
 | **B20** | assistant-features | `MeetingService` | F7 | 1 | "Friday at 5" → conflict-checked proposal; attendees policy-checked |
 | **B21** | assistant-features | `ChatService`, `ChatRepository`, 3 intents, step streaming, preview payloads | F8 | 1.25 | "find time … after my flight" works end-to-end in a test |
 | **B22** | assistant-features | `SafeHttpClient`, `UnsubscribeService`, `SummaryService` | F9, F14 | 1 | SSRF tests pass; risky senders never contacted |
-| **B23** | api-server | `App`, `SecurityMiddleware`, 10 route classes, SSE, `main.js` | §13, §9 | 1.5 | Routes tested; CSRF + DNS-rebinding tests pass (**Milestone 2**) |
+| **B23** | api-server | `App`, `SecurityMiddleware`, 10 route classes, SSE, `main.js`; **built-in Google client** (committed config default, `.env` override; `GoogleRoutes` start Connect Google with it — users never enter a client) | §13, §9, F1.4 | 1.75 | Routes tested; CSRF + DNS-rebinding tests pass; connect works with no user-supplied client (**Milestone 2**) |
 | **B24** 🎨 | web-ui | Vite/Tailwind/router scaffold, `ApiClient`, layout, sidebar, shared components | §8 | 1.25 | Shell renders; CSP clean |
-| **B25** 🎨 | web-ui | Setup wizard + Settings | F1 | 1.25 | New user connects without editing files |
+| **B25** 🎨 | web-ui | Setup wizard + Settings: **two Anthropic key flows** ("have an account?" yes → Console keys page + screenshot; no → sign up / add credits / create key steps + cost estimate; both → paste + Test ✓), **guided warning screen** (why Google says "unverified", where to click) → **Connect Google** button, rules step. Happenstance-style guidance (`notes/ux-references/`) | F1, `DISTRIBUTION.md` | 1.75 | New user connects Anthropic and Google without editing files or creating a Google client |
 | **B26** 🎨 | web-ui | Inbox (tabs, list, detail + risk banner), Assistant (Rules/Test/History), Approvals | F4, F5, F6.3 | 1.5 | Pipeline trace visible; no remote loads |
 | **B27** 🎨 | web-ui | Chat panel + preview cards, Bulk Unsubscribe, Security Center, Today card | F8, F9, F11, F14 | 1.5 | All PRD §8 screens work (**Milestone 3**) |
 | **B28** | hardening-and-release | Live attack-lab run, threshold tuning, security self-review, `npm audit` clean, live smoke test on Kaushal's account | F13, §16 | 2 | Release gate met (0% misuse/exfil/poison; ≥ 95% detection; ≤ 3% FP) |
@@ -188,8 +192,8 @@ Not a watered-down v1 — this is the order in which **extras** move to v1.0.1 i
 - **Attack lab:** corpus = `name.eml` + `name.expected.json`; live mode records model outputs to fixtures; CI replays fixtures for free; release gate 0% misuse/exfil/poison.
 - **Agent & policy:** Planner sees only typed fields and handles; `TaggedValue` provenance; Policy Engine implements SECURITY_APPROACH §7.6 exactly.
 - **Assistant features:** rules matched in code from typed fields; replies written by the quarantined Drafter; meeting proposals via free/busy; chat with 3 intents; SSRF-safe one-click unsubscribe.
-- **API server:** bind `127.0.0.1`; Host/Origin checks; CSRF; CSP; SSE for chat.
-- **Web UI 🎨 (Fable 5):** Inbox Zero-style Assistant page and label tabs; Superhuman-style chat with Edit/Save cards; risk = icon + text; AI text plain only; email HTML only in sandboxed frame.
+- **API server:** bind `127.0.0.1`; Host/Origin checks; CSRF; CSP; SSE for chat. Built-in Google OAuth client is a committed default (desktop-client secret is non-confidential; PKCE + loopback protect it); `.env` may override for development.
+- **Web UI 🎨 (Fable 5):** Inbox Zero-style Assistant page and label tabs; Superhuman-style chat with Edit/Save cards; risk = icon + text; AI text plain only; email HTML only in sandboxed frame. Setup wizard follows Happenstance's guided-connector style: explain each external step with a screenshot and one "Continue to …" button.
 - **Hardening & release:** live lab run, tuning only by measurement, `npm audit`, live smoke test, README with results, tag.
 
 ---
@@ -202,7 +206,7 @@ mailmoat/
 │   ├── workflows/ci.yml
 │   └── pull_request_template.md
 ├── docs/
-│   ├── PRD.md · PLAN.md · SECURITY_APPROACH.md · INBOX_ZERO_TEARDOWN.md
+│   ├── PRD.md · PLAN.md · SECURITY_APPROACH.md · DISTRIBUTION.md · INBOX_ZERO_TEARDOWN.md
 │   └── setup/  google-oauth.md
 ├── notes/                                   (gitignored — private planning)
 ├── shared/
@@ -352,14 +356,14 @@ Claude updates this table at the end of every block. New sessions resume from th
 | B02 | ✅ | Logger (redaction), errors, Config (loopback-only), KeyProvider (0600 key file; keychain = later), SecretStore (AES-256-GCM + name AAD), Database (`node:sqlite`, no native dep), Migrator, full v1 schema (append-only audit log, user-only memory), 2 repos. 41 tests. |
 | B03 | ✅ | GoogleAuth (loopback + PKCE S256, one-time 10-min state, rejects partial grants, encrypted refresh token, rotation, revoke), GmailClient, CalendarClient, `npm run connect:google`, setup guide. Scopes: dropped gmail.settings.basic, added calendar.freebusy. 60 tests. Live connect pending user run. |
 | B04 | ✅ | GmailSync (history polling, pending queue + retries, expired-history recovery), Backfill (sent 365d, received 30d, metadata only), MessageImporter, EmailMetadataMapper (subject hashed, receive time not Date header), Contact/Sender/Email repos, Scheduler, migration 002, `npm run dev:sync`. **B07 note:** "known contact" = sentCount > 0; received-only is attacker-controllable. 80 tests. |
-| B05 | ☐ | |
-| B06 | ☐ | |
-| B07 | ☐ | |
-| B08 | ☐ | |
-| B09 | ☐ | |
-| B10 | ☐ | |
-| B11 | ☐ | |
-| B12 | ☐ | |
+| B05 | ✅ | MimeParser (postal-mime → `ParsedEmail`, attachment metadata only, `IngestError` on failure), AuthResultsParser (only the **first** `Authentication-Results` counts and only if `mx.google.com`; otherwise untrusted `none`; comments stripped), LinkExtractor (parse5; href + visible text/img alt, `<area>`, plain-text URLs, punycode host). Added `parse5`. 104 tests. |
+| B06 | ✅ | HiddenContentDetector (parse5 walk with CSS inheritance: display/visibility/opacity/tiny font/offscreen/clipped/colour≈background incl. `bgcolor`/`<font color>`; `<style>` simple selectors + `@media`; prose comments; long alt/title; zero-width + bidi in body/subject/display name), TextNormalizer (strip invisibles → NFKC → controls → whitespace; Reader cap 12k chars), EmailIngestor (`IngestedEmail`; Reader text = visible only; body SHA-256). 142 tests. |
+| B07 | ✅ | `Signal` base (`fire(reason)`), `SignalEngine` (a crashing signal becomes `S0 SIGNAL_ERROR`, high → fail closed in B12), `OrgDomain` (org-domain approx without PSL, `data/freemail.json`), S1–S4, S9–S11 in `signals/sender/`. S2 also fires when there is no trusted Google stamp. S4 ignores List-Id (forgeable); only exemption = Reply-To the user wrote to. S9/S10 use sentCount > 0 or trusted; free-mail domains never count as known. S11 = free-mail + role/company display name or Reader `claims_to_be` (context.readerForm, null before Reader). 185 tests. |
+| B08 | ✅ | `Confusables` (TR39 skeleton from bundled Unicode `confusables.json`, 6,712 entries; mapped → lower-cased → mapped again since TR39 is case-sensitive), `DomainSimilarity` (OSA distance; <8 chars skeleton-only, 8–9 → 1 edit, ≥10 → 2), `BrandList` + `brands.json` (46 brands; free-mail domains never prove a brand; "norton" dropped as a surname). S5–S8. Migration 003 adds `contacts.name`, taken **only** from the user's sent mail (To/Cc) for S7; existing contacts get names as new sent mail syncs. S7 also catches an address shown as display name. 239 tests. |
+| B09 | ✅ | S12–S20 in `signals/content/`, `data/shorteners.json` (40). S12 needs ≥ 20 CSS-hidden words or a bidi **override** (U+202D/E); preheaders, ZW padding, comments, RTL embeddings ignored (tune in B28). S13 = AI-addressed wording + action verb, override phrases, or our tool names; "agent"/"bot"/"you are now"/"from now on" excluded (FP). S14 = text-domain ≠ href, plus real domain used as subdomain prefix (`netflix.com.account-verify.example`); tracker links exempt only if shown domain = DMARC-passing sender. S18 "seen" = sent-to domains + brands (no body history). S19 adds svg/one/hta/exe…, rar/7z always; MimeParser gets `encrypted` (all ZIP local headers). S20 via parse5. Signal reasons may quote attacker text → display-only, never to Planner. 296 tests. |
+| B10 | ✅ | `LlmClient` (one `complete({role, system, user, schema})`; Zod → JSON-schema structured output with unsupported keywords stripped, Zod re-validates; **never sends `tools`**; system prompt cached; refusal → `LlmRefusalError`, non-`end_turn`/bad JSON/schema fail → `LlmOutputError`, SDK/network → `LlmError`; error messages carry issue paths only). Retries/timeouts = SDK (`maxRetries: 3`, 60 s). Opus/Sonnet 5.5 calls use server-side `fallbacks: "default"` (beta `server-side-fallback-2026-07-01`). `ModelConfig` (PRD §14 roles, Settings overrides, prices). Usage + cost → audit log: minimal `AuditLog` + `AuditLogRepository` pulled forward from B12. Added `@anthropic-ai/sdk`. `npm run llm:smoke` — **live run pending user**. 314 tests. |
+| B11 | ✅ | `ReaderFormSchema` in `shared/schemas/reader-form.js` (strict objects, enums, summary ≤ 300, brand ≤ 40, ≤ 5 ISO-8601 times; added `zod` to shared). `Reader` never throws: any error → `{ failed: true }` (B12 maps to SUSPICIOUS). Untrusted fields in per-call random-suffix tags; trusted receive time/time zone/direction first; `expects_reply` forced false for inbound; empty brand → null. Prompt `reader.system.md` v1 (data-not-instructions, "unsure → true" on risk intents, summary without links/addresses). `npm run reader:sample` (meeting / BEC / injection) — **live run pending user**. 338 tests. |
+| B12 | ✅ | `RiskRules` (§7.4 floors + combinations as data; extra fail-closed floor: Reader failed or `S0` → SUSPICIOUS; weights low 8 / medium 20 / high 45, bands ≥ 40 SUSPICIOUS, ≥ 80 DANGEROUS — tune in B28), `RiskEngine` (max(floor, combos, band); rule reasons first), `Verdict` (frozen; `injectionAttempt`, `verifyByPhone`, `topReasons()`). `SecurityPipeline`: `analyse()` side-effect free (Ingest → Reader → Signals → Risk; parse failure → `S0 INGEST_ERROR`; outbound = Reader only), `process()` = store + audit + Gmail labels (`shared/constants/labels.js`) + opt-in `autoArchiveDangerous`. `VerdictRepository` (one transaction). `SignalCatalog` = single list of S1–S20. `dev:sync` now runs the real pipeline. §8 integration tests: 8.1/8.4/8.4-variant/8.5/8.6/8.7 + benign SAFE. 395 tests. **Branch `feature/security-pipeline` complete.** |
 | B13 | ☐ | |
 | B14 | ☐ | |
 | B15 | ☐ | |
@@ -377,3 +381,21 @@ Claude updates this table at the end of every block. New sessions resume from th
 | B27 | ☐ | |
 | B28 | ☐ | |
 | B29 | ☐ | |
+| D01 | ☐ | v1.1 — see §12 |
+| D02 | ☐ | v1.1 — see §12 |
+| D03 | ☐ | v1.1 — see §12 |
+
+---
+
+## 12. v1.1 Distribution (after v1.0.0)
+
+Decided 3 Oct 2026; background and costs in `DISTRIBUTION.md`. Starts only after `v1.0.0` is tagged. **Total cost: $0** (no Apple Developer Program, no Google verification).
+
+| Block | Branch | What gets built | Hrs | Done when |
+|---|---|---|---|---|
+| **D01** | `chore/website` | GitHub Pages site: what mailmoat does, why it's safe, Download button (latest GitHub Release), first-launch guide with screenshots (System Settings → Privacy & Security → Open Anyway), privacy policy | 2 | Site live; download link points to the latest release |
+| **D02** | `feature/desktop-app` | Electron wrapper: `server/` runs in Electron's Node, `web/` is the window; check Electron's Node supports `node:sqlite` (else swap `Database.js` only); window hardening (context isolation, sandbox, no Node in the renderer, deny navigation/new windows); optional Keychain via `safeStorage`; **ad-hoc signed** `.dmg` via the build tool; no auto-update | 4 | `.dmg` installs on a second Mac via "Open Anyway"; attack lab still passes |
+| **D03** | `feature/desktop-app` | Release pipeline: GitHub Action builds the ad-hoc-signed `.dmg` on tag and attaches it to the GitHub Release; README + site link to it | 1 | Tagging `v1.1.0` publishes a downloadable `.dmg` |
+
+**Rules:** no Swift; no notarization; no auto-update; still local-first (no mailmoat server). The Google client stays unverified and **In production** while users stay under ~80 (Google's cap is 100).
+

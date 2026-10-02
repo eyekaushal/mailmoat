@@ -144,8 +144,21 @@ describe('Backfill + contact history', () => {
     const { backfill } = buildSync();
     await backfill.run({ before: new Date('2027-01-01') });
 
-    expect(contacts.get('priya@partnerco.io')).toMatchObject({ sentCount: 1, receivedCount: 0 });
-    expect(contacts.get('x@unknown.biz')).toMatchObject({ sentCount: 0, receivedCount: 1 });
+    expect(contacts.get('priya@partnerco.io')).toMatchObject({
+      name: 'Priya',
+      sentCount: 1,
+      receivedCount: 0,
+    });
+    // The name on received mail is attacker-controlled and never stored.
+    expect(contacts.get('x@unknown.biz')).toMatchObject({
+      name: null,
+      sentCount: 0,
+      receivedCount: 1,
+    });
+    expect(contacts.sentDomains()).toEqual(['partnerco.io']);
+    expect(contacts.namedContacts()).toEqual([
+      { address: 'priya@partnerco.io', domain: 'partnerco.io', name: 'Priya' },
+    ]);
     expect(contacts.get('me@gmail.com')).toBeUndefined();
     expect(contacts.hasSentToDomain('partnerco.io')).toBe(true);
     expect(contacts.hasSentToDomain('unknown.biz')).toBe(false);

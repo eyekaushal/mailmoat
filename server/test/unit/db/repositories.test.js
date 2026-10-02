@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { Database } from '../../../src/db/Database.js';
 import { Migrator } from '../../../src/db/Migrator.js';
+import { ContactRepository } from '../../../src/db/repositories/ContactRepository.js';
 import { SettingsRepository } from '../../../src/db/repositories/SettingsRepository.js';
 import { SyncStateRepository } from '../../../src/db/repositories/SyncStateRepository.js';
 
@@ -47,5 +48,19 @@ describe('Database.transaction', () => {
       }),
     ).toThrow('stop');
     expect(settings.get('a')).toBeUndefined();
+  });
+});
+
+describe('ContactRepository names', () => {
+  it('keeps the latest non-empty name the user used', () => {
+    const contacts = new ContactRepository(db);
+    contacts.recordSent('rahul@acme-corp.com', new Date('2026-01-01'), 'Rahul');
+    contacts.recordSent('rahul@acme-corp.com', new Date('2026-02-01'), 'Rahul Mehta');
+    contacts.recordSent('rahul@acme-corp.com', new Date('2026-03-01'));
+    contacts.recordReceived('rahul@acme-corp.com', new Date('2026-04-01'));
+    expect(contacts.get('rahul@acme-corp.com')).toMatchObject({
+      name: 'Rahul Mehta',
+      sentCount: 3,
+    });
   });
 });

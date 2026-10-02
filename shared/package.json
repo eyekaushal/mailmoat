@@ -8,5 +8,8 @@
   "exports": {
     "./constants/*": "./src/constants/*.js",
     "./schemas/*": "./src/schemas/*.js"
+  },
+  "dependencies": {
+    "zod": "^4.6.5"
   }
 }

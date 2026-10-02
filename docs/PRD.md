@@ -37,7 +37,7 @@
 
 **mailmoat** is an open-source, local-first AI email assistant for Gmail. It organises the inbox, drafts formal replies, schedules meetings, cleans up subscriptions and answers requests in a chat — and it is **built so that a malicious email cannot hijack it, and so that phishing and business-email-compromise attempts are caught and explained to the user.**
 
-- **Runs on the user's own machine** (`localhost`), with the user's own Google OAuth client and their own Anthropic API key. No mailmoat server exists; no email leaves the machine except to Google and Anthropic.
+- **Runs on the user's own machine** (`localhost`), connecting through mailmoat's built-in Google OAuth client (one shared, unverified client for < 100 users — see `DISTRIBUTION.md`) and the user's own Anthropic API key. No mailmoat server exists; no email leaves the machine except to Google and Anthropic.
 - **Two AIs, two code guards** (CaMeL-based): a quarantined *Reader* that reads email but has no tools, a privileged *Planner* that plans actions but never reads raw email, a deterministic *Signal/Risk Engine*, and a *Policy Engine* that decides what may run.
 - **No external chat channel in v1.** Alerts and approvals live in the local dashboard. Slack is planned for v2 (decided 1 Oct 2026 to fit the 4-day build).
 
@@ -132,14 +132,14 @@ Each requirement has an ID for traceability in `PLAN.md` and tests. "AC" = accep
 
 ### F1 — Setup wizard and settings
 
-**Description:** First run opens a 3-step wizard at `http://127.0.0.1:<port>`: (1) Anthropic API key, (2) Google OAuth client + connect Gmail/Calendar, (3) choose which predefined rules are on. After setup, the same items live under **Settings**.
+**Description:** First run opens a 3-step wizard at `http://127.0.0.1:<port>`: (1) Anthropic API key (two guided flows), (2) **Connect Google** (Gmail + Calendar) using mailmoat's built-in OAuth client, (3) choose which predefined rules are on. After setup, the same items live under **Settings**. Distribution and cost decisions: `docs/DISTRIBUTION.md`.
 
 | ID | Requirement |
 |---|---|
-| F1.1 | The user pastes an Anthropic API key; **Test key** makes a minimal API call from the backend and shows success/failure. |
+| F1.1 | The wizard first asks "Do you have an Anthropic account?" — **Yes:** a button opens the Console's API-keys page plus an annotated screenshot of where to click; **No:** three numbered steps (sign up → add credits → create key), each with a "Continue to Anthropic" button and a rough monthly cost estimate. Both end with the user pasting the key; **Test key** makes a minimal API call from the backend and shows success/failure. |
 | F1.2 | The key field is write-only: after saving, only a masked form (`sk-ant-…abcd`) is ever shown; the key is never returned to the browser. |
 | F1.3 | Secrets (Anthropic key, Google refresh token) are encrypted at rest (see `SECURITY_APPROACH.md §9`). |
-| F1.4 | The wizard links to a step-by-step guide for creating a Google Cloud OAuth client ("Desktop app" type) and explains the consent-screen publishing status (in "Testing" status Google refresh tokens expire after 7 days; switching to "In production" for personal use avoids that, with Google's unverified-app warning). |
+| F1.4 | mailmoat ships **one built-in Google OAuth client** ("Desktop app" type, project owned by Kaushal, publishing status **In production**, unverified — Google's personal-use exception for < 100 users). Users never create or paste a client; they click **Connect Google**. The client ID/secret live in a committed config default (desktop-client secrets are non-confidential; PKCE + loopback protect the flow); `.env` may override them (F1.7). Before opening Google, the wizard shows a **guided warning screen**: why Google says "unverified app" and exactly where to click (Advanced → Go to mailmoat), with a screenshot. |
 | F1.5 | Google connection uses the OAuth loopback redirect to `127.0.0.1` with PKCE and requests only: `gmail.modify`, `calendar.events`, `calendar.freebusy`, `openid`, `email` (no Gmail settings scope: Block is app-side). |
 | F1.6 | Settings also include: model choice for Planner (default `claude-opus-5-5`, alternative `claude-sonnet-5-5`), polling interval (default 60 s), "auto-archive DANGEROUS mail" (default off), trusted senders list, disconnect buttons. |
 | F1.7 | A `.env` file may supply the same values for developers; values saved in the UI take precedence. `.env` is gitignored. |
@@ -329,7 +329,7 @@ Implements `SECURITY_APPROACH.md §7.5–§7.6`.
 ## 7. Key user flows
 
 ### 7.1 First run
-`npm install && npm start` → browser opens `127.0.0.1:<port>` → wizard: API key (Test ✓) → Google client ID/secret + Connect (OAuth) → choose rules → backfill 30 days (progress) → dashboard.
+`npm install && npm start` → browser opens `127.0.0.1:<port>` → wizard: "Do you have an Anthropic account?" → guided key flow (Test ✓) → guided warning screen → **Connect Google** (OAuth, built-in client) → choose rules → backfill 30 days (progress) → dashboard. From v1.1 the same flow runs inside the Mac app instead of a browser tab.
 
 ### 7.2 Normal email (meeting request)
 "Can we meet Friday at 5? – Rahul" from a known contact → Ingest → Signals (none) → Reader (`needs_reply`, `meeting_request`) → Risk SAFE → rules: To Reply + Calendar → Planner proposes event + formal draft → cards in the dashboard → user clicks Save / Approve → event created, reply sent → audit log.
@@ -352,7 +352,7 @@ Bulk Unsubscribe → sort by count → select 10 SAFE newsletters → Unsubscrib
 
 | Screen | Contents |
 |---|---|
-| Setup wizard | 4 steps (F1) |
+| Setup wizard | 3 steps (F1): Anthropic key (two guided flows) · guided warning screen + Connect Google · rules; then a "Connected ✓ — first sync running" screen |
 | **Inbox** | Label tab bar, list, email detail with risk banner (F5) |
 | **Assistant** | Rules / Test / History tabs (F4) |
 | **Chat** | Side panel or full page; streaming steps; preview cards (F8) |
@@ -580,6 +580,6 @@ These also go into `CLAUDE.md`.
 
 | Version | Candidates |
 |---|---|
-| v1.1 | Custom rules (natural language → typed rule, user-approved); daily digest email; Playwright E2E suite. |
+| v1.1 | **Distribution (decided 3 Oct 2026, `DISTRIBUTION.md`):** website on GitHub Pages; ad-hoc-signed Electron `.dmg` on GitHub Releases (no $99 Apple account, no notarization, no auto-update); first-launch guide (System Settings → Privacy & Security → Open Anyway). Also: custom rules (natural language → typed rule, user-approved); daily digest email; Playwright E2E suite. |
 | v2 | **Slack integration** (Socket Mode alerts, approve/reject buttons, daily summary — design kept in `SECURITY_APPROACH.md §7.7`); other LLM providers (OpenAI, Gemini, local Ollama for the Reader); Outlook; multiple accounts; Telegram/WhatsApp channels; Chrome extension with Gmail tabs; QR-code phishing detection; analytics page. |
-| Later | Hosted option (requires Google restricted-scope verification and a security assessment); team/organisation features. |
+| Later | Google verification if users ever approach 100 (brand check + restricted-scope review + yearly CASA assessment, ~$540/yr at a lab; Google itself charges nothing); Apple notarization ($99/yr) for auto-update; hosted option; team/organisation features. |

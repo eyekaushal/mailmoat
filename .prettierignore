@@ -1,3 +1,6 @@
 # Docs are hand-formatted; Prettier would only re-pad tables
 *.md
 package-lock.json
+
+# Generated from Unicode confusables.txt
+server/src/security/signals/data/confusables.json

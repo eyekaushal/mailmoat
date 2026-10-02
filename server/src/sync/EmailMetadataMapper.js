@@ -12,6 +12,7 @@ const SKIPPED_LABELS = new Set(['SPAM', 'TRASH', 'DRAFT', 'CHAT']);
  * @property {string} fromDomain
  * @property {string | null} fromName display name (attacker-controlled for inbound mail)
  * @property {string[]} toAddrs lower-cased To + Cc
+ * @property {Record<string, string>} recipientNames To/Cc address → display name, where given
  * @property {string} date ISO time Gmail received the message
  * @property {string | null} subjectHash
  * @property {boolean} hasListUnsubscribe
@@ -38,6 +39,7 @@ export class EmailMetadataMapper {
   toRecord(metadata) {
     const { headers, labelIds } = metadata;
     const [from] = this.#parseAddresses(headers.from);
+    const recipients = [...this.#parseAddresses(headers.to), ...this.#parseAddresses(headers.cc)];
     const fromAddr = from?.address ?? '';
     const listUnsubscribe = headers['list-unsubscribe'] ?? '';
     const unsubscribeUrl = this.#unsubscribeUrl(listUnsubscribe);
@@ -49,8 +51,9 @@ export class EmailMetadataMapper {
       fromAddr,
       fromDomain: fromAddr.split('@').pop() ?? '',
       fromName: from?.name || null,
-      toAddrs: [...this.#parseAddresses(headers.to), ...this.#parseAddresses(headers.cc)].map(
-        (entry) => entry.address,
+      toAddrs: recipients.map((entry) => entry.address),
+      recipientNames: Object.fromEntries(
+        recipients.filter((entry) => entry.name).map((entry) => [entry.address, entry.name]),
       ),
       date: metadata.internalDate.toISOString(),
       subjectHash: headers.subject
