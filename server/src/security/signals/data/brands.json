@@ -1,39 +1,17 @@
 [
   {
     "name": "PayPal",
-    "keywords": [
-      "paypal"
-    ],
-    "domains": [
-      "paypal.com",
-      "paypal.me",
-      "paypal-communication.com",
-      "paypal-prepaid.com"
-    ]
+    "keywords": ["paypal"],
+    "domains": ["paypal.com", "paypal.me", "paypal-communication.com", "paypal-prepaid.com"]
   },
   {
     "name": "Google",
-    "keywords": [
-      "google",
-      "gmail"
-    ],
-    "domains": [
-      "google.com",
-      "youtube.com",
-      "accounts.google.com",
-      "googleusercontent.com",
-      "g.co"
-    ]
+    "keywords": ["google", "gmail"],
+    "domains": ["google.com", "youtube.com", "accounts.google.com", "googleusercontent.com", "g.co"]
   },
   {
     "name": "Microsoft",
-    "keywords": [
-      "microsoft",
-      "office365",
-      "outlook",
-      "onedrive",
-      "sharepoint"
-    ],
+    "keywords": ["microsoft", "office365", "outlook", "onedrive", "sharepoint"],
     "domains": [
       "microsoft.com",
       "office.com",
@@ -47,22 +25,12 @@
   },
   {
     "name": "Apple",
-    "keywords": [
-      "apple",
-      "icloud",
-      "itunes"
-    ],
-    "domains": [
-      "apple.com",
-      "itunes.com"
-    ]
+    "keywords": ["apple", "icloud", "itunes"],
+    "domains": ["apple.com", "itunes.com"]
   },
   {
     "name": "Amazon",
-    "keywords": [
-      "amazon",
-      "aws"
-    ],
+    "keywords": ["amazon", "aws"],
     "domains": [
       "amazon.com",
       "amazon.in",
@@ -78,22 +46,12 @@
   },
   {
     "name": "Netflix",
-    "keywords": [
-      "netflix"
-    ],
-    "domains": [
-      "netflix.com",
-      "netflix.net",
-      "nflxso.net"
-    ]
+    "keywords": ["netflix"],
+    "domains": ["netflix.com", "netflix.net", "nflxso.net"]
   },
   {
     "name": "Meta",
-    "keywords": [
-      "facebook",
-      "instagram",
-      "whatsapp"
-    ],
+    "keywords": ["facebook", "instagram", "whatsapp"],
     "domains": [
       "facebook.com",
       "facebookmail.com",
@@ -105,396 +63,197 @@
   },
   {
     "name": "LinkedIn",
-    "keywords": [
-      "linkedin"
-    ],
-    "domains": [
-      "linkedin.com"
-    ]
+    "keywords": ["linkedin"],
+    "domains": ["linkedin.com"]
   },
   {
     "name": "DHL",
-    "keywords": [
-      "dhl"
-    ],
-    "domains": [
-      "dhl.com",
-      "dhl.de",
-      "dhl.co.uk",
-      "dhl.in"
-    ]
+    "keywords": ["dhl"],
+    "domains": ["dhl.com", "dhl.de", "dhl.co.uk", "dhl.in"]
   },
   {
     "name": "FedEx",
-    "keywords": [
-      "fedex"
-    ],
-    "domains": [
-      "fedex.com"
-    ]
+    "keywords": ["fedex"],
+    "domains": ["fedex.com"]
   },
   {
     "name": "UPS",
-    "keywords": [
-      "ups"
-    ],
-    "domains": [
-      "ups.com"
-    ]
+    "keywords": ["ups"],
+    "domains": ["ups.com"]
   },
   {
     "name": "USPS",
-    "keywords": [
-      "usps"
-    ],
-    "domains": [
-      "usps.com",
-      "usps.gov"
-    ]
+    "keywords": ["usps"],
+    "domains": ["usps.com", "usps.gov"]
   },
   {
     "name": "DocuSign",
-    "keywords": [
-      "docusign"
-    ],
-    "domains": [
-      "docusign.com",
-      "docusign.net"
-    ]
+    "keywords": ["docusign"],
+    "domains": ["docusign.com", "docusign.net"]
   },
   {
     "name": "Dropbox",
-    "keywords": [
-      "dropbox"
-    ],
-    "domains": [
-      "dropbox.com",
-      "dropboxmail.com"
-    ]
+    "keywords": ["dropbox"],
+    "domains": ["dropbox.com", "dropboxmail.com"]
   },
   {
     "name": "Adobe",
-    "keywords": [
-      "adobe"
-    ],
-    "domains": [
-      "adobe.com",
-      "adobesign.com",
-      "echosign.com"
-    ]
+    "keywords": ["adobe"],
+    "domains": ["adobe.com", "adobesign.com", "echosign.com"]
   },
   {
     "name": "Zoom",
-    "keywords": [
-      "zoom"
-    ],
-    "domains": [
-      "zoom.us",
-      "zoom.com"
-    ]
+    "keywords": ["zoom"],
+    "domains": ["zoom.us", "zoom.com"]
   },
   {
     "name": "Slack",
-    "keywords": [
-      "slack"
-    ],
-    "domains": [
-      "slack.com"
-    ]
+    "keywords": ["slack"],
+    "domains": ["slack.com"]
   },
   {
     "name": "Coinbase",
-    "keywords": [
-      "coinbase"
-    ],
-    "domains": [
-      "coinbase.com"
-    ]
+    "keywords": ["coinbase"],
+    "domains": ["coinbase.com"]
   },
   {
     "name": "Binance",
-    "keywords": [
-      "binance"
-    ],
-    "domains": [
-      "binance.com"
-    ]
+    "keywords": ["binance"],
+    "domains": ["binance.com"]
   },
   {
     "name": "Stripe",
-    "keywords": [
-      "stripe"
-    ],
-    "domains": [
-      "stripe.com"
-    ]
+    "keywords": ["stripe"],
+    "domains": ["stripe.com"]
   },
   {
     "name": "Wells Fargo",
-    "keywords": [
-      "wellsfargo"
-    ],
-    "domains": [
-      "wellsfargo.com"
-    ]
+    "keywords": ["wellsfargo"],
+    "domains": ["wellsfargo.com"]
   },
   {
     "name": "Bank of America",
-    "keywords": [
-      "bankofamerica",
-      "bofa"
-    ],
-    "domains": [
-      "bankofamerica.com",
-      "bofa.com"
-    ]
+    "keywords": ["bankofamerica", "bofa"],
+    "domains": ["bankofamerica.com", "bofa.com"]
   },
   {
     "name": "Chase",
-    "keywords": [
-      "jpmorgan",
-      "chasebank"
-    ],
-    "domains": [
-      "chase.com",
-      "jpmorgan.com",
-      "jpmorganchase.com"
-    ]
+    "keywords": ["jpmorgan", "chasebank"],
+    "domains": ["chase.com", "jpmorgan.com", "jpmorganchase.com"]
   },
   {
     "name": "Citibank",
-    "keywords": [
-      "citibank",
-      "citi"
-    ],
-    "domains": [
-      "citi.com",
-      "citibank.com"
-    ]
+    "keywords": ["citibank", "citi"],
+    "domains": ["citi.com", "citibank.com"]
   },
   {
     "name": "HSBC",
-    "keywords": [
-      "hsbc"
-    ],
-    "domains": [
-      "hsbc.com",
-      "hsbc.co.uk",
-      "hsbc.co.in"
-    ]
+    "keywords": ["hsbc"],
+    "domains": ["hsbc.com", "hsbc.co.uk", "hsbc.co.in"]
   },
   {
     "name": "Barclays",
-    "keywords": [
-      "barclays"
-    ],
-    "domains": [
-      "barclays.com",
-      "barclays.co.uk"
-    ]
+    "keywords": ["barclays"],
+    "domains": ["barclays.com", "barclays.co.uk"]
   },
   {
     "name": "American Express",
-    "keywords": [
-      "americanexpress",
-      "amex"
-    ],
-    "domains": [
-      "americanexpress.com",
-      "aexp.com"
-    ]
+    "keywords": ["americanexpress", "amex"],
+    "domains": ["americanexpress.com", "aexp.com"]
   },
   {
     "name": "Visa",
-    "keywords": [
-      "visa"
-    ],
-    "domains": [
-      "visa.com"
-    ]
+    "keywords": ["visa"],
+    "domains": ["visa.com"]
   },
   {
     "name": "Mastercard",
-    "keywords": [
-      "mastercard"
-    ],
-    "domains": [
-      "mastercard.com"
-    ]
+    "keywords": ["mastercard"],
+    "domains": ["mastercard.com"]
   },
   {
     "name": "HDFC Bank",
-    "keywords": [
-      "hdfc",
-      "hdfcbank"
-    ],
-    "domains": [
-      "hdfcbank.com",
-      "hdfcbank.net",
-      "hdfc.com"
-    ]
+    "keywords": ["hdfc", "hdfcbank"],
+    "domains": ["hdfcbank.com", "hdfcbank.net", "hdfc.com"]
   },
   {
     "name": "ICICI Bank",
-    "keywords": [
-      "icici",
-      "icicibank"
-    ],
-    "domains": [
-      "icicibank.com",
-      "icici.com"
-    ]
+    "keywords": ["icici", "icicibank"],
+    "domains": ["icicibank.com", "icici.com"]
   },
   {
     "name": "State Bank of India",
-    "keywords": [
-      "sbi",
-      "onlinesbi",
-      "statebankofindia"
-    ],
-    "domains": [
-      "sbi.co.in",
-      "onlinesbi.sbi",
-      "onlinesbi.com",
-      "sbi.bank.in"
-    ]
+    "keywords": ["sbi", "onlinesbi", "statebankofindia"],
+    "domains": ["sbi.co.in", "onlinesbi.sbi", "onlinesbi.com", "sbi.bank.in"]
   },
   {
     "name": "Paytm",
-    "keywords": [
-      "paytm"
-    ],
-    "domains": [
-      "paytm.com",
-      "paytmbank.com"
-    ]
+    "keywords": ["paytm"],
+    "domains": ["paytm.com", "paytmbank.com"]
   },
   {
     "name": "Flipkart",
-    "keywords": [
-      "flipkart"
-    ],
-    "domains": [
-      "flipkart.com"
-    ]
+    "keywords": ["flipkart"],
+    "domains": ["flipkart.com"]
   },
   {
     "name": "Spotify",
-    "keywords": [
-      "spotify"
-    ],
-    "domains": [
-      "spotify.com"
-    ]
+    "keywords": ["spotify"],
+    "domains": ["spotify.com"]
   },
   {
     "name": "eBay",
-    "keywords": [
-      "ebay"
-    ],
-    "domains": [
-      "ebay.com",
-      "ebay.in",
-      "ebay.co.uk"
-    ]
+    "keywords": ["ebay"],
+    "domains": ["ebay.com", "ebay.in", "ebay.co.uk"]
   },
   {
     "name": "Walmart",
-    "keywords": [
-      "walmart"
-    ],
-    "domains": [
-      "walmart.com"
-    ]
+    "keywords": ["walmart"],
+    "domains": ["walmart.com"]
   },
   {
     "name": "Steam",
-    "keywords": [
-      "steampowered",
-      "steamcommunity"
-    ],
-    "domains": [
-      "steampowered.com",
-      "steamcommunity.com"
-    ]
+    "keywords": ["steampowered", "steamcommunity"],
+    "domains": ["steampowered.com", "steamcommunity.com"]
   },
   {
     "name": "GitHub",
-    "keywords": [
-      "github"
-    ],
-    "domains": [
-      "github.com"
-    ]
+    "keywords": ["github"],
+    "domains": ["github.com"]
   },
   {
     "name": "Norton",
-    "keywords": [
-      "nortonlifelock",
-      "nortonsupport"
-    ],
-    "domains": [
-      "norton.com",
-      "nortonlifelock.com",
-      "gen.digital"
-    ]
+    "keywords": ["nortonlifelock", "nortonsupport"],
+    "domains": ["norton.com", "nortonlifelock.com", "gen.digital"]
   },
   {
     "name": "McAfee",
-    "keywords": [
-      "mcafee"
-    ],
-    "domains": [
-      "mcafee.com"
-    ]
+    "keywords": ["mcafee"],
+    "domains": ["mcafee.com"]
   },
   {
     "name": "Geek Squad",
-    "keywords": [
-      "geeksquad"
-    ],
-    "domains": [
-      "geeksquad.com",
-      "bestbuy.com"
-    ]
+    "keywords": ["geeksquad"],
+    "domains": ["geeksquad.com", "bestbuy.com"]
   },
   {
     "name": "IRS",
-    "keywords": [
-      "irs"
-    ],
-    "domains": [
-      "irs.gov"
-    ]
+    "keywords": ["irs"],
+    "domains": ["irs.gov"]
   },
   {
     "name": "HMRC",
-    "keywords": [
-      "hmrc"
-    ],
-    "domains": [
-      "hmrc.gov.uk",
-      "gov.uk"
-    ]
+    "keywords": ["hmrc"],
+    "domains": ["hmrc.gov.uk", "gov.uk"]
   },
   {
     "name": "Income Tax Department",
-    "keywords": [
-      "incometax",
-      "incometaxindia"
-    ],
-    "domains": [
-      "incometax.gov.in",
-      "incometaxindia.gov.in"
-    ]
+    "keywords": ["incometax", "incometaxindia"],
+    "domains": ["incometax.gov.in", "incometaxindia.gov.in"]
   },
   {
     "name": "WeTransfer",
-    "keywords": [
-      "wetransfer"
-    ],
-    "domains": [
-      "wetransfer.com"
-    ]
+    "keywords": ["wetransfer"],
+    "domains": ["wetransfer.com"]
   }
 ]
