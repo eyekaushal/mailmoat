@@ -19,6 +19,7 @@
 9. [Testing strategy](#9-testing-strategy)
 10. [Definition of done](#10-definition-of-done)
 11. [Progress tracker](#11-progress-tracker)
+12. [v1.1 Distribution (after v1.0.0)](#12-v11-distribution-after-v100)
 
 ---
 
@@ -51,7 +52,10 @@ Hours are Claude-Code-paced estimates including your review time. **Total ≈ 37
 
 **Things you do in parallel (not Claude):**
 - **Day 1 morning:** create the Google Cloud project + OAuth client (guide in B03) and a test Gmail account; create an Anthropic API key with a small spend limit.
+- **Day 3 (before B23):** in the Google Cloud project from B03, set the OAuth consent screen to **In production** (do **not** submit for verification) and hand over the client ID/secret for mailmoat's built-in config (`DISTRIBUTION.md` §1). Save the Happenstance reference screenshots to `notes/ux-references/` for B25.
 - **Day 4:** live smoke test on Kaushal's own account; record the demo video.
+
+> **Status 3 Oct:** about one branch behind (attack lab not started). Remaining v1 work ≈ 21 h against ~20 h available — if a day overruns, cut strictly from §6. Distribution decisions from 3 Oct (shared Google client, guided setup) add ~1 h to B23/B25; the Mac app and website are **v1.1** (§12), not v1.
 
 ---
 
@@ -139,9 +143,9 @@ Fixes after release: `bugfix/<desc>` branches → `v1.0.1`.
 | **B20** | assistant-features | `MeetingService` | F7 | 1 | "Friday at 5" → conflict-checked proposal; attendees policy-checked |
 | **B21** | assistant-features | `ChatService`, `ChatRepository`, 3 intents, step streaming, preview payloads | F8 | 1.25 | "find time … after my flight" works end-to-end in a test |
 | **B22** | assistant-features | `SafeHttpClient`, `UnsubscribeService`, `SummaryService` | F9, F14 | 1 | SSRF tests pass; risky senders never contacted |
-| **B23** | api-server | `App`, `SecurityMiddleware`, 10 route classes, SSE, `main.js` | §13, §9 | 1.5 | Routes tested; CSRF + DNS-rebinding tests pass (**Milestone 2**) |
+| **B23** | api-server | `App`, `SecurityMiddleware`, 10 route classes, SSE, `main.js`; **built-in Google client** (committed config default, `.env` override; `GoogleRoutes` start Connect Google with it — users never enter a client) | §13, §9, F1.4 | 1.75 | Routes tested; CSRF + DNS-rebinding tests pass; connect works with no user-supplied client (**Milestone 2**) |
 | **B24** 🎨 | web-ui | Vite/Tailwind/router scaffold, `ApiClient`, layout, sidebar, shared components | §8 | 1.25 | Shell renders; CSP clean |
-| **B25** 🎨 | web-ui | Setup wizard + Settings | F1 | 1.25 | New user connects without editing files |
+| **B25** 🎨 | web-ui | Setup wizard + Settings: **two Anthropic key flows** ("have an account?" yes → Console keys page + screenshot; no → sign up / add credits / create key steps + cost estimate; both → paste + Test ✓), **guided warning screen** (why Google says "unverified", where to click) → **Connect Google** button, rules step. Happenstance-style guidance (`notes/ux-references/`) | F1, `DISTRIBUTION.md` | 1.75 | New user connects Anthropic and Google without editing files or creating a Google client |
 | **B26** 🎨 | web-ui | Inbox (tabs, list, detail + risk banner), Assistant (Rules/Test/History), Approvals | F4, F5, F6.3 | 1.5 | Pipeline trace visible; no remote loads |
 | **B27** 🎨 | web-ui | Chat panel + preview cards, Bulk Unsubscribe, Security Center, Today card | F8, F9, F11, F14 | 1.5 | All PRD §8 screens work (**Milestone 3**) |
 | **B28** | hardening-and-release | Live attack-lab run, threshold tuning, security self-review, `npm audit` clean, live smoke test on Kaushal's account | F13, §16 | 2 | Release gate met (0% misuse/exfil/poison; ≥ 95% detection; ≤ 3% FP) |
@@ -188,8 +192,8 @@ Not a watered-down v1 — this is the order in which **extras** move to v1.0.1 i
 - **Attack lab:** corpus = `name.eml` + `name.expected.json`; live mode records model outputs to fixtures; CI replays fixtures for free; release gate 0% misuse/exfil/poison.
 - **Agent & policy:** Planner sees only typed fields and handles; `TaggedValue` provenance; Policy Engine implements SECURITY_APPROACH §7.6 exactly.
 - **Assistant features:** rules matched in code from typed fields; replies written by the quarantined Drafter; meeting proposals via free/busy; chat with 3 intents; SSRF-safe one-click unsubscribe.
-- **API server:** bind `127.0.0.1`; Host/Origin checks; CSRF; CSP; SSE for chat.
-- **Web UI 🎨 (Fable 5):** Inbox Zero-style Assistant page and label tabs; Superhuman-style chat with Edit/Save cards; risk = icon + text; AI text plain only; email HTML only in sandboxed frame.
+- **API server:** bind `127.0.0.1`; Host/Origin checks; CSRF; CSP; SSE for chat. Built-in Google OAuth client is a committed default (desktop-client secret is non-confidential; PKCE + loopback protect it); `.env` may override for development.
+- **Web UI 🎨 (Fable 5):** Inbox Zero-style Assistant page and label tabs; Superhuman-style chat with Edit/Save cards; risk = icon + text; AI text plain only; email HTML only in sandboxed frame. Setup wizard follows Happenstance's guided-connector style: explain each external step with a screenshot and one "Continue to …" button.
 - **Hardening & release:** live lab run, tuning only by measurement, `npm audit`, live smoke test, README with results, tag.
 
 ---
@@ -202,7 +206,7 @@ mailmoat/
 │   ├── workflows/ci.yml
 │   └── pull_request_template.md
 ├── docs/
-│   ├── PRD.md · PLAN.md · SECURITY_APPROACH.md · INBOX_ZERO_TEARDOWN.md
+│   ├── PRD.md · PLAN.md · SECURITY_APPROACH.md · DISTRIBUTION.md · INBOX_ZERO_TEARDOWN.md
 │   └── setup/  google-oauth.md
 ├── notes/                                   (gitignored — private planning)
 ├── shared/
@@ -377,3 +381,21 @@ Claude updates this table at the end of every block. New sessions resume from th
 | B27 | ☐ | |
 | B28 | ☐ | |
 | B29 | ☐ | |
+| D01 | ☐ | v1.1 — see §12 |
+| D02 | ☐ | v1.1 — see §12 |
+| D03 | ☐ | v1.1 — see §12 |
+
+---
+
+## 12. v1.1 Distribution (after v1.0.0)
+
+Decided 3 Oct 2026; background and costs in `DISTRIBUTION.md`. Starts only after `v1.0.0` is tagged. **Total cost: $0** (no Apple Developer Program, no Google verification).
+
+| Block | Branch | What gets built | Hrs | Done when |
+|---|---|---|---|---|
+| **D01** | `chore/website` | GitHub Pages site: what mailmoat does, why it's safe, Download button (latest GitHub Release), first-launch guide with screenshots (System Settings → Privacy & Security → Open Anyway), privacy policy | 2 | Site live; download link points to the latest release |
+| **D02** | `feature/desktop-app` | Electron wrapper: `server/` runs in Electron's Node, `web/` is the window; check Electron's Node supports `node:sqlite` (else swap `Database.js` only); window hardening (context isolation, sandbox, no Node in the renderer, deny navigation/new windows); optional Keychain via `safeStorage`; **ad-hoc signed** `.dmg` via the build tool; no auto-update | 4 | `.dmg` installs on a second Mac via "Open Anyway"; attack lab still passes |
+| **D03** | `feature/desktop-app` | Release pipeline: GitHub Action builds the ad-hoc-signed `.dmg` on tag and attaches it to the GitHub Release; README + site link to it | 1 | Tagging `v1.1.0` publishes a downloadable `.dmg` |
+
+**Rules:** no Swift; no notarization; no auto-update; still local-first (no mailmoat server). The Google client stays unverified and **In production** while users stay under ~80 (Google's cap is 100).
+

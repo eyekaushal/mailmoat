@@ -6,11 +6,12 @@ mailmoat is a local-first AI email assistant for Gmail whose selling point is se
 1. `docs/SECURITY_APPROACH.md` — security design; wins every conflict.
 2. `docs/PRD.md` — features (F1–F14; F10 Slack is v2), stack, classes, data model, API.
 3. `docs/PLAN.md` — blocks, branches, schedule; **§11 is the progress tracker**.
+4. `docs/DISTRIBUTION.md` — how users get and set up mailmoat (shared Google client, guided Anthropic key, v1.1 Mac app); all $0.
 Read docs by section when a block needs them; do not re-read them in full.
 
 ## Session routine
 - Start: read `docs/PLAN.md §11`, continue with the first unchecked block (confirm with the user if unclear).
-- Per block: implement → run tests → update the §11 tracker row → post a summary of **≤ 10 lines**: what changed, how to verify, **suggested commit groups with Conventional Commit messages**.
+- Per block: implement → run tests → update the §11 tracker row → post a summary of **≤ 10 lines**: what changed, how to verify, and exactly **one `git add`, one `git commit` (Conventional Commit message), then `git push`** for the user to run. Never split a block into several commit groups.
 - Read files narrowly; keep test output quiet; **no subagents** unless the user asks.
 - If behind schedule, cut only from `PLAN.md §6`. Never cut core security.
 

@@ -1,6 +1,8 @@
 # Connect Google (Gmail + Calendar)
 
-mailmoat runs on your machine and talks to Google with **your own** OAuth client, so no third party ever holds access to your mail. Setup takes about 10 minutes.
+> **Who needs this guide:** only the mailmoat maintainer (Kaushal), **once**. Since 3 Oct 2026 mailmoat ships one built-in OAuth client, so users just click **Connect Google** (see [`../DISTRIBUTION.md`](../DISTRIBUTION.md)). Developers who want their own client can still follow it and put the values in `.env`.
+
+mailmoat runs on the user's machine; the OAuth client only identifies the app to Google, so no third party ever holds access to anyone's mail. Setup takes about 10 minutes.
 
 ## 1. Create the Google Cloud project
 
@@ -12,7 +14,7 @@ mailmoat runs on your machine and talks to Google with **your own** OAuth client
 1. **Google Auth Platform → Get started**: app name `mailmoat`, your support email, audience **External**, your contact email → **Create**.
 2. **Audience → Test users → Add users**: add every Gmail address you will connect.
 
-> **Testing vs production:** while the app is in *Testing* status, Google expires your sign-in after **7 days** and you must reconnect. For long-term personal use, choose **Publish app** on the Audience page; Google then shows an "unverified app" warning on the consent screen, which is expected for a personal OAuth client.
+> **Testing vs production:** while the app is in *Testing* status, Google expires sign-ins after **7 days** and only listed test users can connect. For the shared mailmoat client, choose **Publish app** on the Audience page (status **In production**) and do **not** submit for verification: Google's personal-use exception covers fewer than 100 users, who see an "unverified app" warning that the setup wizard explains.
 
 ## 3. Create the OAuth client
 
