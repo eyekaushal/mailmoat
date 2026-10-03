@@ -1,6 +1,5 @@
-import { MailOpen } from 'lucide-react';
 import { useNavigate, useParams, useSearchParams } from 'react-router';
-import { EmptyState } from '../../components/EmptyState.jsx';
+import { TodayCard } from '../today/TodayCard.jsx';
 import { EmailDetail } from './EmailDetail.jsx';
 import { EmailList } from './EmailList.jsx';
 import { LabelTabs, queryForTab } from './LabelTabs.jsx';
@@ -40,11 +39,7 @@ export function InboxPage() {
               onClose={() => navigate(`/inbox${suffix}`)}
             />
           ) : (
-            <EmptyState
-              icon={MailOpen}
-              title="Select an email"
-              description="Risk, summary and the full pipeline trace appear here."
-            />
+            <TodayCard />
           )}
         </section>
       </div>

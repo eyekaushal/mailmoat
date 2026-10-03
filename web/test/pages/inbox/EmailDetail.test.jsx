@@ -64,7 +64,7 @@ describe('EmailDetail', () => {
     expect(document.querySelector('b')).toBeNull();
     expect(screen.getByText('bank.com')).toBeTruthy();
     expect(screen.getByText('evil.example')).toBeTruthy();
-    expect(screen.queryByRole('link')).toBeNull();
+    expect(screen.queryByRole('link', { name: /evil\.example/ })).toBeNull();
     expect(screen.getByText('S14')).toBeTruthy();
     expect(screen.getByText(/1 hidden item removed/)).toBeTruthy();
     expect(screen.getByText(/Replies would go to/).textContent).toContain('other@evil.example');

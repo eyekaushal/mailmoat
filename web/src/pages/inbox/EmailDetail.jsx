@@ -3,6 +3,7 @@ import {
   ArrowLeft,
   Code2,
   FileText,
+  MessageSquare,
   Paperclip,
   PenLine,
   ShieldCheck,
@@ -12,6 +13,7 @@ import {
   EyeOff,
 } from 'lucide-react';
 import { useState } from 'react';
+import { Link } from 'react-router';
 import { useSWRConfig } from 'swr';
 import { Button } from '../../components/Button.jsx';
 import { CategoryBadge } from '../../components/CategoryBadge.jsx';
@@ -369,6 +371,12 @@ export function EmailDetail({ gmailId, onClose }) {
             <UserCheck aria-hidden="true" className="size-4" />{' '}
             {sender.trusted ? 'Remove trust' : 'Mark trusted'}
           </Button>
+          <Link
+            to={`/chat?emailId=${gmailId}`}
+            className="inline-flex items-center gap-2 rounded-md border border-line px-3 py-2 text-sm font-medium hover:bg-surface-2"
+          >
+            <MessageSquare aria-hidden="true" className="size-4" /> Ask about this email
+          </Link>
           {verdict && risky && (
             <Button variant="ghost" onClick={feedback} disabled={busy !== null}>
               {notPhishing ? 'Undo “not phishing”' : 'Report not phishing'}

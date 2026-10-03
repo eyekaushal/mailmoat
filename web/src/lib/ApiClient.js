@@ -54,6 +54,63 @@ export class ApiClient {
     return this.#request('DELETE', path);
   }
 
+  /**
+   * A POST whose reply is a Server-Sent-Events stream (the chat). Each `event:`/`data:` block is
+   * handed to `onEvent(name, data)` as it arrives; resolves when the server ends the stream.
+   * @param {string} path
+   * @param {unknown} body
+   * @param {(name: string, data: unknown) => void} onEvent
+   */
+  async stream(path, body, onEvent) {
+    const response = await this.#fetch(this.#baseUrl + path, {
+      method: 'POST',
+      headers: {
+        Accept: 'text/event-stream',
+        'Content-Type': JSON_TYPE,
+        'X-CSRF-Token': await this.#csrfToken(),
+      },
+      credentials: 'same-origin',
+      body: JSON.stringify(body),
+    });
+    if (!response.ok) {
+      const data = await ApiClient.#parse(response);
+      throw new ApiError(data?.error ?? response.statusText, { status: response.status, path });
+    }
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    for (;;) {
+      const { value, done } = await reader.read();
+      buffer += done ? '' : decoder.decode(value, { stream: true });
+      let boundary;
+      while ((boundary = buffer.indexOf('\n\n')) !== -1) {
+        ApiClient.#dispatch(buffer.slice(0, boundary), onEvent);
+        buffer = buffer.slice(boundary + 2);
+      }
+      if (done) {
+        if (buffer.trim()) ApiClient.#dispatch(buffer, onEvent);
+        return;
+      }
+    }
+  }
+
+  static #dispatch(block, onEvent) {
+    let name = 'message';
+    const data = [];
+    for (const line of block.split('\n')) {
+      if (line.startsWith('event:')) name = line.slice(6).trim();
+      else if (line.startsWith('data:')) data.push(line.slice(5).trim());
+    }
+    if (data.length === 0) return;
+    let parsed;
+    try {
+      parsed = JSON.parse(data.join('\n'));
+    } catch {
+      parsed = data.join('\n');
+    }
+    onEvent(name, parsed);
+  }
+
   async #request(method, path, body, retried = false) {
     const headers = { Accept: JSON_TYPE };
     if (body !== undefined) headers['Content-Type'] = JSON_TYPE;
