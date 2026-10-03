@@ -31,6 +31,7 @@ import { LlmClient } from '../src/llm/LlmClient.js';
 import { ModelConfig } from '../src/llm/ModelConfig.js';
 import { PolicyEngine } from '../src/policy/PolicyEngine.js';
 import { OrganizeRule } from '../src/policy/rules/OrganizeRule.js';
+import { BlockedSenderFilter } from '../src/rules/BlockedSenderFilter.js';
 import { PredefinedRules } from '../src/rules/PredefinedRules.js';
 import { RuleEngine } from '../src/rules/RuleEngine.js';
 import { SecurityPipeline } from '../src/security/SecurityPipeline.js';
@@ -78,12 +79,11 @@ if (!config.anthropicApiKey) {
 const gmail = new GmailClient(googleAuth);
 const emails = new EmailRepository(db);
 const contacts = new ContactRepository(db);
+const senders = new SenderRepository(db);
 const importer = new MessageImporter({
   gmail,
   emails,
-  history: new ContactHistoryBuilder(contacts, new SenderRepository(db), () =>
-    googleAuth.connectedEmail(),
-  ),
+  history: new ContactHistoryBuilder(contacts, senders, () => googleAuth.connectedEmail()),
   mapper: new EmailMetadataMapper(),
   logger,
 });
@@ -120,6 +120,7 @@ const pipeline = new SecurityPipeline({
 });
 const ruleEngine = new RuleEngine({
   pipeline,
+  blocked: new BlockedSenderFilter({ senders, gmail, auditLog }),
   rules: new PredefinedRules(),
   repository: new RuleRepository(db),
   emails,

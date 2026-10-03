@@ -25,6 +25,7 @@ export class RuleEngine {
   /**
    * @param {object} deps
    * @param {Pick<import('../security/SecurityPipeline.js').SecurityPipeline, 'process'>} deps.pipeline
+   * @param {Pick<import('./BlockedSenderFilter.js').BlockedSenderFilter, 'handle'>} deps.blocked
    * @param {import('./PredefinedRules.js').PredefinedRules} deps.rules
    * @param {import('../db/repositories/RuleRepository.js').RuleRepository} deps.repository
    * @param {Pick<import('../db/repositories/EmailRepository.js').EmailRepository, 'latestInThread'|'listProcessedSince'>} deps.emails
@@ -93,13 +94,24 @@ export class RuleEngine {
   }
 
   /**
-   * GmailSync processor: security pipeline first, then the rules.
+   * GmailSync processor: blocked senders are filed away first (F9.4), then the security
+   * pipeline, then the rules.
    * @param {import('../sync/EmailMetadataMapper.js').EmailRecord} record
-   * @returns {Promise<import('../security/SecurityPipeline.js').Analysis & { rules: RuleRun[] }>}
+   * @returns {Promise<import('../security/SecurityPipeline.js').Analysis & { rules: RuleRun[], blocked: boolean }>}
    */
   async process(record) {
+    if (await this.#deps.blocked.handle(record)) {
+      return {
+        email: null,
+        signals: [],
+        reader: { failed: false, form: null },
+        verdict: null,
+        rules: [],
+        blocked: true,
+      };
+    }
     const analysis = await this.#deps.pipeline.process(record);
-    return { ...analysis, rules: await this.apply(record, analysis) };
+    return { ...analysis, rules: await this.apply(record, analysis), blocked: false };
   }
 
   /**

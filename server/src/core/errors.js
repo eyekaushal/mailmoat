@@ -66,3 +66,9 @@ export class MeetingError extends MailmoatError {}
 
 /** A chat does not exist, or a chat message could not be handled. */
 export class ChatError extends MailmoatError {}
+
+/** An outbound HTTP request was refused by the SSRF checks or failed. */
+export class HttpError extends MailmoatError {}
+
+/** A sender could not be unsubscribed, blocked or otherwise handled. */
+export class UnsubscribeError extends MailmoatError {}

@@ -122,6 +122,7 @@ function engine({ pipelineResult = analysis(), gmailFailure = false } = {}) {
   };
   const auditLog = { record: (entry) => audit.push(entry) };
   return new RuleEngine({
+    blocked: { handle: async (record) => record.fromAddr === 'spam@blocked.example' },
     pipeline: {
       async process(record) {
         pipelineCalls.push(record.gmailId);
@@ -385,6 +386,7 @@ describe('RuleEngine.process', () => {
       logger: new Logger({ level: 'error', sink: () => {} }),
     });
     const denied = new RuleEngine({
+      blocked: { handle: async () => false },
       pipeline: { process: async (r) => e.process(r) },
       rules: new PredefinedRules(),
       repository: new RuleRepository(db),
@@ -406,6 +408,24 @@ describe('RuleEngine.process', () => {
     const record = store('m1');
     const runs = await denied.apply(record, analysis({ form: form({ category: 'receipt' }) }));
     expect(runs[0]).toMatchObject({ status: 'failed', actionsTaken: [] });
+  });
+});
+
+describe('RuleEngine.process with a blocked sender', () => {
+  it('skips the pipeline and the rules for mail the blocked-sender filter handled', async () => {
+    const e = engine();
+    const record = store('m1');
+    const result = await e.process({ ...record, fromAddr: 'spam@blocked.example' });
+    expect(result).toEqual({
+      email: null,
+      signals: [],
+      reader: { failed: false, form: null },
+      verdict: null,
+      rules: [],
+      blocked: true,
+    });
+    expect(pipelineCalls).toEqual([]);
+    expect((await e.process(record)).blocked).toBe(false);
   });
 });
 

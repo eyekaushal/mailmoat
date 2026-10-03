@@ -3,4 +3,5 @@ export const SECURITY_LABELS = Object.freeze({
   SUSPICIOUS: 'mailmoat/⚠ Suspicious',
   DANGEROUS: 'mailmoat/⛔ Dangerous',
   INJECTION: 'mailmoat/Injection attempt',
+  BLOCKED: 'mailmoat/Blocked',
 });
