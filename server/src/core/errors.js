@@ -63,3 +63,6 @@ export class DraftError extends MailmoatError {}
 
 /** A meeting could not be proposed or saved: unknown or risky email, no times, or policy denied. */
 export class MeetingError extends MailmoatError {}
+
+/** A chat does not exist, or a chat message could not be handled. */
+export class ChatError extends MailmoatError {}

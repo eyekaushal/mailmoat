@@ -70,14 +70,25 @@ export class ApprovalService {
 
   /** What the Approvals page shows: the exact action, content, data sources and reason. */
   listPending() {
-    return this.#approvals.listPending().map((row) => ({
+    return this.#approvals.listPending().map((row) => this.#view(row));
+  }
+
+  /** One approval in the same shape, whatever its status; undefined if unknown. */
+  get(id) {
+    const row = this.#approvals.get(id);
+    return row && this.#view(row);
+  }
+
+  #view(row) {
+    return {
       id: row.id,
       tool: row.kind,
+      status: row.status,
       reason: row.payload.reason,
       emailIds: row.payload.emailIds,
       args: row.payload.args,
       requestedAt: row.requestedAt,
-    }));
+    };
   }
 
   /**
