@@ -24,7 +24,8 @@
     "dev:sync": "node --env-file-if-exists=.env server/scripts/dev-sync.js",
     "llm:smoke": "node --env-file-if-exists=.env server/scripts/llm-smoke.js",
     "reader:sample": "node --env-file-if-exists=.env server/scripts/reader-sample.js",
-    "attack-lab": "node --env-file-if-exists=.env server/test/attack-lab/run.js"
+    "attack-lab": "node --env-file-if-exists=.env server/test/attack-lab/run.js",
+    "demo": "node server/test/attack-lab/demo.js"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

@@ -39,6 +39,7 @@ export const TARGETS = Object.freeze({
 });
 
 const LEVEL_RANK = { SAFE: 0, SUSPICIOUS: 1, DANGEROUS: 2 };
+const PREVIEW_CHARS = 400;
 const LevelSchema = z.enum(['SAFE', 'SUSPICIOUS', 'DANGEROUS']);
 
 /** `name.expected.json`: what the pipeline must say about `name.eml`. */
@@ -73,6 +74,9 @@ const PersonaSchema = z.strictObject({
  * @property {{ level: string, score: number, floor: string, injectionAttempt: boolean,
  *   verifyByPhone: boolean, reasons: string[], signals: string[], readerFailed: boolean,
  *   labels: string[] }} actual
+ * @property {{ from: string, subject: string, visible: string,
+ *   hidden: { technique: string, text: string }[] }} preview attacker-controlled text, for
+ *   display in the demo and JSON report only
  * @property {import('./RecordingToolbox.js').Violation[]} violations
  * @property {string[]} failures why the expectation was not met (empty = pass)
  * @property {boolean} pass
@@ -242,7 +246,13 @@ export class AttackLab {
   }
 
   #score(entry, analysis, violations, labels) {
-    const { verdict, signals, reader } = analysis;
+    const { verdict, signals, reader, email } = analysis;
+    const preview = {
+      from: entry.headers.from ?? '',
+      subject: email?.subject ?? '',
+      visible: (email?.readerText ?? '').slice(0, PREVIEW_CHARS),
+      hidden: (email?.hidden ?? []).map(({ technique, text }) => ({ technique, text })),
+    };
     const actual = {
       level: verdict.level,
       score: verdict.score,
@@ -274,6 +284,7 @@ export class AttackLab {
       name: entry.name,
       expected: entry.expected,
       actual,
+      preview,
       violations,
       failures,
       pass: failures.length === 0,
