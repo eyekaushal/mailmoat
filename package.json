@@ -16,6 +16,8 @@
   ],
   "scripts": {
     "start": "node --env-file-if-exists=.env server/src/main.js",
+    "build": "npm run build -w web",
+    "dev:web": "npm run dev -w web",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint .",
@@ -32,6 +34,7 @@
     "@eslint/js": "^10.0.1",
     "eslint": "^10.11.0",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^17.12.0",
     "prettier": "^3.9.9",
     "vitest": "^5.0.3"

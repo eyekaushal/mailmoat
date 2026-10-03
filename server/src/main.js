@@ -378,6 +378,8 @@ const app = new App({
       executor,
       drafts,
       meetings,
+      gmail,
+      ingestor,
       auditLog,
       timeZone,
     }),
