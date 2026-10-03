@@ -19,7 +19,8 @@ mailmoat runs on the user's machine; the OAuth client only identifies the app to
 ## 3. Create the OAuth client
 
 1. **Clients → Create client** → type **Desktop app** → name `mailmoat local` → **Create**.
-2. Copy the **Client ID** and **Client secret** into `.env` in the repository root (never into `.env.example`):
+2. **Maintainer (the shared client users get):** paste the **Client ID** and **Client secret** into `server/src/config/builtInGoogleClient.js` and commit it (a Desktop-app secret is non-confidential; PKCE and the loopback redirect protect the sign-in). Set the publishing status to **In production** first (`DISTRIBUTION.md` §1).
+   **Developer (your own client):** put them in `.env` in the repository root instead (never into `.env.example`); `.env` overrides the built-in client:
 
 ```
 GOOGLE_CLIENT_ID=...apps.googleusercontent.com

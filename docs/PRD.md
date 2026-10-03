@@ -489,19 +489,21 @@ Schema changes go through numbered migration files.
 
 ## 13. Internal API
 
-All routes are under `/api`, JSON only, bound to `127.0.0.1`, protected by Host/Origin checks and CSRF on non-GET.
+All routes are under `/api`, JSON only, bound to `127.0.0.1`, protected by Host/Origin checks and CSRF on non-GET (the UI reads its session token from `GET /csrf` and sends it as `X-CSRF-Token`).
 
 | Area | Routes |
 |---|---|
-| Setup/settings | `GET /settings`, `PUT /settings`, `PUT /secrets/anthropic`, `POST /secrets/anthropic/test`, `GET /google/auth-url`, `GET /google/callback`, `POST /google/disconnect` |
-| Inbox | `GET /emails?label=&risk=&cursor=`, `GET /emails/:id`, `GET /emails/:id/trace`, `POST /emails/:id/archive`, `POST /emails/:id/trust-sender`, `POST /emails/:id/not-phishing` |
-| Rules | `GET /rules`, `PATCH /rules/:id`, `POST /rules/test`, `GET /rules/history`, `POST /rules/process-past` |
-| Chat | `POST /chat` (streams steps via Server-Sent Events), `GET /chats`, `DELETE /chats/:id` |
-| Approvals | `GET /approvals`, `POST /approvals/:id/approve`, `POST /approvals/:id/reject`, `PATCH /approvals/:id` (edit) |
-| Senders | `GET /senders`, `POST /senders/unsubscribe`, `POST /senders/block`, `POST /senders/keep`, `POST /senders/archive-all` |
-| Security | `GET /security/overview`, `GET /security/feed`, `GET /audit?filter=`, `GET /audit/export` |
+| Setup/settings | `GET /settings`, `PUT /settings`, `PUT /secrets/anthropic`, `DELETE /secrets/anthropic`, `POST /secrets/anthropic/test`, `GET /google/auth-url`, `GET /google/callback`, `POST /google/disconnect` |
+| Inbox | `GET /emails?label=&risk=&cursor=&limit=` (label = rule id), `GET /emails/counts`, `GET /emails/:id`, `GET /emails/:id/trace`, `POST /emails/:id/archive`, `POST /emails/:id/draft-reply`, `POST /emails/:id/propose-meeting`, `POST /emails/:id/save-meeting`, `POST /emails/:id/trust-sender`, `POST /emails/:id/not-phishing` |
+| Rules | `GET /rules`, `PATCH /rules/:id`, `POST /rules/test`, `GET /rules/history`, `POST /rules/process-past`, `GET /rules/process-past` (progress) |
+| Chat | `POST /chat` (streams steps via Server-Sent Events), `GET /chats`, `POST /chats`, `GET /chats/:id`, `DELETE /chats/:id`, `POST /chats/:id/decide` |
+| Approvals | `GET /approvals`, `GET /approvals/:id`, `POST /approvals/:id/approve`, `POST /approvals/:id/reject`, `PATCH /approvals/:id` (edit) |
+| Senders | `GET /senders`, `GET /senders/block-warning?address=`, `POST /senders/unsubscribe`, `POST /senders/block`, `POST /senders/keep`, `POST /senders/undo`, `POST /senders/archive-all` |
+| Security | `GET /security/overview?days=`, `GET /security/feed`, `GET /audit?filter=&subject=`, `GET /audit/export` |
 | Summary | `GET /summary/today` |
-| System | `GET /health`, `POST /data/delete-all` |
+| System | `GET /health`, `GET /csrf`, `POST /data/delete-all` (body `{ "confirm": "DELETE" }`) |
+
+Request bodies and queries are validated with the Zod schemas in `shared/src/schemas/api.js`. Typed errors map to 400 (validation, refused action), 404 (unknown resource), 409 (not connected / approval no longer pending), 502 (model or upstream failure); anything unexpected is a 500 whose details stay in the server log.
 
 ---
 

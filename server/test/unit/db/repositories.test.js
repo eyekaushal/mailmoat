@@ -1,7 +1,12 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { Database } from '../../../src/db/Database.js';
 import { Migrator } from '../../../src/db/Migrator.js';
+import { AuditLogRepository } from '../../../src/db/repositories/AuditLogRepository.js';
 import { ContactRepository } from '../../../src/db/repositories/ContactRepository.js';
+import { EmailRepository } from '../../../src/db/repositories/EmailRepository.js';
+import { RuleRepository } from '../../../src/db/repositories/RuleRepository.js';
+import { VerdictRepository } from '../../../src/db/repositories/VerdictRepository.js';
+import { storeEmail } from '../../helpers/inboxFixtures.js';
 import { SettingsRepository } from '../../../src/db/repositories/SettingsRepository.js';
 import { SyncStateRepository } from '../../../src/db/repositories/SyncStateRepository.js';
 
@@ -251,5 +256,134 @@ describe('MemoryRepository', () => {
     expect(repo.remove(id)).toBe(true);
     expect(repo.remove(id)).toBe(false);
     expect(repo.list()).toEqual([]);
+  });
+});
+
+describe('ContactRepository.setTrusted', () => {
+  it('stores the user-sourced trust flag, creating an unseen contact', () => {
+    const contacts = new ContactRepository(db);
+    contacts.setTrusted('New@Example.com', true, new Date('2026-10-01'));
+    expect(contacts.get('new@example.com')).toMatchObject({
+      domain: 'example.com',
+      trusted: true,
+      sentCount: 0,
+    });
+    contacts.recordSent('new@example.com', new Date('2026-10-02'));
+    expect(contacts.get('new@example.com')).toMatchObject({ trusted: true, sentCount: 1 });
+    contacts.setTrusted('new@example.com', false, new Date('2026-10-03'));
+    expect(contacts.get('new@example.com').trusted).toBe(false);
+  });
+});
+
+describe('VerdictRepository feedback, auth, counts and feed', () => {
+  it('keeps "not phishing" beside the verdict and exposes the stored auth results', () => {
+    const repos = { emails: new EmailRepository(db), verdicts: new VerdictRepository(db) };
+    storeEmail(repos, 'a', { level: 'SUSPICIOUS' });
+    expect(repos.verdicts.setFeedback('a', 'not_phishing')).toBe(true);
+    expect(repos.verdicts.get('a')).toMatchObject({
+      level: 'SUSPICIOUS',
+      userFeedback: 'not_phishing',
+    });
+    expect(repos.verdicts.setFeedback('missing', 'not_phishing')).toBe(false);
+    expect(repos.verdicts.auth('a')).toEqual({
+      spf: 'pass',
+      dkim: 'pass',
+      dkimDomain: 'acme-corp.com',
+      dmarc: 'pass',
+    });
+    expect(repos.verdicts.auth('missing')).toBeUndefined();
+  });
+
+  it('counts by level since a date and lists flagged mail newest first', () => {
+    const repos = { emails: new EmailRepository(db), verdicts: new VerdictRepository(db) };
+    storeEmail(repos, 'a', { at: new Date('2026-10-05T00:00:00Z') });
+    storeEmail(repos, 'b', {
+      level: 'DANGEROUS',
+      injectionAttempt: true,
+      at: new Date('2026-10-06T00:00:00Z'),
+    });
+    storeEmail(repos, 'c', { level: 'SUSPICIOUS', at: new Date('2026-09-01T00:00:00Z') });
+    expect(repos.verdicts.counts({ since: '2026-10-01T00:00:00.000Z' })).toEqual({
+      scanned: 2,
+      safe: 1,
+      suspicious: 0,
+      dangerous: 1,
+      injectionAttempts: 1,
+    });
+    expect(repos.verdicts.counts({ since: '2027-01-01T00:00:00.000Z' })).toEqual({
+      scanned: 0,
+      safe: 0,
+      suspicious: 0,
+      dangerous: 0,
+      injectionAttempts: 0,
+    });
+    expect(repos.verdicts.listFlagged().map((v) => v.gmailId)).toEqual(['b', 'c']);
+    expect(repos.verdicts.listFlagged({ limit: 1 })).toHaveLength(1);
+  });
+});
+
+describe('EmailRepository.page and unreadCounts', () => {
+  it('pages newest first by tab and risk, with a keyset cursor that survives equal dates', () => {
+    const rules = new RuleRepository(db);
+    rules.seed([{ id: 'fyi', name: 'FYI', actions: ['label'], isSecurity: false }]);
+    const repos = { emails: new EmailRepository(db), verdicts: new VerdictRepository(db), rules };
+    const date = '2026-10-05T00:00:00.000Z';
+    storeEmail(repos, 'a', { date, ruleIds: ['fyi'] });
+    storeEmail(repos, 'b', { date, level: 'DANGEROUS' });
+    storeEmail(repos, 'c', { date, ruleIds: ['fyi'], form: false });
+    storeEmail(repos, 'out', { date, direction: 'outbound' });
+
+    const first = repos.emails.page({ limit: 2 });
+    expect(first.items.map((e) => e.gmailId)).toEqual(['c', 'b']);
+    expect(first.items[0]).toMatchObject({
+      rules: ['fyi'],
+      category: null,
+      summary: null,
+      needsReply: false,
+    });
+    const rest = repos.emails.page({ limit: 2, cursor: first.nextCursor });
+    expect(rest.items.map((e) => e.gmailId)).toEqual(['a']);
+    expect(rest.nextCursor).toBeNull();
+    expect(repos.emails.page({ ruleId: 'fyi' }).items.map((e) => e.gmailId)).toEqual(['c', 'a']);
+    expect(repos.emails.page({ level: 'DANGEROUS' }).items.map((e) => e.gmailId)).toEqual(['b']);
+    expect(() => repos.emails.page({ cursor: 'bm9wZQ' })).toThrow('Invalid cursor');
+    expect(repos.emails.unreadCounts()).toEqual({
+      all: 3,
+      byRule: { fyi: 2 },
+      byLevel: { SAFE: 2, DANGEROUS: 1 },
+    });
+  });
+});
+
+describe('AuditLogRepository filters and counts', () => {
+  it('filters recent entries by event and subject, and counts by decision since a date', () => {
+    const audit = new AuditLogRepository(db);
+    audit.append({
+      ts: '2026-10-01T00:00:00Z',
+      actor: 'system',
+      event: 'policy_decision',
+      subject: 'send_email',
+      decision: 'DENY',
+    });
+    audit.append({
+      ts: '2026-10-02T00:00:00Z',
+      actor: 'system',
+      event: 'policy_decision',
+      subject: 'archive',
+      decision: 'ALLOW',
+    });
+    audit.append({
+      ts: '2026-10-03T00:00:00Z',
+      actor: 'user',
+      event: 'approval_decided',
+      subject: 'a1',
+    });
+    expect(audit.recent({ subject: 'a1' }).map((e) => e.event)).toEqual(['approval_decided']);
+    expect(audit.recent({ event: 'policy_decision', limit: 1 }).map((e) => e.subject)).toEqual([
+      'archive',
+    ]);
+    expect(audit.count({ event: 'policy_decision', decision: 'DENY' })).toBe(1);
+    expect(audit.count({ since: '2026-10-02T00:00:00Z' })).toBe(2);
+    expect(audit.count()).toBe(3);
   });
 });
