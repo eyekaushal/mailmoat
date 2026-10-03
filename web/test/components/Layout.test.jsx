@@ -25,6 +25,7 @@ function renderShell({ health, approvals, at = '/inbox' }) {
             <Route path="/inbox" element={<h1>Inbox screen</h1>} />
             <Route path="/approvals" element={<h1>Approvals screen</h1>} />
           </Route>
+          <Route path="/setup" element={<h1>Setup wizard</h1>} />
         </Routes>
       </MemoryRouter>
     </ApiProvider>,
@@ -42,7 +43,7 @@ const connected = {
 describe('Layout', () => {
   it('renders the seven screens in the sidebar and the current page', async () => {
     renderShell({ health: connected });
-    const nav = screen.getByRole('navigation', { name: 'Main' });
+    const nav = await screen.findByRole('navigation', { name: 'Main' });
     for (const { label } of NAV_ITEMS) expect(nav.textContent).toContain(label);
     expect(screen.getByText('Inbox screen')).toBeTruthy();
     expect(screen.getByRole('link', { name: /Inbox/ }).getAttribute('aria-current')).toBe('page');
@@ -51,19 +52,15 @@ describe('Layout', () => {
     expect(screen.getByText('Anthropic key set')).toBeTruthy();
   });
 
-  it('shows what is not connected yet and the pending approvals count', async () => {
-    renderShell({
-      health: {
-        ...connected,
-        google: { connected: false, email: null },
-        anthropic: { configured: false },
-      },
-      approvals: [{ id: 'a' }, { id: 'b' }],
-      at: '/approvals',
-    });
-    await waitFor(() => expect(screen.getByText('Google not connected')).toBeTruthy());
-    expect(screen.getByText('No Anthropic key')).toBeTruthy();
-    expect(screen.getByLabelText('2 pending').textContent).toBe('2');
+  it('shows the pending approvals count on the Approvals item', async () => {
+    renderShell({ health: connected, approvals: [{ id: 'a' }, { id: 'b' }], at: '/approvals' });
+    await waitFor(() => expect(screen.getByLabelText('2 pending').textContent).toBe('2'));
     expect(screen.getByText('Approvals screen')).toBeTruthy();
+  });
+
+  it('hands over to the setup wizard until both connections exist', async () => {
+    renderShell({ health: { ...connected, google: { connected: false, email: null } } });
+    await waitFor(() => expect(screen.getByText('Setup wizard')).toBeTruthy());
+    expect(screen.queryByText('Inbox screen')).toBeNull();
   });
 });
