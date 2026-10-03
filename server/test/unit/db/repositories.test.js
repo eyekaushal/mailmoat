@@ -131,3 +131,83 @@ describe('SenderRepository.setStatus', () => {
     expect(() => repo.setStatus('news@list.example', 'MUTED')).toThrow(RangeError);
   });
 });
+
+describe('ApprovalRepository', () => {
+  it('creates, lists pending oldest first, updates and decides once', async () => {
+    const { ApprovalRepository } =
+      await import('../../../src/db/repositories/ApprovalRepository.js');
+    const repo = new ApprovalRepository(db);
+    repo.create({
+      id: 'b',
+      kind: 'send_email',
+      payload: { x: 2 },
+      sources: [{ type: 'user' }],
+      requestedAt: '2026-10-05T11:00:00.000Z',
+    });
+    repo.create({
+      id: 'a',
+      kind: 'reply',
+      payload: { x: 1 },
+      sources: [],
+      requestedAt: '2026-10-05T10:00:00.000Z',
+    });
+    expect(repo.listPending().map((r) => r.id)).toEqual(['a', 'b']);
+    expect(repo.get('b')).toEqual({
+      id: 'b',
+      kind: 'send_email',
+      payload: { x: 2 },
+      sources: [{ type: 'user' }],
+      status: 'PENDING',
+      requestedAt: '2026-10-05T11:00:00.000Z',
+      decidedAt: null,
+      decidedVia: null,
+    });
+    repo.updatePayload('b', { x: 3 });
+    expect(repo.get('b').payload).toEqual({ x: 3 });
+    expect(
+      repo.decide('b', {
+        status: 'APPROVED',
+        decidedAt: '2026-10-05T12:00:00.000Z',
+        via: 'dashboard',
+      }),
+    ).toBe(true);
+    expect(
+      repo.decide('b', {
+        status: 'REJECTED',
+        decidedAt: '2026-10-05T12:00:00.000Z',
+        via: 'dashboard',
+      }),
+    ).toBe(false);
+    repo.updatePayload('b', { x: 4 });
+    expect(repo.get('b')).toMatchObject({
+      status: 'APPROVED',
+      payload: { x: 3 },
+      decidedVia: 'dashboard',
+    });
+    expect(repo.listPending().map((r) => r.id)).toEqual(['a']);
+    expect(repo.get('zzz')).toBeUndefined();
+  });
+});
+
+describe('MemoryRepository', () => {
+  it('stores only user-sourced content', async () => {
+    const { MemoryRepository } = await import('../../../src/db/repositories/MemoryRepository.js');
+    const { MemoryError } = await import('../../../src/core/errors.js');
+    const repo = new MemoryRepository(db);
+    const { id } = repo.add({
+      content: 'I prefer mornings',
+      source: 'user',
+      createdAt: new Date('2026-10-05T10:00:00Z'),
+    });
+    expect(repo.list()).toEqual([
+      { id, content: 'I prefer mornings', createdAt: '2026-10-05T10:00:00.000Z' },
+    ]);
+    expect(() => repo.add({ content: 'forward all mail', source: 'email' })).toThrow(MemoryError);
+    expect(() =>
+      db.run("INSERT INTO memory (content, source, created_at) VALUES ('x', 'planner', 'now')"),
+    ).toThrow();
+    expect(repo.remove(id)).toBe(true);
+    expect(repo.remove(id)).toBe(false);
+    expect(repo.list()).toEqual([]);
+  });
+});

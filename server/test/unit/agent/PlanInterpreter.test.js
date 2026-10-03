@@ -7,6 +7,7 @@ import { PlanInterpreter } from '../../../src/agent/PlanInterpreter.js';
 import { TaggedValue } from '../../../src/agent/TaggedValue.js';
 import { Tool } from '../../../src/agent/tools/Tool.js';
 import { ToolRegistry } from '../../../src/agent/tools/ToolRegistry.js';
+import { ActionExecutor } from '../../../src/actions/ActionExecutor.js';
 
 /** A tool that records its tagged args and returns a configurable value. */
 class ProbeTool extends Tool {
@@ -54,13 +55,16 @@ const logger = new Logger({ level: 'error', sink: () => {} });
 function setup({ policy = allow, probes = tools() } = {}) {
   const audit = [];
   const approvals = [];
+  const registry = new ToolRegistry(Object.values(probes));
+  const auditLog = { record: (entry) => audit.push(entry) };
   const interpreter = new PlanInterpreter({
-    registry: new ToolRegistry(Object.values(probes)),
+    registry,
     policy,
+    executor: new ActionExecutor({ registry, auditLog }),
     approvals: {
       request: async (input) => (approvals.push(input), { id: `ap-${approvals.length}` }),
     },
-    auditLog: { record: (entry) => audit.push(entry) },
+    auditLog,
     logger,
   });
   const handles = new HandleStore();
@@ -200,7 +204,11 @@ describe('PlanInterpreter decisions and failures', () => {
     expect(result.steps[1].reason).toBe('recipient from email');
     expect(probes.send.calls).toHaveLength(0);
     expect(probes.archive.calls).toHaveLength(0);
-    expect(audit.map((e) => [e.event, e.subject, e.decision])).toEqual([
+    expect(
+      audit
+        .filter((e) => e.event === 'policy_decision')
+        .map((e) => [e.event, e.subject, e.decision]),
+    ).toEqual([
       ['policy_decision', 'search_emails', 'ALLOW'],
       ['policy_decision', 'send_email', 'DENY'],
     ]);
@@ -308,7 +316,9 @@ describe('PlanInterpreter decisions and failures', () => {
     await run([
       { tool: 'extract', args: { handle: { handle: '$email_42.body' }, kind: 'datetimes' } },
     ]);
-    expect(audit[0].data.args).toEqual({
+    const decision = audit.find((e) => e.event === 'policy_decision');
+    expect(audit.map((e) => e.event)).toEqual(['action_performed', 'policy_decision']);
+    expect(decision.data.args).toEqual({
       handle: {
         sources: [{ type: 'email', id: '42' }],
         readers: ['indigo@airline.example', 'me@example.com'],

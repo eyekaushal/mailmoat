@@ -36,6 +36,7 @@ import { TaggedValue } from './TaggedValue.js';
 export class PlanInterpreter {
   #registry;
   #policy;
+  #executor;
   #approvals;
   #auditLog;
   #logger;
@@ -44,14 +45,16 @@ export class PlanInterpreter {
    * @param {{
    *   registry: import('./tools/ToolRegistry.js').ToolRegistry,
    *   policy: { decide(call: ToolCall): Decision | Promise<Decision> },
+   *   executor: Pick<import('../actions/ActionExecutor.js').ActionExecutor, 'perform'>,
    *   approvals: { request(input: { call: ToolCall, reason: string }): Promise<{ id: string }> },
    *   auditLog: Pick<import('../audit/AuditLog.js').AuditLog, 'record'>,
    *   logger: import('../core/Logger.js').Logger,
    * }} deps
    */
-  constructor({ registry, policy, approvals, auditLog, logger }) {
+  constructor({ registry, policy, executor, approvals, auditLog, logger }) {
     this.#registry = registry;
     this.#policy = policy;
+    this.#executor = executor;
     this.#approvals = approvals;
     this.#auditLog = auditLog;
     this.#logger = logger;
@@ -96,12 +99,10 @@ export class PlanInterpreter {
       const { id } = await this.#approvals.request({ call, reason: decision.reason });
       outcome.approvalId = id;
     } else if (decision.outcome === 'ALLOW') {
-      const result = await tool.execute(args, { now: session.now, timeZone: session.timeZone });
-      if (!(result instanceof TaggedValue)) {
-        throw new ToolError(`${tool.name} returned an untagged value`);
-      }
-      // Invariant 3: a result inherits the provenance of everything that went into the call.
-      outcome.result = TaggedValue.combine(result.value, [result, ...Object.values(args)]);
+      outcome.result = await this.#executor.perform(call, {
+        now: session.now,
+        timeZone: session.timeZone,
+      });
     } else if (decision.outcome !== 'DENY') {
       throw new ToolError(`Policy returned an unknown outcome: ${decision.outcome}`);
     }

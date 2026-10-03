@@ -97,6 +97,14 @@ export class TaggedValue {
     return this.readers.has(address.toLowerCase());
   }
 
+  /**
+   * Rebuilds a value stored with `toJSON` (e.g. a pending approval's arguments).
+   * @param {{ value: unknown, sources: Source[], readers: 'user-only'|'public'|string[] }} json
+   */
+  static fromJSON({ value, sources, readers }) {
+    return new TaggedValue(value, sources, readers);
+  }
+
   /** Plain data for the audit log and approval previews. */
   toJSON() {
     return {
