@@ -1,3 +1,5 @@
+export const SENDER_STATUSES = Object.freeze(['NONE', 'KEPT', 'UNSUBSCRIBED', 'BLOCKED']);
+
 /**
  * Per-sender statistics and unsubscribe/block status (Bulk Unsubscribe, PRD F9).
  */
@@ -21,6 +23,19 @@ export class SenderRepository {
          read_count = read_count + excluded.read_count,
          last_received = MAX(COALESCE(last_received, ''), excluded.last_received)`,
       [address.toLowerCase(), Number(isRead), at.toISOString()],
+    );
+  }
+
+  /**
+   * @param {string} address
+   * @param {'NONE'|'KEPT'|'UNSUBSCRIBED'|'BLOCKED'} status
+   */
+  setStatus(address, status) {
+    if (!SENDER_STATUSES.includes(status)) throw new RangeError(`Unknown sender status: ${status}`);
+    this.#db.run(
+      `INSERT INTO senders (address, status) VALUES (?, ?)
+       ON CONFLICT(address) DO UPDATE SET status = excluded.status`,
+      [address.toLowerCase(), status],
     );
   }
 

@@ -55,6 +55,37 @@ export class EmailRepository {
     return row && this.#toRecord(row);
   }
 
+  /**
+   * Metadata search for the agent's `search_emails` tool, newest first.
+   * @param {{ from?: string, direction?: 'inbound'|'outbound', since?: string, until?: string, limit?: number }} filter
+   *   `from` matches the address or the domain; `since`/`until` are ISO times
+   * @returns {import('../../sync/EmailMetadataMapper.js').EmailRecord[]}
+   */
+  search({ from, direction, since, until, limit = 200 } = {}) {
+    const where = [];
+    const params = [];
+    if (from) {
+      where.push('(from_addr = ? OR from_domain = ?)');
+      params.push(from.toLowerCase(), from.toLowerCase());
+    }
+    if (direction) {
+      where.push('direction = ?');
+      params.push(direction);
+    }
+    if (since) {
+      where.push('date >= ?');
+      params.push(since);
+    }
+    if (until) {
+      where.push('date <= ?');
+      params.push(until);
+    }
+    const clause = where.length > 0 ? `WHERE ${where.join(' AND ')}` : '';
+    return this.#db
+      .all(`SELECT * FROM emails ${clause} ORDER BY date DESC LIMIT ?`, [...params, limit])
+      .map((row) => this.#toRecord(row));
+  }
+
   /** New mail still waiting for the pipeline, oldest first; gives up after 5 failed attempts. */
   listPending(limit = 50) {
     return this.#db

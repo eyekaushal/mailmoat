@@ -39,3 +39,18 @@ export class LlmRefusalError extends LlmError {}
 
 /** The model answered, but not with output that passes our schema. Never trust partial output. */
 export class LlmOutputError extends LlmError {}
+
+/** The Planner produced no usable plan (model failure, refusal or invalid output). Nothing runs. */
+export class PlanError extends MailmoatError {}
+
+/** An opaque handle is malformed, unknown or could not be loaded. The step must be denied. */
+export class HandleError extends MailmoatError {}
+
+/** A tool is unknown, got invalid arguments or failed while running. The plan must stop. */
+export class ToolError extends MailmoatError {}
+
+/** An approval does not exist or is no longer pending. */
+export class ApprovalError extends MailmoatError {}
+
+/** A memory write was attempted with content that did not come from the user (invariant 7). */
+export class MemoryError extends MailmoatError {}
