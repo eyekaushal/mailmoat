@@ -18,11 +18,12 @@ export function realIngestor() {
 
 /**
  * Builds a raw RFC 822 message as Gmail would deliver it, with Google's Authentication-Results on top.
- * @param {{ from: string, replyTo?: string, subject: string, html?: string, text?: string, dmarc?: string, spf?: string, dkimDomain?: string }} mail
+ * @param {{ from: string, replyTo?: string, subject: string, html?: string, text?: string, dmarc?: string, spf?: string, dkimDomain?: string, messageId?: string }} mail
  */
 export function rawEmail({
   from,
   replyTo,
+  messageId,
   subject,
   html,
   text,
@@ -36,6 +37,7 @@ export function rawEmail({
     `Authentication-Results: mx.google.com; ${dkim}; spf=${spf} smtp.mailfrom=${fromDomain}; dmarc=${dmarc} header.from=${fromDomain}`,
     `From: ${from}`,
     ...(replyTo ? [`Reply-To: ${replyTo}`] : []),
+    ...(messageId ? [`Message-ID: ${messageId}`] : []),
     'To: kaushal@gmail.com',
     `Subject: ${subject}`,
     'MIME-Version: 1.0',

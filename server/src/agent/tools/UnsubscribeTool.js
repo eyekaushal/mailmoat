@@ -6,7 +6,7 @@ import { Tool } from './Tool.js';
 export class UnsubscribeTool extends Tool {
   #unsubscribes;
 
-  /** @param {{ unsubscribes: { unsubscribe(address: string): Promise<{ status: string }> } }} deps */
+  /** @param {{ unsubscribes: { unsubscribe(address: string): Promise<{ status: string, method?: string }> } }} deps */
   constructor({ unsubscribes }) {
     super({
       name: 'unsubscribe',
@@ -18,6 +18,9 @@ export class UnsubscribeTool extends Tool {
 
   async execute(args) {
     const result = await this.#unsubscribes.unsubscribe(args.sender.value);
-    return TaggedValue.fromOwnData({ status: result.status }, 'inbox');
+    return TaggedValue.fromOwnData(
+      { status: result.status, method: result.method ?? null },
+      'inbox',
+    );
   }
 }

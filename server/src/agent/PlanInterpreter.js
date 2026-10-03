@@ -15,7 +15,8 @@ import { TaggedValue } from './TaggedValue.js';
  *   handles: import('./HandleStore.js').HandleStore,
  *   now: Date,
  *   timeZone: string,
- * }} Session
+ *   onStep?: (event: { phase: 'start', step: number, tool: string } | ({ phase: 'end' } & StepOutcome)) => void,
+ * }} Session `onStep` lets chat stream progress; it never influences what runs
  * @typedef {{
  *   step: number, tool: string, decision: Decision['outcome'], reason: string,
  *   result: TaggedValue | null, approvalId: string | null,
@@ -71,6 +72,7 @@ export class PlanInterpreter {
     /** @type {StepOutcome[]} */
     const steps = [];
     for (const [index, step] of plan.steps.entries()) {
+      session.onStep?.({ phase: 'start', step: index, tool: step.tool });
       let outcome;
       try {
         outcome = await this.#runStep(index, step, results, session);
@@ -81,6 +83,7 @@ export class PlanInterpreter {
         this.#audit(outcome, {});
       }
       steps.push(outcome);
+      session.onStep?.({ phase: 'end', ...outcome });
       if (outcome.decision === 'DENY') return { status: 'stopped', message: plan.message, steps };
       if (outcome.decision === 'ASK') return { status: 'pending', message: plan.message, steps };
       results[index] = outcome.result;

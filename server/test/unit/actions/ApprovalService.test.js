@@ -77,6 +77,7 @@ describe('ApprovalService', () => {
       {
         id,
         tool: 'send_email',
+        status: 'PENDING',
         reason: 'needs approval',
         emailIds: ['42'],
         args: {

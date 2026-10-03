@@ -311,7 +311,7 @@ describe('sender and memory tools', () => {
       sender: 'news@list.example',
     });
     expect(calls).toEqual(['news@list.example']);
-    expect(result.value).toEqual({ status: 'UNSUBSCRIBED' });
+    expect(result.value).toEqual({ status: 'UNSUBSCRIBED', method: null });
   });
 
   it('block_sender sets BLOCKED', async () => {

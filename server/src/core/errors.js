@@ -54,3 +54,21 @@ export class ApprovalError extends MailmoatError {}
 
 /** A memory write was attempted with content that did not come from the user (invariant 7). */
 export class MemoryError extends MailmoatError {}
+
+/** A rule setting is invalid (unknown rule, security rule, disallowed action) or an action failed. */
+export class RuleError extends MailmoatError {}
+
+/** A reply could not be drafted: unknown or risky email, or the quarantined Drafter failed. */
+export class DraftError extends MailmoatError {}
+
+/** A meeting could not be proposed or saved: unknown or risky email, no times, or policy denied. */
+export class MeetingError extends MailmoatError {}
+
+/** A chat does not exist, or a chat message could not be handled. */
+export class ChatError extends MailmoatError {}
+
+/** An outbound HTTP request was refused by the SSRF checks or failed. */
+export class HttpError extends MailmoatError {}
+
+/** A sender could not be unsubscribed, blocked or otherwise handled. */
+export class UnsubscribeError extends MailmoatError {}

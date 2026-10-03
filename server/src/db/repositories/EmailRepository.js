@@ -86,6 +86,30 @@ export class EmailRepository {
       .map((row) => this.#toRecord(row));
   }
 
+  /**
+   * The newest message in a thread (the rules "To Reply" / "Awaiting Reply" need to know whether
+   * the user or the other party spoke last).
+   * @returns {import('../../sync/EmailMetadataMapper.js').EmailRecord | undefined}
+   */
+  latestInThread(threadId) {
+    const row = this.#db.get(
+      'SELECT * FROM emails WHERE thread_id = ? ORDER BY date DESC, gmail_id DESC LIMIT 1',
+      [threadId],
+    );
+    return row && this.#toRecord(row);
+  }
+
+  /**
+   * Mail the pipeline has already handled, oldest first, for "Process past emails" (PRD F4.5).
+   * @param {string} since ISO time
+   * @returns {import('../../sync/EmailMetadataMapper.js').EmailRecord[]}
+   */
+  listProcessedSince(since) {
+    return this.#db
+      .all('SELECT * FROM emails WHERE pending = 0 AND date >= ? ORDER BY date ASC', [since])
+      .map((row) => this.#toRecord(row));
+  }
+
   /** New mail still waiting for the pipeline, oldest first; gives up after 5 failed attempts. */
   listPending(limit = 50) {
     return this.#db

@@ -51,14 +51,16 @@ export class VerdictRepository {
       }
       if (verdict) {
         this.#db.run(
-          `INSERT OR REPLACE INTO verdicts (gmail_id, level, score, reasons_json, floor, created_at)
-           VALUES (?, ?, ?, ?, ?, ?)`,
+          `INSERT OR REPLACE INTO verdicts
+             (gmail_id, level, score, reasons_json, floor, injection_attempt, created_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?)`,
           [
             gmailId,
             verdict.level,
             verdict.score,
             JSON.stringify(verdict.reasons),
             verdict.floor,
+            Number(verdict.injectionAttempt),
             iso,
           ],
         );
@@ -67,7 +69,8 @@ export class VerdictRepository {
   }
 
   /**
-   * @returns {{ level: string, score: number, reasons: string[], floor: string, createdAt: string } | undefined}
+   * @returns {{ level: string, score: number, reasons: string[], floor: string,
+   *   injectionAttempt: boolean, createdAt: string } | undefined}
    */
   get(gmailId) {
     const row = this.#db.get('SELECT * FROM verdicts WHERE gmail_id = ?', [gmailId]);
@@ -77,6 +80,7 @@ export class VerdictRepository {
         score: row.score,
         reasons: JSON.parse(row.reasons_json),
         floor: row.floor,
+        injectionAttempt: row.injection_attempt === 1,
         createdAt: row.created_at,
       }
     );
