@@ -45,3 +45,6 @@ export class PlanError extends MailmoatError {}
 
 /** An opaque handle is malformed, unknown or could not be loaded. The step must be denied. */
 export class HandleError extends MailmoatError {}
+
+/** A tool is unknown, got invalid arguments or failed while running. The plan must stop. */
+export class ToolError extends MailmoatError {}

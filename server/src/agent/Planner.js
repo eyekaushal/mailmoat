@@ -1,19 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { z } from 'zod';
-import { RISK_LEVELS } from '@mailmoat/shared/constants/risk-levels';
-import {
-  ARG_NAME_PATTERN,
-  HANDLE_PATTERN,
-  PLAN_TOOLS,
-  PlanSchema,
-} from '@mailmoat/shared/schemas/plan';
-import {
-  MAX_PROPOSED_TIMES,
-  READER_CATEGORIES,
-  ReaderFormSchema,
-} from '@mailmoat/shared/schemas/reader-form';
+import { ARG_NAME_PATTERN, PLAN_TOOLS, PlanSchema } from '@mailmoat/shared/schemas/plan';
 import { ConfigError, LlmError, LlmRefusalError, PlanError } from '../core/errors.js';
-import { HandleStore } from './HandleStore.js';
+import { EmailFacts } from './EmailFacts.js';
 
 const SYSTEM_PROMPT = readFileSync(new URL('./prompts/planner.system.md', import.meta.url), 'utf8');
 const MAX_REQUEST_CHARS = 4_000;
@@ -37,44 +26,8 @@ const CatalogueSchema = z
   .min(1);
 
 /**
- * Exactly the typed fields the Planner may learn about an email (SECURITY_APPROACH §7.5).
- * Strict so that a new field cannot slip through without a deliberate change here.
- */
-const EmailFactsSchema = z.strictObject({
-  id: z.string().min(1),
-  handles: z.strictObject({
-    summary: z.string().regex(HANDLE_PATTERN),
-    body: z.string().regex(HANDLE_PATTERN),
-  }),
-  direction: z.enum(['inbound', 'outbound']),
-  from: z.strictObject({
-    address: z.email().nullable(),
-    domain: z
-      .string()
-      .regex(/^[a-z0-9.-]+$/)
-      .nullable(),
-  }),
-  date: z.iso.datetime(),
-  risk: z.strictObject({ level: z.enum(RISK_LEVELS) }).nullable(),
-  category: z.enum(READER_CATEGORIES).nullable(),
-  needs_reply: z.boolean().nullable(),
-  intents: ReaderFormSchema.shape.intents.nullable(),
-  meeting_request: z
-    .strictObject({
-      proposed_times: z
-        .array(z.iso.datetime({ offset: true, local: true }))
-        .max(MAX_PROPOSED_TIMES),
-    })
-    .nullable(),
-});
-
-/**
  * @typedef {{ name: string, description: string, args: { name: string, type: string, description: string, required: boolean }[] }} ToolDescription
- * @typedef {{
- *   record: import('../sync/EmailMetadataMapper.js').EmailRecord,
- *   form: import('@mailmoat/shared/schemas/reader-form').ReaderForm | null,
- *   verdict: { level: string } | null,
- * }} PlannerEmail
+ * @typedef {import('./EmailFacts.js').StoredEmail} PlannerEmail
  * @typedef {{ tool: string, args: Record<string, import('@mailmoat/shared/schemas/plan').PlanArgValue> }} PlanStep
  * @typedef {{ message: string, steps: PlanStep[] }} Plan
  */
@@ -158,32 +111,12 @@ export class Planner {
   /** Whitelists typed fields; anything free-text never enters the object. */
   #facts(emails) {
     if (emails.length > MAX_EMAILS) throw new PlanError('Too many emails in context');
-    return emails.map(({ record, form, verdict }) => {
-      const address = z.email().safeParse(record.fromAddr);
-      const candidate = {
-        id: record.gmailId,
-        handles: {
-          summary: HandleStore.emailHandle(record.gmailId, 'summary'),
-          body: HandleStore.emailHandle(record.gmailId, 'body'),
-        },
-        direction: record.direction,
-        from: {
-          address: address.success ? address.data : null,
-          domain: address.success ? record.fromDomain : null,
-        },
-        date: record.date,
-        risk: verdict ? { level: verdict.level } : null,
-        category: form?.category ?? null,
-        needs_reply: form?.needs_reply ?? null,
-        intents: form?.intents ?? null,
-        meeting_request: form?.meeting_request ?? null,
-      };
-      const parsed = EmailFactsSchema.safeParse(candidate);
-      if (!parsed.success) {
-        const paths = parsed.error.issues.map((issue) => issue.path.join('.'));
-        throw new PlanError(`Email facts failed validation at: ${paths.join(', ')}`);
+    return emails.map((email) => {
+      try {
+        return EmailFacts.from(email);
+      } catch (error) {
+        throw new PlanError('Stored email facts failed validation', { cause: error });
       }
-      return parsed.data;
     });
   }
 

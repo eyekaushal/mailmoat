@@ -38,7 +38,7 @@ describe('TaggedValue', () => {
     expect(both.sources).toEqual([{ type: 'user' }, { type: 'email', id: '42' }]);
     expect([...both.readers]).toEqual(['rahul@acme.example', 'me@example.com']);
 
-    const three = TaggedValue.combine('y', [both, other]);
+    const three = TaggedValue.combine('y', [both, other, typed]);
     expect(three.emailIds()).toEqual(['42', '43']);
     expect([...three.readers]).toEqual(['me@example.com']);
 

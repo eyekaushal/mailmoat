@@ -1,5 +1,6 @@
 /**
- * @typedef {{ type: 'user'|'email'|'contacts'|'calendar'|'memory'|'inbox', id?: string }} Source
+ * @typedef {{ type: 'user'|'planner'|'email'|'contacts'|'calendar'|'memory'|'inbox', id?: string }} Source
+ *   `planner`: text the Planner produced that is not in the user's request
  * @typedef {'user-only'|'public'|Set<string>} Readers
  *   `user-only`: never leaves the app; `public`: anywhere the user sends it; a Set: only those
  *   addresses (the user is always an implicit reader).
@@ -58,7 +59,13 @@ export class TaggedValue {
    */
   static combine(value, parts) {
     if (parts.length === 0) throw new TypeError('combine needs at least one part');
-    const sources = parts.flatMap((part) => part.sources);
+    const seen = new Set();
+    const sources = parts
+      .flatMap((part) => part.sources)
+      .filter((source) => {
+        const key = `${source.type}:${source.id ?? ''}`;
+        return seen.has(key) ? false : seen.add(key);
+      });
     const readers = parts.map((part) => part.readers).reduce(TaggedValue.#intersectReaders);
     return new TaggedValue(value, sources, readers);
   }
