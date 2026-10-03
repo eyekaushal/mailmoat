@@ -5,12 +5,20 @@ import { Layout } from './components/Layout.jsx';
 import { NAV_ITEMS } from './components/Sidebar.jsx';
 import { ApiClient } from './lib/ApiClient.js';
 import { ApiProvider } from './lib/useApi.js';
+import { ApprovalsPage } from './pages/approvals/ApprovalsPage.jsx';
+import { AssistantPage } from './pages/assistant/AssistantPage.jsx';
+import { InboxPage } from './pages/inbox/InboxPage.jsx';
 import { SettingsPage } from './pages/settings/SettingsPage.jsx';
 import { SetupWizard } from './pages/setup/SetupWizard.jsx';
 
 const client = new ApiClient();
 
-const PAGES = { '/settings': SettingsPage };
+const PAGES = {
+  '/inbox': InboxPage,
+  '/assistant': AssistantPage,
+  '/approvals': ApprovalsPage,
+  '/settings': SettingsPage,
+};
 
 // Screens arrive block by block (PLAN B26–B27); until then each route shows where it will live.
 function Placeholder({ label }) {
@@ -48,6 +56,7 @@ export function App() {
                 />
               );
             })}
+            <Route path="/inbox/:gmailId" element={<InboxPage />} />
             <Route path="*" element={<Navigate to="/inbox" replace />} />
           </Route>
         </Routes>

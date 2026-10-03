@@ -40,11 +40,11 @@ function Pairs({ entries }) {
  *   signals: { id: string, severity: string, reason: string }[],
  *   reader: { failed: boolean, form: Record<string, unknown> | null },
  *   verdict: { level: string, score: number, floor: string, reasons: string[] } | null,
- *   rules: { ruleId: string, actionsTaken: string[], status: string }[],
+ *   rules: { ruleId: string, actionsTaken: string[], status?: string }[],
  *   events: { id: number, ts: string, actor: string, event: string, decision?: string | null, reason?: string | null }[],
- * } }} props
+ * }, preview?: boolean }} props `preview` = the Test tab: rules that would run, nothing ran
  */
-export function PipelineTrace({ trace }) {
+export function PipelineTrace({ trace, preview = false }) {
   const { auth, signals, reader, verdict, rules, events } = trace;
   const form = reader.form;
   const intents = form ? Object.keys(form.intents ?? {}).filter((key) => form.intents[key]) : [];
@@ -134,7 +134,7 @@ export function PipelineTrace({ trace }) {
         )}
       </Section>
 
-      <Section title={`5 · Rules (${rules.length})`}>
+      <Section title={`5 · ${preview ? 'Rules that would run' : 'Rules'} (${rules.length})`}>
         {rules.length === 0 ? (
           <p className="text-muted">No rule matched.</p>
         ) : (
@@ -143,36 +143,40 @@ export function PipelineTrace({ trace }) {
               <li key={run.ruleId} className="flex flex-wrap items-center gap-2">
                 <span className="font-medium">{run.ruleId}</span>
                 <span className="text-muted">{run.actionsTaken.join(', ') || 'no actions'}</span>
-                <span
-                  className={`rounded px-1.5 py-0.5 text-[11px] ${run.status === 'done' ? 'bg-safe-soft text-safe' : 'bg-danger-soft text-danger'}`}
-                >
-                  {run.status}
-                </span>
+                {run.status && (
+                  <span
+                    className={`rounded px-1.5 py-0.5 text-[11px] ${run.status === 'done' ? 'bg-safe-soft text-safe' : 'bg-danger-soft text-danger'}`}
+                  >
+                    {run.status}
+                  </span>
+                )}
               </li>
             ))}
           </ul>
         )}
       </Section>
 
-      <Section title={`6 · Audit events (${events.length})`}>
-        {events.length === 0 ? (
-          <p className="text-muted">No events yet.</p>
-        ) : (
-          <ol className="space-y-1 font-mono text-xs">
-            {events.map((event) => (
-              <li key={event.id} className="flex flex-wrap gap-x-2">
-                <time dateTime={event.ts} className="text-muted">
-                  {event.ts.replace('T', ' ').slice(0, 19)}
-                </time>
-                <span>{event.actor}</span>
-                <span className="font-medium">{event.event}</span>
-                {event.decision && <span>{event.decision}</span>}
-                {event.reason && <span className="text-muted">{event.reason}</span>}
-              </li>
-            ))}
-          </ol>
-        )}
-      </Section>
+      {!preview && (
+        <Section title={`6 · Audit events (${events.length})`}>
+          {events.length === 0 ? (
+            <p className="text-muted">No events yet.</p>
+          ) : (
+            <ol className="space-y-1 font-mono text-xs">
+              {events.map((event) => (
+                <li key={event.id} className="flex flex-wrap gap-x-2">
+                  <time dateTime={event.ts} className="text-muted">
+                    {event.ts.replace('T', ' ').slice(0, 19)}
+                  </time>
+                  <span>{event.actor}</span>
+                  <span className="font-medium">{event.event}</span>
+                  {event.decision && <span>{event.decision}</span>}
+                  {event.reason && <span className="text-muted">{event.reason}</span>}
+                </li>
+              ))}
+            </ol>
+          )}
+        </Section>
+      )}
     </div>
   );
 }

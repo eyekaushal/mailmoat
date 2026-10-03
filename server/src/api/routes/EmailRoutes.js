@@ -32,6 +32,8 @@ export class EmailRoutes {
    *   executor: Pick<import('../../actions/ActionExecutor.js').ActionExecutor, 'perform'>,
    *   drafts: Pick<import('../../features/DraftService.js').DraftService, 'createReply'>,
    *   meetings: Pick<import('../../features/MeetingService.js').MeetingService, 'propose'|'save'>,
+   *   gmail: Pick<import('../../google/GmailClient.js').GmailClient, 'getRawMessage'>,
+   *   ingestor: Pick<import('../../security/ingest/EmailIngestor.js').EmailIngestor, 'ingest'>,
    *   auditLog: Pick<import('../../audit/AuditLog.js').AuditLog, 'record'>,
    *   timeZone: string,
    *   now?: () => Date,
@@ -44,6 +46,7 @@ export class EmailRoutes {
   router() {
     const { emails, verdicts, rules, contacts, audit, drafts, meetings, auditLog, now } =
       this.#deps;
+    const { gmail, ingestor } = this.#deps;
     const router = Router();
 
     router.get('/emails', (request, response) => {
@@ -81,6 +84,28 @@ export class EmailRoutes {
         verdict: verdicts.get(record.gmailId) ?? null,
         rules: rules.runsFor(record.gmailId),
         events: audit.recent({ subject: record.gmailId, limit: 50 }),
+      });
+    });
+
+    // The body is never stored (PRD §9): the detail view fetches it from Gmail on open and the
+    // browser only ever gets the visible text, disarmed links and HTML it sanitises itself.
+    router.get('/emails/:id/content', async (request, response) => {
+      const record = this.#record(request.params);
+      const { raw } = await gmail.getRawMessage(record.gmailId);
+      const email = await ingestor.ingest(raw);
+      response.json({
+        gmailId: record.gmailId,
+        subject: email.subject,
+        from: email.from,
+        to: email.to,
+        cc: email.cc,
+        replyTo: email.replyTo,
+        text: email.readerText,
+        textTruncated: email.readerTextTruncated,
+        links: email.links.map(({ href, text, host }) => ({ href, text, host })),
+        hidden: email.hidden,
+        attachments: email.attachments,
+        html: email.html,
       });
     });
 
