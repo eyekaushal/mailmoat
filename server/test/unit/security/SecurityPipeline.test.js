@@ -118,7 +118,11 @@ describe('SecurityPipeline.process', () => {
     const analysis = await pipeline().process(store('inj'));
     expect(analysis.verdict.level).toBe('DANGEROUS');
 
-    expect(verdicts.get('inj')).toMatchObject({ level: 'DANGEROUS', floor: 'DANGEROUS' });
+    expect(verdicts.get('inj')).toMatchObject({
+      level: 'DANGEROUS',
+      floor: 'DANGEROUS',
+      injectionAttempt: true,
+    });
     expect(verdicts.signals('inj').map((s) => s.id)).toContain('S13');
     expect(verdicts.readerForm('inj')).toMatchObject({ category: 'work' });
     expect(gmail.calls).toEqual([

@@ -116,6 +116,48 @@ describe('EmailRepository.search', () => {
   });
 });
 
+describe('EmailRepository threads and past mail', () => {
+  const record = (gmailId, { threadId = 't1', direction = 'inbound', date, pending = false }) => ({
+    gmailId,
+    threadId,
+    direction,
+    fromAddr: direction === 'inbound' ? 'rahul@acme.example' : 'me@example.com',
+    fromDomain: direction === 'inbound' ? 'acme.example' : 'example.com',
+    fromName: null,
+    toAddrs: [],
+    recipientNames: {},
+    date,
+    subjectHash: null,
+    hasListUnsubscribe: false,
+    unsubscribeUrl: null,
+    oneClick: false,
+    labels: [],
+    isRead: false,
+    pending,
+  });
+
+  it('finds the newest message of a thread and lists processed mail since a date', async () => {
+    const { EmailRepository } = await import('../../../src/db/repositories/EmailRepository.js');
+    const repo = new EmailRepository(db);
+    for (const r of [
+      record('a', { date: '2026-10-01T09:00:00.000Z' }),
+      record('b', { direction: 'outbound', date: '2026-10-01T10:00:00.000Z' }),
+      record('c', { threadId: 't2', date: '2026-10-02T10:00:00.000Z', pending: true }),
+      record('old', { threadId: 't3', date: '2026-09-01T10:00:00.000Z' }),
+    ]) {
+      repo.insertIfAbsent(r, { pending: r.pending });
+    }
+    expect(repo.latestInThread('t1')?.gmailId).toBe('b');
+    expect(repo.latestInThread('t2')?.gmailId).toBe('c');
+    expect(repo.latestInThread('none')).toBeUndefined();
+    // Oldest first; pending mail belongs to the sync loop, not to "process past emails".
+    expect(repo.listProcessedSince('2026-09-25T00:00:00.000Z').map((r) => r.gmailId)).toEqual([
+      'a',
+      'b',
+    ]);
+  });
+});
+
 describe('SenderRepository.setStatus', () => {
   it('upserts the status and rejects unknown ones', async () => {
     const { SenderRepository } = await import('../../../src/db/repositories/SenderRepository.js');

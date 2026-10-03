@@ -54,3 +54,6 @@ export class ApprovalError extends MailmoatError {}
 
 /** A memory write was attempted with content that did not come from the user (invariant 7). */
 export class MemoryError extends MailmoatError {}
+
+/** A rule setting is invalid (unknown rule, security rule, disallowed action) or an action failed. */
+export class RuleError extends MailmoatError {}
