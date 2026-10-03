@@ -1,4 +1,13 @@
+import { ValidationError } from '../../core/errors.js';
+
 const MAX_ATTEMPTS = 5;
+
+/**
+ * @typedef {import('../../sync/EmailMetadataMapper.js').EmailRecord & {
+ *   rules: string[], category: string | null, summary: string | null, needsReply: boolean,
+ *   verdict: { level: string, score: number, injectionAttempt: boolean, userFeedback: string | null } | null,
+ * }} InboxItem one Inbox row: metadata, matched rules, the Reader's typed fields and the verdict
+ */
 
 /**
  * Stored email metadata (never bodies) and the queue of new mail awaiting the security pipeline.
@@ -135,6 +144,112 @@ export class EmailRepository {
 
   count() {
     return this.#db.get('SELECT COUNT(*) AS n FROM emails').n;
+  }
+
+  /**
+   * The Inbox list (PRD F5): newest first, keyset-paginated, with the verdict and the Reader's
+   * typed fields. `ruleId` is a tab: an email is in it when that rule ran on it (so "Awaiting
+   * Reply" lists the user's own mail). Without a tab, inbound mail only.
+   * @param {{ ruleId?: string, level?: string, cursor?: string, limit?: number }} [filter]
+   * @returns {{ items: InboxItem[], nextCursor: string | null }}
+   * @throws {ValidationError} for a malformed cursor
+   */
+  page({ ruleId, level, cursor, limit = 50 } = {}) {
+    const where = [];
+    const params = [];
+    if (ruleId) {
+      where.push(
+        'EXISTS (SELECT 1 FROM rule_runs r WHERE r.gmail_id = e.gmail_id AND r.rule_id = ?)',
+      );
+      params.push(ruleId);
+    } else {
+      where.push("e.direction = 'inbound'");
+    }
+    if (level) {
+      where.push('v.level = ?');
+      params.push(level);
+    }
+    if (cursor) {
+      const { date, gmailId } = EmailRepository.#decodeCursor(cursor);
+      where.push('(e.date < ? OR (e.date = ? AND e.gmail_id < ?))');
+      params.push(date, date, gmailId);
+    }
+    const rows = this.#db.all(
+      `SELECT e.*, v.level, v.score, v.injection_attempt, v.user_feedback,
+              json_extract(rf.json, '$.category') AS category,
+              json_extract(rf.json, '$.summary') AS summary,
+              json_extract(rf.json, '$.needs_reply') AS needs_reply,
+              (SELECT json_group_array(r.rule_id) FROM rule_runs r
+                WHERE r.gmail_id = e.gmail_id AND r.status = 'done') AS rule_ids
+       FROM emails e
+       LEFT JOIN verdicts v ON v.gmail_id = e.gmail_id
+       LEFT JOIN reader_forms rf ON rf.gmail_id = e.gmail_id
+       WHERE ${where.join(' AND ')}
+       ORDER BY e.date DESC, e.gmail_id DESC
+       LIMIT ?`,
+      [...params, limit + 1],
+    );
+    const items = rows.slice(0, limit).map((row) => ({
+      ...this.#toRecord(row),
+      rules: JSON.parse(row.rule_ids),
+      category: row.category,
+      summary: row.summary,
+      needsReply: row.needs_reply === 1,
+      verdict:
+        row.level === null
+          ? null
+          : {
+              level: row.level,
+              score: row.score,
+              injectionAttempt: row.injection_attempt === 1,
+              userFeedback: row.user_feedback,
+            },
+    }));
+    const last = items.at(-1);
+    const nextCursor =
+      rows.length > limit ? EmailRepository.#encodeCursor(last.date, last.gmailId) : null;
+    return { items, nextCursor };
+  }
+
+  /**
+   * Unread counts for the tab bar (F5.1): per rule, per risk level, and all inbound mail.
+   * @returns {{ all: number, byRule: Record<string, number>, byLevel: Record<string, number> }}
+   */
+  unreadCounts() {
+    const all = this.#db.get(
+      "SELECT COUNT(*) AS n FROM emails WHERE direction = 'inbound' AND is_read = 0",
+    ).n;
+    const byRule = {};
+    for (const row of this.#db.all(
+      `SELECT r.rule_id, COUNT(*) AS n FROM rule_runs r
+       JOIN emails e ON e.gmail_id = r.gmail_id
+       WHERE e.is_read = 0 AND r.status = 'done' GROUP BY r.rule_id`,
+    )) {
+      byRule[row.rule_id] = row.n;
+    }
+    const byLevel = {};
+    for (const row of this.#db.all(
+      `SELECT v.level, COUNT(*) AS n FROM verdicts v
+       JOIN emails e ON e.gmail_id = v.gmail_id
+       WHERE e.is_read = 0 GROUP BY v.level`,
+    )) {
+      byLevel[row.level] = row.n;
+    }
+    return { all, byRule, byLevel };
+  }
+
+  static #encodeCursor(date, gmailId) {
+    return Buffer.from(JSON.stringify({ date, gmailId })).toString('base64url');
+  }
+
+  static #decodeCursor(cursor) {
+    try {
+      const { date, gmailId } = JSON.parse(Buffer.from(cursor, 'base64url').toString('utf8'));
+      if (typeof date !== 'string' || typeof gmailId !== 'string') throw new Error('shape');
+      return { date, gmailId };
+    } catch {
+      throw new ValidationError('Invalid cursor');
+    }
   }
 
   #toRecord(row) {

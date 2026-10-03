@@ -37,6 +37,21 @@ describe('Config', () => {
     expect(config.googleClient).toBeUndefined();
   });
 
+  it('falls back to the built-in Google client unless .env overrides it (PRD F1.4)', () => {
+    const builtIn = { clientId: 'built-in.apps.googleusercontent.com', clientSecret: 'GOCSPX-x' };
+    expect(new Config({}, { ...mac, builtInGoogleClient: builtIn }).googleClient).toEqual(builtIn);
+    expect(
+      new Config(
+        { GOOGLE_CLIENT_ID: 'dev-id', GOOGLE_CLIENT_SECRET: 'dev-secret' },
+        { ...mac, builtInGoogleClient: builtIn },
+      ).googleClient,
+    ).toEqual({ clientId: 'dev-id', clientSecret: 'dev-secret' });
+    expect(
+      new Config({}, { ...mac, builtInGoogleClient: { clientId: '', clientSecret: '' } })
+        .googleClient,
+    ).toBeUndefined();
+  });
+
   it('rejects invalid values with a clear error', () => {
     expect(() => new Config({ PORT: '80' }, mac)).toThrow(ConfigError);
     expect(() => new Config({ LOG_LEVEL: 'verbose' }, mac)).toThrow(/LOG_LEVEL/);

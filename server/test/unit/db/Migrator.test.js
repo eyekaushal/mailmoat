@@ -14,6 +14,7 @@ describe('Migrator', () => {
       '002_processing_queue.sql',
       '003_contact_names.sql',
       '004_verdict_injection.sql',
+      '005_verdict_feedback.sql',
     ]);
     expect(new Migrator(db).migrate()).toEqual([]);
     const tables = db.all("SELECT name FROM sqlite_master WHERE type = 'table'").map((t) => t.name);

@@ -70,7 +70,7 @@ export class VerdictRepository {
 
   /**
    * @returns {{ level: string, score: number, reasons: string[], floor: string,
-   *   injectionAttempt: boolean, createdAt: string } | undefined}
+   *   injectionAttempt: boolean, userFeedback: string | null, createdAt: string } | undefined}
    */
   get(gmailId) {
     const row = this.#db.get('SELECT * FROM verdicts WHERE gmail_id = ?', [gmailId]);
@@ -81,9 +81,86 @@ export class VerdictRepository {
         reasons: JSON.parse(row.reasons_json),
         floor: row.floor,
         injectionAttempt: row.injection_attempt === 1,
+        userFeedback: row.user_feedback ?? null,
         createdAt: row.created_at,
       }
     );
+  }
+
+  /**
+   * The user's "Not phishing" feedback (PRD F3.9): a user-sourced fact beside the verdict. The
+   * level is never lowered (invariant 5).
+   * @param {string} gmailId
+   * @param {'not_phishing' | null} feedback
+   * @returns {boolean} false if the email has no verdict
+   */
+  setFeedback(gmailId, feedback) {
+    const { changes } = this.#db.run('UPDATE verdicts SET user_feedback = ? WHERE gmail_id = ?', [
+      feedback,
+      gmailId,
+    ]);
+    return Number(changes) > 0;
+  }
+
+  /** @returns {{ spf: string, dkim: string, dkimDomain: string | null, dmarc: string } | undefined} */
+  auth(gmailId) {
+    const row = this.#db.get('SELECT * FROM auth_results WHERE gmail_id = ?', [gmailId]);
+    return row && { spf: row.spf, dkim: row.dkim, dkimDomain: row.dkim_domain, dmarc: row.dmarc };
+  }
+
+  /**
+   * Security Center overview numbers (F11.1) for verdicts stored since `since`.
+   * @param {{ since: string }} range ISO time
+   * @returns {{ scanned: number, safe: number, suspicious: number, dangerous: number, injectionAttempts: number }}
+   */
+  counts({ since }) {
+    const row = this.#db.get(
+      `SELECT COUNT(*) AS scanned,
+              SUM(level = 'SAFE') AS safe,
+              SUM(level = 'SUSPICIOUS') AS suspicious,
+              SUM(level = 'DANGEROUS') AS dangerous,
+              SUM(injection_attempt) AS injection_attempts
+       FROM verdicts WHERE created_at >= ?`,
+      [since],
+    );
+    return {
+      scanned: row.scanned,
+      safe: row.safe ?? 0,
+      suspicious: row.suspicious ?? 0,
+      dangerous: row.dangerous ?? 0,
+      injectionAttempts: row.injection_attempts ?? 0,
+    };
+  }
+
+  /**
+   * The Security Center feed (F11.2): non-SAFE verdicts, newest first, with sender metadata.
+   * @param {{ limit?: number }} [filter]
+   * @returns {{ gmailId: string, fromAddr: string, fromDomain: string, fromName: string | null,
+   *   date: string, level: string, score: number, reasons: string[], injectionAttempt: boolean,
+   *   userFeedback: string | null, createdAt: string }[]}
+   */
+  listFlagged({ limit = 100 } = {}) {
+    return this.#db
+      .all(
+        `SELECT v.*, e.from_addr, e.from_domain, e.from_name, e.date
+         FROM verdicts v JOIN emails e ON e.gmail_id = v.gmail_id
+         WHERE v.level <> 'SAFE'
+         ORDER BY v.created_at DESC, v.gmail_id DESC LIMIT ?`,
+        [limit],
+      )
+      .map((row) => ({
+        gmailId: row.gmail_id,
+        fromAddr: row.from_addr,
+        fromDomain: row.from_domain,
+        fromName: row.from_name,
+        date: row.date,
+        level: row.level,
+        score: row.score,
+        reasons: JSON.parse(row.reasons_json),
+        injectionAttempt: row.injection_attempt === 1,
+        userFeedback: row.user_feedback ?? null,
+        createdAt: row.created_at,
+      }));
   }
 
   /** @returns {import('@mailmoat/shared/schemas/reader-form').ReaderForm | undefined} */

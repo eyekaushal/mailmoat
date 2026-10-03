@@ -28,16 +28,15 @@ export class AuditLogRepository {
   }
 
   /**
-   * @param {{ event?: string, limit?: number }} [filter]
+   * @param {{ event?: string, subject?: string, limit?: number }} [filter]
    * @returns {(AuditEntry & { id: number })[]} newest first
    */
-  recent({ event, limit = 100 } = {}) {
-    const rows = event
-      ? this.#db.all('SELECT * FROM audit_log WHERE event = ? ORDER BY id DESC LIMIT ?', [
-          event,
-          limit,
-        ])
-      : this.#db.all('SELECT * FROM audit_log ORDER BY id DESC LIMIT ?', [limit]);
+  recent({ event, subject, limit = 100 } = {}) {
+    const { clause, params } = AuditLogRepository.#where({ event, subject });
+    const rows = this.#db.all(`SELECT * FROM audit_log ${clause} ORDER BY id DESC LIMIT ?`, [
+      ...params,
+      limit,
+    ]);
     return rows.map((row) => ({
       id: row.id,
       ts: row.ts,
@@ -48,5 +47,36 @@ export class AuditLogRepository {
       reason: row.reason,
       data: row.data_json === null ? null : JSON.parse(row.data_json),
     }));
+  }
+
+  /**
+   * How many entries match, e.g. policy DENY decisions since a date (Security Center F11.1).
+   * @param {{ event?: string, decision?: string, since?: string }} [filter]
+   */
+  count({ event, decision, since } = {}) {
+    const { clause, params } = AuditLogRepository.#where({ event, decision, since });
+    return this.#db.get(`SELECT COUNT(*) AS n FROM audit_log ${clause}`, params).n;
+  }
+
+  static #where({ event, subject, decision, since }) {
+    const where = [];
+    const params = [];
+    if (event) {
+      where.push('event = ?');
+      params.push(event);
+    }
+    if (subject) {
+      where.push('subject = ?');
+      params.push(subject);
+    }
+    if (decision) {
+      where.push('decision = ?');
+      params.push(decision);
+    }
+    if (since) {
+      where.push('ts >= ?');
+      params.push(since);
+    }
+    return { clause: where.length > 0 ? `WHERE ${where.join(' AND ')}` : '', params };
   }
 }

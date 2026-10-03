@@ -72,3 +72,9 @@ export class HttpError extends MailmoatError {}
 
 /** A sender could not be unsubscribed, blocked or otherwise handled. */
 export class UnsubscribeError extends MailmoatError {}
+
+/** An API request body or query failed validation. */
+export class ValidationError extends MailmoatError {}
+
+/** An API resource (email, chat, approval, …) does not exist. */
+export class NotFoundError extends MailmoatError {}

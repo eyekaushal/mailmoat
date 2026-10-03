@@ -57,6 +57,24 @@ export class ContactRepository {
     );
   }
 
+  /**
+   * "Mark as trusted sender" (PRD F3.9): a user-sourced fact that skips the identity signals
+   * S9/S10 only. Creates the contact if the address was never seen.
+   * @param {string} address
+   * @param {boolean} trusted
+   * @param {Date} at
+   */
+  setTrusted(address, trusted, at) {
+    const normalized = address.toLowerCase();
+    const iso = at.toISOString();
+    this.#db.run(
+      `INSERT INTO contacts (address, domain, first_seen, last_seen, trusted)
+       VALUES (?, ?, ?, ?, ?)
+       ON CONFLICT(address) DO UPDATE SET trusted = excluded.trusted`,
+      [normalized, normalized.split('@').pop(), iso, iso, Number(trusted)],
+    );
+  }
+
   /** @returns {string[]} every domain the user has written to */
   sentDomains() {
     return this.#db

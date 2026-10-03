@@ -2,6 +2,7 @@ import { homedir as osHomedir } from 'node:os';
 import { join } from 'node:path';
 import { z } from 'zod';
 import { ConfigError } from '../core/errors.js';
+import { BUILT_IN_GOOGLE_CLIENT } from './builtInGoogleClient.js';
 
 const optionalText = z
   .string()
@@ -28,12 +29,21 @@ export class Config {
 
   #values;
   #dataDir;
+  #builtInGoogleClient;
 
   /**
    * @param {Record<string, string | undefined>} env usually `process.env`
-   * @param {{ platform?: NodeJS.Platform, homedir?: string }} [system] injectable for tests
+   * @param {{ platform?: NodeJS.Platform, homedir?: string, builtInGoogleClient?: { clientId: string, clientSecret: string } }} [system]
+   *   injectable for tests
    */
-  constructor(env, { platform = process.platform, homedir = osHomedir() } = {}) {
+  constructor(
+    env,
+    {
+      platform = process.platform,
+      homedir = osHomedir(),
+      builtInGoogleClient = BUILT_IN_GOOGLE_CLIENT,
+    } = {},
+  ) {
     const parsed = envSchema.safeParse(env);
     if (!parsed.success) {
       const problems = parsed.error.issues.map(
@@ -43,6 +53,7 @@ export class Config {
     }
     this.#values = parsed.data;
     this.#dataDir = parsed.data.MAILMOAT_DATA_DIR ?? Config.#defaultDataDir(platform, homedir, env);
+    this.#builtInGoogleClient = builtInGoogleClient;
   }
 
   get host() {
@@ -71,10 +82,16 @@ export class Config {
     return this.#values.ANTHROPIC_API_KEY;
   }
 
-  /** @returns {{ clientId: string, clientSecret: string } | undefined} */
+  /**
+   * The Google OAuth client: a developer's `.env` override, else the built-in shared client
+   * (PRD F1.4); undefined only when neither is filled in.
+   * @returns {{ clientId: string, clientSecret: string } | undefined}
+   */
   get googleClient() {
     const { GOOGLE_CLIENT_ID: clientId, GOOGLE_CLIENT_SECRET: clientSecret } = this.#values;
-    return clientId && clientSecret ? { clientId, clientSecret } : undefined;
+    if (clientId && clientSecret) return { clientId, clientSecret };
+    const builtIn = this.#builtInGoogleClient;
+    return builtIn.clientId && builtIn.clientSecret ? { ...builtIn } : undefined;
   }
 
   static #defaultDataDir(platform, homedir, env) {
