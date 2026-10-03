@@ -60,3 +60,6 @@ export class RuleError extends MailmoatError {}
 
 /** A reply could not be drafted: unknown or risky email, or the quarantined Drafter failed. */
 export class DraftError extends MailmoatError {}
+
+/** A meeting could not be proposed or saved: unknown or risky email, no times, or policy denied. */
+export class MeetingError extends MailmoatError {}
