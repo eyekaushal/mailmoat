@@ -1,0 +1,9 @@
+{
+  "threat": "T5",
+  "technique": "brand/ip-literal-link",
+  "summary": "Amazon-branded sender; the link goes to a raw IP address.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S6", "S7", "S16"]
+  }
+}

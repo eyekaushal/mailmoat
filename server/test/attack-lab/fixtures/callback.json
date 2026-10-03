@@ -1,0 +1,292 @@
+{
+  "amazon-prime-charge-freemail": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "receipt",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": true,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "brand",
+          "claimed_brand": "Amazon",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A message presenting as Amazon Prime reports a charge and asks the user to call a number within two hours for a refund."
+        }
+      }
+    ]
+  },
+  "apple-support-outlook": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "receipt",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": true,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "brand",
+          "claimed_brand": "Apple",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A message presenting as Apple Support reports a purchase and asks the user to call a number for a refund if unauthorised."
+        }
+      }
+    ]
+  },
+  "bank-fraud-desk-call-back": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "receipt",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": true,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "bank",
+          "claimed_brand": "HDFC Bank",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A message presenting as a bank fraud desk reports a blocked transaction and asks the user to call a number to confirm identity."
+        }
+      }
+    ]
+  },
+  "geek-squad-auto-renew": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "receipt",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": true,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "brand",
+          "claimed_brand": "Geek Squad",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A message presenting as Geek Squad says a protection plan auto-renewed for 349 dollars and asks the user to call a helpline to cancel."
+        }
+      }
+    ]
+  },
+  "mcafee-pdf-invoice-callback": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "receipt",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": true,
+            "asks_to_click_link": false,
+            "asks_to_call_number": true,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "brand",
+          "claimed_brand": "McAfee",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A message presenting as McAfee says a renewal invoice is attached and asks the user to call a support number to cancel."
+        }
+      }
+    ]
+  },
+  "microsoft-defender-charge": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "receipt",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": true,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "brand",
+          "claimed_brand": "Microsoft",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A message presenting as Microsoft Defender reports a 299 dollar renewal and asks the user to call a billing desk to cancel."
+        }
+      }
+    ]
+  },
+  "norton-renewal-499": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "receipt",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": true,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "brand",
+          "claimed_brand": "Norton",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A message presenting as Norton says a subscription renewed for about 500 dollars and asks the user to call a number within 24 hours to cancel."
+        }
+      }
+    ]
+  },
+  "paypal-invoice-spoof-call-to-cancel": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "receipt",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": true,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "brand",
+          "claimed_brand": "PayPal",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A message presenting as PayPal reports a 799 dollar invoice and asks the user to call a number immediately to cancel it."
+        }
+      }
+    ]
+  },
+  "telecom-bill-unlisted-brand": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "notification",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": true,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": true,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "brand",
+          "claimed_brand": "Airtel",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A message presenting as Airtel says a bill is overdue and asks the user to call a number and pay by card to avoid disconnection."
+        }
+      }
+    ]
+  },
+  "zoom-invoice-callback": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "receipt",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": true,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "brand",
+          "claimed_brand": "Zoom",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A message presenting as Zoom says an annual plan renewed and asks the user to call a number within 48 hours to cancel."
+        }
+      }
+    ]
+  }
+}

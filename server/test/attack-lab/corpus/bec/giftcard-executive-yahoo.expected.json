@@ -1,0 +1,9 @@
+{
+  "threat": "T4",
+  "technique": "gift-card/free-mail",
+  "summary": "Gift-card request from the CEO's name on a Yahoo address.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S7", "S11"]
+  }
+}

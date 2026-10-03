@@ -1,0 +1,9 @@
+{
+  "threat": "none",
+  "technique": "work/contact",
+  "summary": "A partner contact asks to move a call.",
+  "expect": {
+    "level": "SAFE",
+    "signals": []
+  }
+}

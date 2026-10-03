@@ -1,0 +1,25 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.microsoft.com (mail.microsoft.com. [203.0.113.10]) by mx.google.com with ESMTPS id mtuxj2dc.71 for <kaushal@gmail.com>; Thu, 10 Sep 2026 02:50:00 +0000
+Authentication-Results: mx.google.com; dkim=fail (signature did not verify) header.i=@microsoft.com header.s=s1; spf=fail (google.com: domain of bounce@microsoft.com does not designate 198.51.100.7 as permitted sender) smtp.mailfrom=microsoft.com; dmarc=fail (p=REJECT sp=REJECT dis=NONE) header.from=microsoft.com
+Date: Thu, 10 Sep 2026 02:50:00 +0000
+From: "Microsoft Security" <security@microsoft.com>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Re-enable multi-factor authentication
+Message-ID: <mtuxj2dc.71@microsoft.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="----=_Mixed_mtuxj2dc.71"
+
+------=_Mixed_mtuxj2dc.71
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Your MFA was reset. Scan the attached QR code with your phone and sign in to re-enable it within 24 hours.
+
+Microsoft Security
+------=_Mixed_mtuxj2dc.71
+Content-Type: image/png; name="mfa-qr.png"
+Content-Disposition: attachment; filename="mfa-qr.png"
+Content-Transfer-Encoding: base64
+
+UE5HIHBsYWNlaG9sZGVy
+------=_Mixed_mtuxj2dc.71--

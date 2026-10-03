@@ -1,0 +1,18 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.kaushal-studio.example (mail.kaushal-studio.example. [203.0.113.10]) by mx.google.com with ESMTPS id muad0hs0.109 for <kaushal@gmail.com>; Sun, 20 Sep 2026 22:00:00 +0000
+Authentication-Results: mx.google.com; dkim=none; spf=pass (google.com: domain of bounce@kaushal-studio.example designates 203.0.113.10 as permitted sender) smtp.mailfrom=kaushal-studio.example; dmarc=none (p=NONE) header.from=kaushal-studio.example
+Date: Sun, 20 Sep 2026 22:00:00 +0000
+From: "WordPress" <wordpress@kaushal-studio.example>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: [Kaushal Studio] Some plugins were automatically updated
+Message-ID: <muad0hs0.109@kaushal-studio.example>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Howdy! Some plugins have automatically updated to their latest versions on your site at https://kaushal-studio.example:
+
+- Yoast SEO 24.1
+- WP Rocket 3.17
+
+No further action is needed.

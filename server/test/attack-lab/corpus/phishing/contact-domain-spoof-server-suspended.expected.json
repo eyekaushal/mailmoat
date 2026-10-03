@@ -1,0 +1,9 @@
+{
+  "threat": "T5",
+  "technique": "contact-spoof/dmarc-fail",
+  "summary": "Spoof of a hosting provider the user actually uses.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S1", "S18"]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "threat": "T5",
+  "technique": "brand/dmarc-fail+qr",
+  "summary": "Spoofed microsoft.com asking to scan an attached QR code to re-enable MFA.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S1", "S2"]
+  }
+}

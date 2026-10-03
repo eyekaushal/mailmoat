@@ -1,0 +1,9 @@
+{
+  "threat": "none",
+  "technique": "work/first-contact-inquiry",
+  "summary": "A prospective client writes for the first time asking for a quote.",
+  "expect": {
+    "level": "SAFE",
+    "signals": []
+  }
+}

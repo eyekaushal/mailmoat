@@ -1,0 +1,698 @@
+{
+  "amazon-order-cancelled-ip-link": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "notification",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": true,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "brand",
+          "claimed_brand": "Amazon",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A message presenting as Amazon says an order is on hold and asks the user to sign in via a link to verify identity."
+        }
+      }
+    ]
+  },
+  "apple-id-locked-userinfo-link": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "security_alert",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": true,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "brand",
+          "claimed_brand": "Apple",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A message presenting as Apple says the account is locked and asks the user to unlock it via a link."
+        }
+      }
+    ]
+  },
+  "coinbase-withdrawal-spoof": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "security_alert",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": true,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "brand",
+          "claimed_brand": "Coinbase",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A message presenting as Coinbase reports a pending withdrawal and asks the user to log in via a link to cancel it within 30 minutes."
+        }
+      }
+    ]
+  },
+  "contact-domain-spoof-server-suspended": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "notification",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": true,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "vendor",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A message presenting as the user's hosting provider says payment failed and asks them to log in via a link to avoid suspension."
+        }
+      }
+    ]
+  },
+  "dhl-customs-fee-shortener": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "notification",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": true,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "brand",
+          "claimed_brand": "DHL",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A message presenting as DHL says a parcel is held at customs and asks the user to pay a small fee via a link."
+        }
+      }
+    ]
+  },
+  "docusign-review-punycode-link": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "notification",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": true,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "brand",
+          "claimed_brand": "DocuSign",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A message presenting as DocuSign says a contact sent a document and asks the user to sign in via a link to review it."
+        }
+      }
+    ]
+  },
+  "dropbox-shared-file-html-attachment": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "notification",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": true,
+            "asks_to_open_attachment": true,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "brand",
+          "claimed_brand": "Dropbox",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A message presenting as Dropbox says a contact shared a file and asks the user to open an attachment and sign in to download it."
+        }
+      }
+    ]
+  },
+  "google-security-alert-spoof": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "security_alert",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": true,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "brand",
+          "claimed_brand": "Google",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A message presenting as Google says someone has the user's password and asks them to secure the account via a link."
+        }
+      }
+    ]
+  },
+  "google-two-factor-code-request": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "security_alert",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": true,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "brand",
+          "claimed_brand": "Google",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A message presenting as Google asks the user to reply with a 6-digit code to confirm identity."
+        }
+      }
+    ]
+  },
+  "hdfc-kyc-update-lookalike": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "security_alert",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": true,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "bank",
+          "claimed_brand": "HDFC Bank",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A message presenting as HDFC Bank says KYC is pending and asks the user to log in via a link within 48 hours."
+        }
+      }
+    ]
+  },
+  "invoice-html-attachment": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": true,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "none",
+          "claims_to_be": "vendor",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A short note from an accounts-payable address asking the user to open an attached invoice."
+        }
+      }
+    ]
+  },
+  "irs-refund-freemail": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "other",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": true,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "government",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A message presenting as the IRS offers a refund and asks the user to submit a social security number and bank login via a link."
+        }
+      }
+    ]
+  },
+  "it-helpdesk-password-form-in-body": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "security_alert",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": true,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "it_support",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A message presenting as IT helpdesk says the mailbox is full and asks the user to enter credentials in a form to increase the quota."
+        }
+      }
+    ]
+  },
+  "linkedin-message-waiting-lookalike": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "notification",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": true,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "brand",
+          "claimed_brand": "LinkedIn",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A message presenting as LinkedIn says a recruiter sent a message and asks the user to sign in via a link to read it."
+        }
+      }
+    ]
+  },
+  "microsoft-mfa-qr-code": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "security_alert",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": true,
+            "asks_to_open_attachment": true,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "brand",
+          "claimed_brand": "Microsoft",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A message presenting as Microsoft says MFA was reset and asks the user to scan an attached QR code and sign in within 24 hours."
+        }
+      }
+    ]
+  },
+  "microsoft-password-expiry": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "security_alert",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": true,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "it_support",
+          "claimed_brand": "Microsoft",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A message presenting as Microsoft 365 admin says the password expires today and asks the user to verify it via a link."
+        }
+      }
+    ]
+  },
+  "netflix-lookalike-domain": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "notification",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": true,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "brand",
+          "claimed_brand": "Netflix",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A message presenting as Netflix says a payment was declined and asks the user to log in via a link to update it."
+        }
+      }
+    ]
+  },
+  "netflix-spoof-dmarc-fail-link-mismatch": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "notification",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": true,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "brand",
+          "claimed_brand": "Netflix",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A message presenting as Netflix says a payment failed and asks the user to update payment details via a link within 24 hours."
+        }
+      }
+    ]
+  },
+  "office365-storage-full-form": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "security_alert",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": true,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "brand",
+          "claimed_brand": "Microsoft",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A message presenting as the Office 365 team says storage is full and asks the user to sign in via an embedded form."
+        }
+      }
+    ]
+  },
+  "paypal-spoof-dmarc-fail": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "security_alert",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": true,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "brand",
+          "claimed_brand": "PayPal",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A message presenting as PayPal reports a login from a new device and asks the user to log in via a link to review it."
+        }
+      }
+    ]
+  },
+  "sbi-account-blocked-freemail": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "security_alert",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": true,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "bank",
+          "claimed_brand": "State Bank of India",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A message presenting as SBI says the account is blocked and asks the user to update KYC via a link."
+        }
+      }
+    ]
+  },
+  "unsubscribe-trap-spam": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "marketing",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "none",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A promotional email for discounted supplements with a shop link and an unsubscribe link."
+        }
+      }
+    ]
+  },
+  "voicemail-html-attachment": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "notification",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": true,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "none",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A voicemail notification asking the user to open an attached player to listen to a message."
+        }
+      }
+    ]
+  },
+  "wetransfer-file-expiring-lookalike": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "notification",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "brand",
+          "claimed_brand": "WeTransfer",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A message presenting as WeTransfer says a contact sent files that expire tomorrow and asks the user to download them via a link."
+        }
+      }
+    ]
+  }
+}

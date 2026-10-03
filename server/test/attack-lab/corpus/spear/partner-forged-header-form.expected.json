@@ -1,0 +1,9 @@
+{
+  "threat": "T6",
+  "technique": "contact-spoof/forged-header+form",
+  "summary": "Partner address with a forged non-Google auth header and a login form in the body.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S2", "S20"]
+  }
+}

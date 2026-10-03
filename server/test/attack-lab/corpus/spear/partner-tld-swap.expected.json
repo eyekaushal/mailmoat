@@ -1,0 +1,9 @@
+{
+  "threat": "T6",
+  "technique": "contact-lookalike/tld",
+  "summary": "Same contact, .co instead of .io.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S5"]
+  }
+}

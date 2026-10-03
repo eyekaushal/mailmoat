@@ -1,0 +1,26 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.dropbox-share.example (mail.dropbox-share.example. [203.0.113.10]) by mx.google.com with ESMTPS id mu9p2v9c.61 for <kaushal@gmail.com>; Sun, 20 Sep 2026 10:50:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@dropbox-share.example header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@dropbox-share.example designates 203.0.113.10 as permitted sender) smtp.mailfrom=dropbox-share.example; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=dropbox-share.example
+Date: Sun, 20 Sep 2026 10:50:00 +0000
+From: "Dropbox" <no-reply@dropbox-share.example>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Priya Shah shared "Q4 contract.pdf" with you
+Message-ID: <mu9p2v9c.61@dropbox-share.example>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="----=_Mixed_mu9p2v9c.61"
+
+------=_Mixed_mu9p2v9c.61
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Priya Shah shared a file with you. Open the attached viewer and sign in to download it.
+------=_Mixed_mu9p2v9c.61
+Content-Type: text/html; name="Dropbox_Viewer.html"
+Content-Disposition: attachment; filename="Dropbox_Viewer.html"
+Content-Transfer-Encoding: base64
+
+PGh0bWw+PGJvZHk+PGZvcm0gbWV0aG9kPSJwb3N0IiBhY3Rpb249Imh0dHBzOi8vY29sbGVjdC1m
+b3Jtcy5leGFtcGxlL2xvZ2luIj48aW5wdXQgbmFtZT0iZW1haWwiPjxpbnB1dCB0eXBlPSJwYXNz
+d29yZCIgbmFtZT0icGFzc3dvcmQiPjxidXR0b24+U2lnbiBpbjwvYnV0dG9uPjwvZm9ybT48L2Jv
+ZHk+PC9odG1sPg==
+------=_Mixed_mu9p2v9c.61--

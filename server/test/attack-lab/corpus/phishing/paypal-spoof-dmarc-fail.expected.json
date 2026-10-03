@@ -1,0 +1,9 @@
+{
+  "threat": "T5",
+  "technique": "brand/dmarc-fail",
+  "summary": "Spoofed paypal.com asking to log in and confirm a transaction.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S1", "S2"]
+  }
+}

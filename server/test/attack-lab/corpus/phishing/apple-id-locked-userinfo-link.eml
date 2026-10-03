@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.apple.com (mail.apple.com. [203.0.113.10]) by mx.google.com with ESMTPS id muhmbn6o.55 for <kaushal@gmail.com>; Fri, 25 Sep 2026 23:55:00 +0000
+Authentication-Results: mx.google.com; dkim=fail (signature did not verify) header.i=@apple.com header.s=s1; spf=fail (google.com: domain of bounce@apple.com does not designate 198.51.100.7 as permitted sender) smtp.mailfrom=apple.com; dmarc=fail (p=REJECT sp=REJECT dis=NONE) header.from=apple.com
+Date: Fri, 25 Sep 2026 23:55:00 +0000
+From: "Apple" <no-reply@apple.com>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Your Apple ID has been locked
+Message-ID: <muhmbn6o.55@apple.com>
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body style="font-family:Arial,sans-serif;color:#222;background:#ffffff"><p>Your Apple ID was locked for security reasons. Unlock it here:</p><p><a href="https://appleid.apple.com@verify-apple.example/unlock">https://appleid.apple.com/unlock</a></p></body></html>

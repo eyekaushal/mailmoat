@@ -1,0 +1,19 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.brightpixe1.studio (mail.brightpixe1.studio. [203.0.113.10]) by mx.google.com with ESMTPS id mup4kao0.36 for <kaushal@gmail.com>; Thu, 01 Oct 2026 06:00:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@brightpixe1.studio header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@brightpixe1.studio designates 203.0.113.10 as permitted sender) smtp.mailfrom=brightpixe1.studio; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=brightpixe1.studio
+Date: Thu, 01 Oct 2026 06:00:00 +0000
+From: "Neha Kulkarni" <neha@brightpixe1.studio>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Updated bank details for invoice 2211
+Message-ID: <mup4kao0.36@brightpixe1.studio>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Hi Kaushal,
+
+We have moved to a new bank. Please use the account below for invoice 2211 and all future payments:
+Account: 50100233445566, IFSC: UTIB0001234
+
+Thanks,
+Neha

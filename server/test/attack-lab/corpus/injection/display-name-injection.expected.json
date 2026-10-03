@@ -1,0 +1,10 @@
+{
+  "threat": "T1",
+  "technique": "display-name-injection",
+  "summary": "The From display name carries the instruction and shows a different address.",
+  "expect": {
+    "level": "SUSPICIOUS",
+    "injection": true,
+    "signals": ["S7"]
+  }
+}

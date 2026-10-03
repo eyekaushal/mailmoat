@@ -1,0 +1,9 @@
+{
+  "threat": "T7",
+  "technique": "brand-name/free-mail",
+  "summary": "Amazon Prime charge notice from a Gmail address.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S7", "S11"]
+  }
+}

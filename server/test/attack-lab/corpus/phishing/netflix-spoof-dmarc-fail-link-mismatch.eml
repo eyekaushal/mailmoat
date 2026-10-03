@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.netflix.com (mail.netflix.com. [203.0.113.10]) by mx.google.com with ESMTPS id muotuhs0.49 for <kaushal@gmail.com>; Thu, 01 Oct 2026 01:00:00 +0000
+Authentication-Results: mx.google.com; dkim=fail (signature did not verify) header.i=@netflix.com header.s=s1; spf=fail (google.com: domain of bounce@netflix.com does not designate 198.51.100.7 as permitted sender) smtp.mailfrom=netflix.com; dmarc=fail (p=REJECT sp=REJECT dis=NONE) header.from=netflix.com
+Date: Thu, 01 Oct 2026 01:00:00 +0000
+From: "Netflix" <info@netflix.com>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Your payment failed - update your details
+Message-ID: <muotuhs0.49@netflix.com>
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body style="font-family:Arial,sans-serif;color:#222;background:#ffffff"><p>Hi Kaushal,</p><p>We could not process your payment. Update your details within 24 hours to keep watching.</p><p><a href="https://netflix-billing-update.example/account">https://www.netflix.com/account</a></p></body></html>

@@ -1,0 +1,14 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.producthunt-daily.example (mail.producthunt-daily.example. [203.0.113.10]) by mx.google.com with ESMTPS id mu86s4w0.112 for <kaushal@gmail.com>; Sat, 19 Sep 2026 09:30:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@producthunt-daily.example header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@producthunt-daily.example designates 203.0.113.10 as permitted sender) smtp.mailfrom=producthunt-daily.example; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=producthunt-daily.example
+Date: Sat, 19 Sep 2026 09:30:00 +0000
+From: "Product Hunt Daily" <hello@producthunt-daily.example>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Today's top launches
+Message-ID: <mu86s4w0.112@producthunt-daily.example>
+MIME-Version: 1.0
+List-Unsubscribe: <https://producthunt-daily.example/unsub/77>
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body style="font-family:Arial,sans-serif;color:#222;background:#ffffff"><h3>Today's top launches</h3><ol><li><a href="https://bit.ly/3LaunchA">Rewind for teams</a></li><li><a href="https://bit.ly/3LaunchB">Figma-to-code 2.0</a></li></ol><p style="font-size:11px"><a href="https://producthunt-daily.example/unsub/77">Unsubscribe</a></p></body></html>

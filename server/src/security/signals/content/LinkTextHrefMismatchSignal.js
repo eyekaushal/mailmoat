@@ -31,12 +31,17 @@ export class LinkTextHrefMismatchSignal extends Signal {
       if (shown && !OrgDomain.same(shown, link.host) && !this.#isSendersOwnDomain(shown, email)) {
         return this.fire(`A link shows ${shown} but actually goes to ${link.host}.`);
       }
+      // `netflix.com.evil.example` and `login.microsoftonline.com.evil.example` both read as the
+      // real site to a person; the genuine domain is a whole label sequence, not a suffix.
       const embedded = genuine.find(
-        (domain) => link.host.startsWith(`${domain}.`) && !OrgDomain.same(domain, link.host),
+        (domain) =>
+          (link.host.startsWith(`${domain}.`) || link.host.includes(`.${domain}.`)) &&
+          !OrgDomain.same(domain, link.host),
       );
       if (embedded) {
+        const how = link.host.startsWith(`${embedded}.`) ? 'starts with' : 'contains';
         return this.fire(
-          `The link address ${link.host} starts with ${embedded} but really belongs to ${OrgDomain.of(link.host)}.`,
+          `The link address ${link.host} ${how} ${embedded} but really belongs to ${OrgDomain.of(link.host)}.`,
         );
       }
     }

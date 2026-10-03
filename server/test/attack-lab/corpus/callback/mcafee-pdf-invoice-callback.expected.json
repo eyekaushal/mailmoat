@@ -1,0 +1,9 @@
+{
+  "threat": "T7",
+  "technique": "brand-name/pdf-attachment",
+  "summary": "McAfee renewal where the phone number is in an attached PDF.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S7", "S9"]
+  }
+}

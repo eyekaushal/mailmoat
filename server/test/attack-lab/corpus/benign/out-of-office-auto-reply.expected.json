@@ -1,0 +1,9 @@
+{
+  "threat": "none",
+  "technique": "work/auto-reply",
+  "summary": "Out-of-office auto-reply from a contact.",
+  "expect": {
+    "level": "SAFE",
+    "signals": []
+  }
+}

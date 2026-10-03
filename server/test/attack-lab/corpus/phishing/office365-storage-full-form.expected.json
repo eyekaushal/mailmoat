@@ -1,0 +1,9 @@
+{
+  "threat": "T5",
+  "technique": "brand/form-in-body",
+  "summary": "Office 365-branded storage warning with an embedded login form.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S20"]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "threat": "T1",
+  "technique": "subject-injection",
+  "summary": "The instruction sits in the subject line, where it is fully visible.",
+  "expect": {
+    "level": "SUSPICIOUS",
+    "injection": true,
+    "signals": []
+  }
+}

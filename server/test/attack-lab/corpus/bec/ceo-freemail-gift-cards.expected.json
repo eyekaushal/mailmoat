@@ -1,0 +1,9 @@
+{
+  "threat": "T4",
+  "technique": "ceo-fraud/free-mail",
+  "summary": "CEO name on a Gmail address asking for gift cards.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S7", "S9", "S11"]
+  }
+}

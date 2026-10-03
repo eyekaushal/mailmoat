@@ -1,0 +1,9 @@
+{
+  "threat": "T6",
+  "technique": "contact-name/free-mail+shortener",
+  "summary": "Partner contact on Outlook with a bit.ly \"document review\" link.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S7", "S15"]
+  }
+}

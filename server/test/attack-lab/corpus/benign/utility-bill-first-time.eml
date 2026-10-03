@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.tatapower-bills.example (mail.tatapower-bills.example. [203.0.113.10]) by mx.google.com with ESMTPS id mugf3ko0.104 for <kaushal@gmail.com>; Fri, 25 Sep 2026 03:45:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@tatapower-bills.example header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@tatapower-bills.example designates 203.0.113.10 as permitted sender) smtp.mailfrom=tatapower-bills.example; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=tatapower-bills.example
+Date: Fri, 25 Sep 2026 03:45:00 +0000
+From: "Tata Power" <ebill@tatapower-bills.example>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: =?UTF-8?B?WW91ciBlbGVjdHJpY2l0eSBiaWxsIGZvciBTZXB0ZW1iZXI6IOKCuTIsMzEw?=
+Message-ID: <mugf3ko0.104@tatapower-bills.example>
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body style="font-family:Arial,sans-serif;color:#222;background:#ffffff"><p>Your bill for consumer no. 900211 is ₹2,310, due 10 October.</p><p><a href="https://tatapower-bills.example/pay/900211">Pay online</a></p></body></html>

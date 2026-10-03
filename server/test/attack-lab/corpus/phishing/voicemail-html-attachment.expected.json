@@ -1,0 +1,9 @@
+{
+  "threat": "T5",
+  "technique": "generic/html-attachment",
+  "summary": "Fake voicemail notification with an HTML \"player\" attachment.",
+  "expect": {
+    "level": "SUSPICIOUS",
+    "signals": ["S19"]
+  }
+}

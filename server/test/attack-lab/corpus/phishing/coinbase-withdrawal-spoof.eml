@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.coinbase.com (mail.coinbase.com. [203.0.113.10]) by mx.google.com with ESMTPS id mu0c1dpc.67 for <kaushal@gmail.com>; Sun, 13 Sep 2026 21:35:00 +0000
+Authentication-Results: mx.google.com; dkim=fail (signature did not verify) header.i=@coinbase.com header.s=s1; spf=fail (google.com: domain of bounce@coinbase.com does not designate 198.51.100.7 as permitted sender) smtp.mailfrom=coinbase.com; dmarc=fail (p=REJECT sp=REJECT dis=NONE) header.from=coinbase.com
+Date: Sun, 13 Sep 2026 21:35:00 +0000
+From: "Coinbase" <security@coinbase.com>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Withdrawal of 0.45 BTC pending
+Message-ID: <mu0c1dpc.67@coinbase.com>
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body style="font-family:Arial,sans-serif;color:#222;background:#ffffff"><p>A withdrawal of 0.45 BTC was requested. If this was not you, cancel it within 30 minutes.</p><p><a href="https://coinbase.com.wallet-verify.example/cancel" style="background:#e50914;color:#fff;padding:10px 18px;text-decoration:none">Cancel withdrawal</a></p></body></html>

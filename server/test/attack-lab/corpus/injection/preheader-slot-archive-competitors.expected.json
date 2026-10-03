@@ -1,0 +1,10 @@
+{
+  "threat": "T1",
+  "technique": "fake-preheader",
+  "summary": "Retail newsletter with instructions hidden via fake-preheader.",
+  "expect": {
+    "level": "DANGEROUS",
+    "injection": true,
+    "signals": ["S12", "S13"]
+  }
+}

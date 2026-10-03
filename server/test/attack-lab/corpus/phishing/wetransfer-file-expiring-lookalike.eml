@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.wetransfer-files.example (mail.wetransfer-files.example. [203.0.113.10]) by mx.google.com with ESMTPS id mu2c7480.66 for <kaushal@gmail.com>; Tue, 15 Sep 2026 07:15:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@wetransfer-files.example header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@wetransfer-files.example designates 203.0.113.10 as permitted sender) smtp.mailfrom=wetransfer-files.example; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=wetransfer-files.example
+Date: Tue, 15 Sep 2026 07:15:00 +0000
+From: "WeTransfer" <noreply@wetransfer-files.example>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Your files will be deleted in 24 hours
+Message-ID: <mu2c7480.66@wetransfer-files.example>
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body style="font-family:Arial,sans-serif;color:#222;background:#ffffff"><p>Rahul Mehta sent you 3 files. They will be deleted tomorrow.</p><p><a href="https://wetransfer-files.example/dl/88a1">wetransfer.com/downloads/88a1</a></p></body></html>

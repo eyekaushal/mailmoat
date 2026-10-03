@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.accounts.google.com (mail.accounts.google.com. [203.0.113.10]) by mx.google.com with ESMTPS id mubprw80.59 for <kaushal@gmail.com>; Mon, 21 Sep 2026 20:45:00 +0000
+Authentication-Results: mx.google.com; dkim=fail (signature did not verify) header.i=@accounts.google.com header.s=s1; spf=fail (google.com: domain of bounce@accounts.google.com does not designate 198.51.100.7 as permitted sender) smtp.mailfrom=accounts.google.com; dmarc=fail (p=REJECT sp=REJECT dis=NONE) header.from=accounts.google.com
+Date: Mon, 21 Sep 2026 20:45:00 +0000
+From: "Google" <no-reply@accounts.google.com>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Critical security alert
+Message-ID: <mubprw80.59@accounts.google.com>
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body style="font-family:Arial,sans-serif;color:#222;background:#ffffff"><p>Someone has your password. Google blocked a sign-in attempt from Lagos, Nigeria.</p><p><a href="https://accounts.google.com.security-check.example/recover" style="background:#e50914;color:#fff;padding:10px 18px;text-decoration:none">Secure your account</a></p></body></html>

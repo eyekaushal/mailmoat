@@ -1,0 +1,10 @@
+{
+  "threat": "T4",
+  "technique": "payroll-diversion/display-name",
+  "summary": "Same name on an Outlook address.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S7", "S9"],
+    "verifyByPhone": true
+  }
+}

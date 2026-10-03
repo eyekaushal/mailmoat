@@ -1,0 +1,10 @@
+{
+  "threat": "T4",
+  "technique": "payroll-diversion/reply-to",
+  "summary": "An HR-style domain with Reply-To on Proton.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S4", "S7"],
+    "verifyByPhone": true
+  }
+}

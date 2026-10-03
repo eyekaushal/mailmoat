@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.acme-corp-ceo.com (mail.acme-corp-ceo.com. [203.0.113.10]) by mx.google.com with ESMTPS id mujziruo.35 for <kaushal@gmail.com>; Sun, 27 Sep 2026 15:40:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@acme-corp-ceo.com header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@acme-corp-ceo.com designates 203.0.113.10 as permitted sender) smtp.mailfrom=acme-corp-ceo.com; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=acme-corp-ceo.com
+Date: Sun, 27 Sep 2026 15:40:00 +0000
+From: "Rahul Mehta" <rahul.mehta@acme-corp-ceo.com>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: New number
+Message-ID: <mujziruo.35@acme-corp-ceo.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Hi Kaushal, I changed my mobile. Save this number and text me on it when you are free: +91 98XXX 11223. Rahul

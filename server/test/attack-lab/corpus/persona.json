@@ -1,0 +1,38 @@
+{
+  "address": "kaushal@gmail.com",
+  "timeZone": "Asia/Kolkata",
+  "contacts": [
+    {
+      "address": "rahul@acme-corp.com",
+      "name": "Rahul Mehta"
+    },
+    {
+      "address": "finance@acme-corp.com",
+      "name": "Acme Finance"
+    },
+    {
+      "address": "priya@partnerco.io",
+      "name": "Priya Shah"
+    },
+    {
+      "address": "neha@brightpixel.studio",
+      "name": "Neha Kulkarni"
+    },
+    {
+      "address": "amit.verma@gmail.com",
+      "name": "Amit Verma"
+    },
+    {
+      "address": "sana.iyer@gmail.com",
+      "name": "Sana Iyer"
+    },
+    {
+      "address": "support@cloudnest.dev",
+      "name": "CloudNest Support"
+    },
+    {
+      "address": "hello@lumenpress.co",
+      "name": "Lumen Press"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.partnerco.co (mail.partnerco.co. [203.0.113.10]) by mx.google.com with ESMTPS id munyy3hc.84 for <kaushal@gmail.com>; Wed, 30 Sep 2026 10:35:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@partnerco.co header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@partnerco.co designates 203.0.113.10 as permitted sender) smtp.mailfrom=partnerco.co; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=partnerco.co
+Date: Wed, 30 Sep 2026 10:35:00 +0000
+From: "Priya Shah" <priya@partnerco.co>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Re: Atlas budget
+Message-ID: <munyy3hc.84@partnerco.co>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Kaushal, as discussed, the revised Atlas budget is at the link below. Please approve by EOD so finance can release the October tranche.
+
+https://partnerco-docs.example/atlas/budget
+
+Priya

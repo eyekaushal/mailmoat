@@ -1,0 +1,15 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.google-account-recovery.example (mail.google-account-recovery.example. [203.0.113.10]) by mx.google.com with ESMTPS id mttsg5mo.72 for <kaushal@gmail.com>; Wed, 09 Sep 2026 07:40:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@google-account-recovery.example header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@google-account-recovery.example designates 203.0.113.10 as permitted sender) smtp.mailfrom=google-account-recovery.example; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=google-account-recovery.example
+Date: Wed, 09 Sep 2026 07:40:00 +0000
+From: "Google Account Team" <noreply@google-account-recovery.example>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Confirm it is you
+Message-ID: <mttsg5mo.72@google-account-recovery.example>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+We sent a 6-digit code to your phone. Reply to this email with the code to confirm your identity and keep your account active.
+
+Google Account Team

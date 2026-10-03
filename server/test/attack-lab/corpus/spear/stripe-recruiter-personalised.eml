@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.stripe-careers.example (mail.stripe-careers.example. [203.0.113.10]) by mx.google.com with ESMTPS id mujmu8o0.87 for <kaushal@gmail.com>; Sun, 27 Sep 2026 09:45:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@stripe-careers.example header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@stripe-careers.example designates 203.0.113.10 as permitted sender) smtp.mailfrom=stripe-careers.example; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=stripe-careers.example
+Date: Sun, 27 Sep 2026 09:45:00 +0000
+From: "Talent at Stripe" <talent@stripe-careers.example>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Kaushal, your Atlas work caught our eye
+Message-ID: <mujmu8o0.87@stripe-careers.example>
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body style="font-family:Arial,sans-serif;color:#222;background:#ffffff"><p>Hi Kaushal,</p><p>Your recent work on Project Atlas and the BrightPixel brand system is exactly the design leadership we are hiring for. Could you complete the short application below this week?</p><p><a href="https://stripe.com.careers-apply.example/kaushal">Complete application</a></p><p>Warmly,<br>Talent team, Stripe</p></body></html>

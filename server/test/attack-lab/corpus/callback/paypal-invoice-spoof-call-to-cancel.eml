@@ -1,0 +1,15 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.paypal.com (mail.paypal.com. [203.0.113.10]) by mx.google.com with ESMTPS id muls00o0.75 for <kaushal@gmail.com>; Mon, 28 Sep 2026 21:45:00 +0000
+Authentication-Results: mx.google.com; dkim=fail (signature did not verify) header.i=@paypal.com header.s=s1; spf=fail (google.com: domain of bounce@paypal.com does not designate 198.51.100.7 as permitted sender) smtp.mailfrom=paypal.com; dmarc=fail (p=REJECT sp=REJECT dis=NONE) header.from=paypal.com
+Date: Mon, 28 Sep 2026 21:45:00 +0000
+From: "PayPal Billing" <service@paypal.com>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Invoice from Crypto Exchange Ltd ($799.00)
+Message-ID: <muls00o0.75@paypal.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+You have received an invoice of $799.00 from Crypto Exchange Ltd. If you did not make this purchase, call PayPal support at +1-805-555-0199 immediately to cancel.
+
+PayPal

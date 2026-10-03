@@ -1,0 +1,9 @@
+{
+  "threat": "T5",
+  "technique": "brand/code-relay",
+  "summary": "Google-branded request to reply with a 2FA code.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S6", "S7", "S9"]
+  }
+}

@@ -1,0 +1,17 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.gmail.com (mail.gmail.com. [203.0.113.10]) by mx.google.com with ESMTPS id mujfvgw0.48 for <kaushal@gmail.com>; Sun, 27 Sep 2026 06:30:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@gmail.com header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@gmail.com designates 203.0.113.10 as permitted sender) smtp.mailfrom=gmail.com; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=gmail.com
+Date: Sun, 27 Sep 2026 06:30:00 +0000
+From: "Acme Finance" <acme.finance.dept@gmail.com>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: OVERDUE: invoice ACM-0931
+Message-ID: <mujfvgw0.48@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Dear Kaushal,
+
+Our records show invoice ACM-0931 (₹1,20,000) is overdue. To avoid a late fee, pay today to A/C 2233445566, IFSC HDFC0000987 and reply with the receipt.
+
+Acme Finance

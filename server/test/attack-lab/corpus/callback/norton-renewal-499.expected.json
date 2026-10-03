@@ -1,0 +1,9 @@
+{
+  "threat": "T7",
+  "technique": "brand-name/unknown-domain",
+  "summary": "The classic $499 Norton renewal with a number to call.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S7", "S9"]
+  }
+}

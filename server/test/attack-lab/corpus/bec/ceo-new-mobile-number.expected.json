@@ -1,0 +1,9 @@
+{
+  "threat": "T4",
+  "technique": "ceo-fraud/stage-one-number-swap",
+  "summary": "Stage one: \"save my new number\", from a look-alike corporate domain.",
+  "expect": {
+    "level": "SUSPICIOUS",
+    "signals": ["S7", "S9"]
+  }
+}

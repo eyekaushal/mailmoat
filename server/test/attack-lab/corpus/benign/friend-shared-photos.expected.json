@@ -1,0 +1,9 @@
+{
+  "threat": "none",
+  "technique": "personal/contact-link",
+  "summary": "A friend shares a Google Photos album.",
+  "expect": {
+    "level": "SAFE",
+    "signals": []
+  }
+}

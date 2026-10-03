@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.paypal.com (mail.paypal.com. [203.0.113.10]) by mx.google.com with ESMTPS id mun9elmo.51 for <kaushal@gmail.com>; Tue, 29 Sep 2026 22:40:00 +0000
+Authentication-Results: mx.google.com; dkim=fail (signature did not verify) header.i=@paypal.com header.s=s1; spf=fail (google.com: domain of bounce@paypal.com does not designate 198.51.100.7 as permitted sender) smtp.mailfrom=paypal.com; dmarc=fail (p=REJECT sp=REJECT dis=NONE) header.from=paypal.com
+Date: Tue, 29 Sep 2026 22:40:00 +0000
+From: "PayPal" <service@paypal.com>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Unusual activity on your account
+Message-ID: <mun9elmo.51@paypal.com>
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body style="font-family:Arial,sans-serif;color:#222;background:#ffffff"><p>We noticed a login from a new device. Confirm it was you.</p><p><a href="http://paypa1-secure.example/signin" style="background:#e50914;color:#fff;padding:10px 18px;text-decoration:none">Log in to review</a></p></body></html>

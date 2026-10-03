@@ -1,0 +1,10 @@
+{
+  "threat": "T4",
+  "technique": "vendor-bank-change/compromised-account",
+  "summary": "The real vendor account, fully authenticated, asks for a bank change. Must trigger verify-by-phone.",
+  "expect": {
+    "level": "SUSPICIOUS",
+    "signals": [],
+    "verifyByPhone": true
+  }
+}

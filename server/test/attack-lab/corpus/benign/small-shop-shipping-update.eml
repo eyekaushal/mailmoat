@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.chumbak-store.example (mail.chumbak-store.example. [203.0.113.10]) by mx.google.com with ESMTPS id mty4wveo.124 for <kaushal@gmail.com>; Sat, 12 Sep 2026 08:40:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@sendgrid.net header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@chumbak-store.example designates 203.0.113.10 as permitted sender) smtp.mailfrom=chumbak-store.example; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=chumbak-store.example
+Date: Sat, 12 Sep 2026 08:40:00 +0000
+From: "Chumbak" <orders@chumbak-store.example>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Your order #CH-20911 has shipped
+Message-ID: <mty4wveo.124@chumbak-store.example>
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body style="font-family:Arial,sans-serif;color:#222;background:#ffffff"><p>Good news, your order has shipped via Delhivery.</p><p><a href="https://chumbak-store.example/track/CH-20911">Track package</a></p></body></html>

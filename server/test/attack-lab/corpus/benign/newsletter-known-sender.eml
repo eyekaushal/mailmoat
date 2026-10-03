@@ -1,0 +1,30 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.lumenpress.co (mail.lumenpress.co. [203.0.113.10]) by mx.google.com with ESMTPS id muoux2o0.93 for <kaushal@gmail.com>; Thu, 01 Oct 2026 01:30:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@lumenpress.co header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@lumenpress.co designates 203.0.113.10 as permitted sender) smtp.mailfrom=lumenpress.co; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=lumenpress.co
+Date: Thu, 01 Oct 2026 01:30:00 +0000
+From: "Lumen Press" <hello@lumenpress.co>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Lumen Weekly #118: the quiet redesign
+Message-ID: <muoux2o0.93@lumenpress.co>
+MIME-Version: 1.0
+List-Unsubscribe: <https://lumenpress.co/unsubscribe/abc>
+Content-Type: multipart/alternative; boundary="----=_Alt_muoux2o0.93"
+
+------=_Alt_muoux2o0.93
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Lumen Weekly #118
+
+This week: how a two-person team redesigned onboarding without a redesign.
+
+Read: https://lumenpress.co/118
+Also on Medium: https://medium.com/@lumenpress/118
+
+Unsubscribe: https://lumenpress.co/unsubscribe/abc
+------=_Alt_muoux2o0.93
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body style="font-family:Arial,sans-serif;color:#222;background:#ffffff"><div style="display:none">How a two-person team redesigned onboarding without a redesign</div><h2>Lumen Weekly #118</h2><p>This week: how a two-person team redesigned onboarding without a redesign.</p><p><a href="https://lumenpress.co/118">Read the issue</a> · <a href="https://medium.com/@lumenpress/118">On Medium</a></p><p style="font-size:11px"><a href="https://lumenpress.co/unsubscribe/abc">Unsubscribe</a></p></body></html>
+------=_Alt_muoux2o0.93--

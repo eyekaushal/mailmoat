@@ -1,0 +1,28 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.invoices-portal.example (mail.invoices-portal.example. [203.0.113.10]) by mx.google.com with ESMTPS id mu7wf6yo.62 for <kaushal@gmail.com>; Sat, 19 Sep 2026 04:40:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@invoices-portal.example header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@invoices-portal.example designates 203.0.113.10 as permitted sender) smtp.mailfrom=invoices-portal.example; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=invoices-portal.example
+Date: Sat, 19 Sep 2026 04:40:00 +0000
+From: "Accounts Payable" <ap@invoices-portal.example>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Invoice 8841
+Message-ID: <mu7wf6yo.62@invoices-portal.example>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="----=_Mixed_mu7wf6yo.62"
+
+------=_Mixed_mu7wf6yo.62
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Please find attached invoice 8841 for your records.
+
+Accounts Payable
+------=_Mixed_mu7wf6yo.62
+Content-Type: text/html; name="Invoice_8841.htm"
+Content-Disposition: attachment; filename="Invoice_8841.htm"
+Content-Transfer-Encoding: base64
+
+PGh0bWw+PGJvZHk+PGZvcm0gbWV0aG9kPSJwb3N0IiBhY3Rpb249Imh0dHBzOi8vY29sbGVjdC1m
+b3Jtcy5leGFtcGxlL2xvZ2luIj48aW5wdXQgbmFtZT0iZW1haWwiPjxpbnB1dCB0eXBlPSJwYXNz
+d29yZCIgbmFtZT0icGFzc3dvcmQiPjxidXR0b24+U2lnbiBpbjwvYnV0dG9uPjwvZm9ybT48L2Jv
+ZHk+PC9odG1sPg==
+------=_Mixed_mu7wf6yo.62--

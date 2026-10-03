@@ -1,0 +1,10 @@
+{
+  "threat": "none",
+  "technique": "brand-transactional/github",
+  "summary": "GitHub Actions deployment notice (DMARC pass, brand domain).",
+  "expect": {
+    "level": "SAFE",
+    "signals": []
+  },
+  "knownGap": "Genuine, DMARC-aligned brand mail: the Reader honestly says claims_to_be = brand, and the §7.4 rule \"brand claim + first-time sender\" makes it SUSPICIOUS. Needs a brand-domain-ownership check in B28."
+}

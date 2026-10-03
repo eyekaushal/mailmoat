@@ -1,0 +1,9 @@
+{
+  "threat": "T4",
+  "technique": "gift-card/spoofed-address",
+  "summary": "Direct spoof of the CEO's address with DMARC fail and no Reply-To trick.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S1", "S2"]
+  }
+}

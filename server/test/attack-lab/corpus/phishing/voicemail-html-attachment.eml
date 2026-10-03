@@ -1,0 +1,26 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.voice-msg.example (mail.voice-msg.example. [203.0.113.10]) by mx.google.com with ESMTPS id mu6cil9c.63 for <kaushal@gmail.com>; Fri, 18 Sep 2026 02:35:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@voice-msg.example header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@voice-msg.example designates 203.0.113.10 as permitted sender) smtp.mailfrom=voice-msg.example; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=voice-msg.example
+Date: Fri, 18 Sep 2026 02:35:00 +0000
+From: "Voicemail Service" <vm@voice-msg.example>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: New voicemail (0:42)
+Message-ID: <mu6cil9c.63@voice-msg.example>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="----=_Mixed_mu6cil9c.63"
+
+------=_Mixed_mu6cil9c.63
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+You have a new voicemail from +91 22 4000 1100 (0:42). Open the attached player to listen.
+------=_Mixed_mu6cil9c.63
+Content-Type: text/html; name="VM_20260918.html"
+Content-Disposition: attachment; filename="VM_20260918.html"
+Content-Transfer-Encoding: base64
+
+PGh0bWw+PGJvZHk+PGZvcm0gbWV0aG9kPSJwb3N0IiBhY3Rpb249Imh0dHBzOi8vY29sbGVjdC1m
+b3Jtcy5leGFtcGxlL2xvZ2luIj48aW5wdXQgbmFtZT0iZW1haWwiPjxpbnB1dCB0eXBlPSJwYXNz
+d29yZCIgbmFtZT0icGFzc3dvcmQiPjxidXR0b24+U2lnbiBpbjwvYnV0dG9uPjwvZm9ybT48L2Jv
+ZHk+PC9odG1sPg==
+------=_Mixed_mu6cil9c.63--

@@ -12,6 +12,10 @@ describe('BrandList', () => {
     ['Wells Fargo Online', 'Wells Fargo'],
     ['netflix-account-help.com', 'Netflix'],
     ['Bank of America Alerts', 'Bank of America'],
+    // Capital I is a confusable of l; the real spelling must still match.
+    ['LinkedIn', 'LinkedIn'],
+    ['IRS Refund Dept', 'IRS'],
+    ['ICICI Bank Alerts', 'ICICI Bank'],
   ])('finds the brand named in %s', (text, expected) => {
     expect(brands.namedIn(text)?.name).toBe(expected);
   });

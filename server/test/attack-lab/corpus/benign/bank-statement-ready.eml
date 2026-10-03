@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.hdfcbank.net (mail.hdfcbank.net. [203.0.113.10]) by mx.google.com with ESMTPS id mug84sw0.103 for <kaushal@gmail.com>; Fri, 25 Sep 2026 00:30:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@hdfcbank.net header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@hdfcbank.net designates 203.0.113.10 as permitted sender) smtp.mailfrom=hdfcbank.net; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=hdfcbank.net
+Date: Fri, 25 Sep 2026 00:30:00 +0000
+From: "HDFC Bank" <alerts@hdfcbank.net>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Your September account statement is ready
+Message-ID: <mug84sw0.103@hdfcbank.net>
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body style="font-family:Arial,sans-serif;color:#222;background:#ffffff"><p>Dear Customer, your statement for September is ready. Log in to NetBanking to view or download it.</p><p><a href="https://netbanking.hdfcbank.com/netbanking/">Go to NetBanking</a></p></body></html>

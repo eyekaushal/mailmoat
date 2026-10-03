@@ -1,0 +1,28 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.partner-co.io (mail.partner-co.io. [203.0.113.10]) by mx.google.com with ESMTPS id mup0zp1c.83 for <kaushal@gmail.com>; Thu, 01 Oct 2026 04:20:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@partner-co.io header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@partner-co.io designates 203.0.113.10 as permitted sender) smtp.mailfrom=partner-co.io; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=partner-co.io
+Date: Thu, 01 Oct 2026 04:20:00 +0000
+From: "Priya Shah" <priya@partner-co.io>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Project Atlas follow-up
+Message-ID: <mup0zp1c.83@partner-co.io>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="----=_Mixed_mup0zp1c.83"
+
+------=_Mixed_mup0zp1c.83
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Hi Kaushal,
+
+Following up on the Atlas milestones we discussed on Tuesday. I have attached the updated plan with the revised dates for the design handoff; could you review the section on the October sprint before our Thursday call?
+
+Best,
+Priya
+------=_Mixed_mup0zp1c.83
+Content-Type: application/pdf; name="Atlas_plan_v3.pdf"
+Content-Disposition: attachment; filename="Atlas_plan_v3.pdf"
+Content-Transfer-Encoding: base64
+
+JVBERi0xLjQgbGFiIHBsYWNlaG9sZGVy
+------=_Mixed_mup0zp1c.83--

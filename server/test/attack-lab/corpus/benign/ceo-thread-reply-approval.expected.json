@@ -1,0 +1,9 @@
+{
+  "threat": "none",
+  "technique": "work/contact-reply",
+  "summary": "The CEO replies in a thread approving a plan.",
+  "expect": {
+    "level": "SAFE",
+    "signals": []
+  }
+}

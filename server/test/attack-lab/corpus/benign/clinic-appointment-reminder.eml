@@ -1,0 +1,15 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.apolloclinic-bandra.example (mail.apolloclinic-bandra.example. [203.0.113.10]) by mx.google.com with ESMTPS id mu9bi6o0.111 for <kaushal@gmail.com>; Sun, 20 Sep 2026 04:30:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@apolloclinic-bandra.example header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@apolloclinic-bandra.example designates 203.0.113.10 as permitted sender) smtp.mailfrom=apolloclinic-bandra.example; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=apolloclinic-bandra.example
+Date: Sun, 20 Sep 2026 04:30:00 +0000
+From: "Apollo Clinic Bandra" <appointments@apolloclinic-bandra.example>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Reminder: appointment Tue 6 Oct, 10:30
+Message-ID: <mu9bi6o0.111@apolloclinic-bandra.example>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Dear Kaushal, this is a reminder of your appointment with Dr. Rao on Tuesday 6 October at 10:30. To reschedule, call 022 2640 1100.
+
+Apollo Clinic, Bandra

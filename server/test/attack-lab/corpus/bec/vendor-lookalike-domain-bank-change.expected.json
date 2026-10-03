@@ -1,0 +1,10 @@
+{
+  "threat": "T4",
+  "technique": "vendor-bank-change/lookalike-domain",
+  "summary": "A known vendor's domain with \"l\" swapped for \"1\" announces new bank details.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S5", "S9"],
+    "verifyByPhone": true
+  }
+}

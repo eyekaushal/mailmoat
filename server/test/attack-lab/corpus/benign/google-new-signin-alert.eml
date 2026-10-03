@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.accounts.google.com (mail.accounts.google.com. [203.0.113.10]) by mx.google.com with ESMTPS id muhs1elc.102 for <kaushal@gmail.com>; Sat, 26 Sep 2026 02:35:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@accounts.google.com header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@accounts.google.com designates 203.0.113.10 as permitted sender) smtp.mailfrom=accounts.google.com; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=accounts.google.com
+Date: Sat, 26 Sep 2026 02:35:00 +0000
+From: "Google" <no-reply@accounts.google.com>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: New sign-in on Windows
+Message-ID: <muhs1elc.102@accounts.google.com>
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body style="font-family:Arial,sans-serif;color:#222;background:#ffffff"><p>Your Google Account was just signed in to from a new Windows device. If this was you, you can ignore this email.</p><p><a href="https://myaccount.google.com/notifications">Check activity</a></p></body></html>

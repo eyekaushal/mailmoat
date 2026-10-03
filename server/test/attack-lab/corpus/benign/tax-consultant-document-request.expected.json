@@ -1,0 +1,9 @@
+{
+  "threat": "none",
+  "technique": "work/first-contact-documents",
+  "summary": "A chartered accountant the user hired asks for documents.",
+  "expect": {
+    "level": "SAFE",
+    "signals": []
+  }
+}

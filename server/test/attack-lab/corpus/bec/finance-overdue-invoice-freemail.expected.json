@@ -1,0 +1,9 @@
+{
+  "threat": "T4",
+  "technique": "invoice-fraud/free-mail",
+  "summary": "Client's finance team name on Gmail chasing an \"overdue\" payment.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S7", "S11"]
+  }
+}

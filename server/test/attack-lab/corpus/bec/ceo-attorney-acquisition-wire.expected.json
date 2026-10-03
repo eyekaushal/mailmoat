@@ -1,0 +1,9 @@
+{
+  "threat": "T4",
+  "technique": "ceo-fraud/forged-auth-header",
+  "summary": "Confidential acquisition story with a forged Authentication-Results header from a non-Google host.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S2"]
+  }
+}

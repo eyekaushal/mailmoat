@@ -1,0 +1,9 @@
+{
+  "threat": "none",
+  "technique": "notification/known-vendor",
+  "summary": "Domain auto-renewal notice from the hosting provider.",
+  "expect": {
+    "level": "SAFE",
+    "signals": []
+  }
+}

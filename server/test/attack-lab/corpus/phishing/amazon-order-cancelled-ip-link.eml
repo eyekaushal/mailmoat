@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.amazon-in-orders.example (mail.amazon-in-orders.example. [203.0.113.10]) by mx.google.com with ESMTPS id muk1b2o0.54 for <kaushal@gmail.com>; Sun, 27 Sep 2026 16:30:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@amazon-in-orders.example header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@amazon-in-orders.example designates 203.0.113.10 as permitted sender) smtp.mailfrom=amazon-in-orders.example; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=amazon-in-orders.example
+Date: Sun, 27 Sep 2026 16:30:00 +0000
+From: "Amazon.in" <order-update@amazon-in-orders.example>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Your order could not be verified
+Message-ID: <muk1b2o0.54@amazon-in-orders.example>
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body style="font-family:Arial,sans-serif;color:#222;background:#ffffff"><p>Order #402-5519-7733 is on hold. Sign in to verify your identity or the order will be cancelled.</p><p><a href="http://185.203.1.44/amazon/signin" style="background:#e50914;color:#fff;padding:10px 18px;text-decoration:none">Verify now</a></p></body></html>

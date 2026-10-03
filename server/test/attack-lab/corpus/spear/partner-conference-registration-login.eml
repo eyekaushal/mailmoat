@@ -1,0 +1,15 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.partnerco-events.com (mail.partnerco-events.com. [203.0.113.10]) by mx.google.com with ESMTPS id muhwv0lc.88 for <kaushal@gmail.com>; Sat, 26 Sep 2026 04:50:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@partnerco-events.com header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@partnerco-events.com designates 203.0.113.10 as permitted sender) smtp.mailfrom=partnerco-events.com; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=partnerco-events.com
+Date: Sat, 26 Sep 2026 04:50:00 +0000
+From: "Priya Shah" <priya.shah@partnerco-events.com>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Speaker slot at DesignOps Summit
+Message-ID: <muhwv0lc.88@partnerco-events.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Kaushal, we would love you to speak about the Atlas design system at DesignOps Summit in November. Register with your work email and password at https://designops-summit-register.example so we can issue the speaker badge.
+
+Priya

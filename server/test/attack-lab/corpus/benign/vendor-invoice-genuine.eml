@@ -1,0 +1,28 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.brightpixel.studio (mail.brightpixel.studio. [203.0.113.10]) by mx.google.com with ESMTPS id mukpyf40.99 for <kaushal@gmail.com>; Mon, 28 Sep 2026 04:00:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@brightpixel.studio header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@brightpixel.studio designates 203.0.113.10 as permitted sender) smtp.mailfrom=brightpixel.studio; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=brightpixel.studio
+Date: Mon, 28 Sep 2026 04:00:00 +0000
+From: "Neha Kulkarni" <neha@brightpixel.studio>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Invoice 2211 - September retainer
+Message-ID: <mukpyf40.99@brightpixel.studio>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="----=_Mixed_mukpyf40.99"
+
+------=_Mixed_mukpyf40.99
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Hi Kaushal,
+
+September's retainer invoice (2211, ₹60,000) is attached. Same account as always; due in 15 days.
+
+Thanks,
+Neha
+------=_Mixed_mukpyf40.99
+Content-Type: application/pdf; name="Invoice_2211.pdf"
+Content-Disposition: attachment; filename="Invoice_2211.pdf"
+Content-Transfer-Encoding: base64
+
+JVBERi0xLjQgbGFiIHBsYWNlaG9sZGVy
+------=_Mixed_mukpyf40.99--

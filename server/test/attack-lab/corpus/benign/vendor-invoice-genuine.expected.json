@@ -1,0 +1,9 @@
+{
+  "threat": "none",
+  "technique": "invoice/known-vendor",
+  "summary": "Monthly invoice from a vendor the user pays, same bank details as always.",
+  "expect": {
+    "level": "SAFE",
+    "signals": []
+  }
+}

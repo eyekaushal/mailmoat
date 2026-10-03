@@ -1,0 +1,9 @@
+{
+  "threat": "T4",
+  "technique": "ceo-fraud/stage-one-probe",
+  "summary": "The classic first message with no ask yet, from a free-mail account using the CEO's name.",
+  "expect": {
+    "level": "SUSPICIOUS",
+    "signals": ["S7", "S9", "S11"]
+  }
+}

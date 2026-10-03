@@ -32,6 +32,19 @@ describe('LinkTextHrefMismatchSignal (S14)', () => {
     expect(evaluate([link('https://acme-corp.com.files.example/x', 'Open')])).not.toBeNull();
   });
 
+  it('fires when a real domain sits in the middle of the host, behind its own subdomain', () => {
+    expect(
+      evaluate([link('https://login.microsoftonline.com.verify-session.example/', 'Keep')])?.reason,
+    ).toBe(
+      'The link address login.microsoftonline.com.verify-session.example contains microsoftonline.com but really belongs to verify-session.example.',
+    );
+    expect(
+      evaluate([link('https://drive.google.com.share-view.example/d/1', 'Open')]),
+    ).not.toBeNull();
+    // The brand's own subdomains are fine.
+    expect(evaluate([link('https://login.microsoftonline.com/common', 'Sign in')])).toBeNull();
+  });
+
   it('accepts a newsletter that shows its own domain through a click tracker, if DMARC passed', () => {
     const tracked = [link('https://click.tracker.example/abc', 'www.acme-corp.com')];
     expect(evaluate(tracked)).toBeNull();

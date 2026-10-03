@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.google.com (mail.google.com. [203.0.113.10]) by mx.google.com with ESMTPS id mugdukao.89 for <kaushal@gmail.com>; Fri, 25 Sep 2026 03:10:00 +0000
+Authentication-Results: mx.google.com; dkim=fail (signature did not verify) header.i=@google.com header.s=s1; spf=fail (google.com: domain of bounce@google.com does not designate 198.51.100.7 as permitted sender) smtp.mailfrom=google.com; dmarc=fail (p=REJECT sp=REJECT dis=NONE) header.from=google.com
+Date: Fri, 25 Sep 2026 03:10:00 +0000
+From: "Rahul Mehta (via Google Drive)" <drive-shares-noreply@google.com>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Rahul Mehta shared "Board deck Q4" with you
+Message-ID: <mugdukao.89@google.com>
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body style="font-family:Arial,sans-serif;color:#222;background:#ffffff"><p>Rahul Mehta shared a document with you.</p><p><a href="https://drive.google.com.share-view.example/d/9f1a">Open</a></p><p>Sign in to view.</p></body></html>

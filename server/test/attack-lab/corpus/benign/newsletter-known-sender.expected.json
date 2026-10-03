@@ -1,0 +1,9 @@
+{
+  "threat": "none",
+  "technique": "newsletter/known-sender",
+  "summary": "Weekly newsletter from a publisher the user has replied to.",
+  "expect": {
+    "level": "SAFE",
+    "signals": []
+  }
+}

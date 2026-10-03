@@ -1,0 +1,10 @@
+{
+  "threat": "T4",
+  "technique": "ceo-fraud/lookalike-domain",
+  "summary": "CEO asks for an urgent, secret payment from a domain one character off the real one.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S5", "S9"],
+    "verifyByPhone": true
+  }
+}

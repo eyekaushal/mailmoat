@@ -1,0 +1,9 @@
+{
+  "threat": "none",
+  "technique": "mailing-list/digest",
+  "summary": "A technical mailing-list digest.",
+  "expect": {
+    "level": "SAFE",
+    "signals": []
+  }
+}

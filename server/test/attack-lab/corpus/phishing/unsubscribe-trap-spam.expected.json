@@ -1,0 +1,9 @@
+{
+  "threat": "T8",
+  "technique": "unsubscribe-trap",
+  "summary": "Spam whose unsubscribe link confirms the address on an attacker domain.",
+  "expect": {
+    "level": "SUSPICIOUS",
+    "signals": ["S2", "S18"]
+  }
+}

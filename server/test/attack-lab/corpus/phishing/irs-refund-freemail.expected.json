@@ -1,0 +1,9 @@
+{
+  "threat": "T5",
+  "technique": "brand/free-mail+government",
+  "summary": "Tax refund lure from a Gmail address claiming to be the IRS.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S7", "S11", "S18"]
+  }
+}

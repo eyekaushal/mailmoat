@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.taxwise-ca.example (mail.taxwise-ca.example. [203.0.113.10]) by mx.google.com with ESMTPS id mu29io00.120 for <kaushal@gmail.com>; Tue, 15 Sep 2026 06:00:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@taxwise-ca.example header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@taxwise-ca.example designates 203.0.113.10 as permitted sender) smtp.mailfrom=taxwise-ca.example; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=taxwise-ca.example
+Date: Tue, 15 Sep 2026 06:00:00 +0000
+From: "Meera Joshi" <meera@taxwise-ca.example>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Documents for your ITR
+Message-ID: <mu29io00.120@taxwise-ca.example>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Dear Kaushal, as discussed on the phone, please send your Form 16, bank interest certificates and the rent receipts by Friday so we can file before the deadline. Regards, Meera Joshi, CA

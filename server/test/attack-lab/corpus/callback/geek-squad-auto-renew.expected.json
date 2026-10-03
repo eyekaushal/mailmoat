@@ -1,0 +1,9 @@
+{
+  "threat": "T7",
+  "technique": "brand-name/lookalike-domain",
+  "summary": "Geek Squad renewal from geeksquad-billing.example.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S6", "S7", "S9"]
+  }
+}

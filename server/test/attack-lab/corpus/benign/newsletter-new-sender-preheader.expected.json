@@ -1,0 +1,9 @@
+{
+  "threat": "none",
+  "technique": "newsletter/first-time+preheader",
+  "summary": "First issue from a new newsletter with a normal hidden preheader.",
+  "expect": {
+    "level": "SAFE",
+    "signals": []
+  }
+}

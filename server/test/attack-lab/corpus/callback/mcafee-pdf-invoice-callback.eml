@@ -1,0 +1,23 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.secure-renewals.example (mail.secure-renewals.example. [203.0.113.10]) by mx.google.com with ESMTPS id muj5vdxc.77 for <kaushal@gmail.com>; Sun, 27 Sep 2026 01:50:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@secure-renewals.example header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@secure-renewals.example designates 203.0.113.10 as permitted sender) smtp.mailfrom=secure-renewals.example; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=secure-renewals.example
+Date: Sun, 27 Sep 2026 01:50:00 +0000
+From: "McAfee Total Protection" <invoice@secure-renewals.example>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Invoice MC-88213
+Message-ID: <muj5vdxc.77@secure-renewals.example>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="----=_Mixed_muj5vdxc.77"
+
+------=_Mixed_muj5vdxc.77
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Your McAfee Total Protection renewal invoice ($389.99) is attached. To cancel, call the support number shown on the invoice.
+------=_Mixed_muj5vdxc.77
+Content-Type: application/pdf; name="Invoice_MC-88213.pdf"
+Content-Disposition: attachment; filename="Invoice_MC-88213.pdf"
+Content-Transfer-Encoding: base64
+
+JVBERi0xLjQgQ2FsbCArMS04ODgtNTU1LTAxNzc=
+------=_Mixed_muj5vdxc.77--

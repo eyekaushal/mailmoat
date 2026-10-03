@@ -1,0 +1,10 @@
+{
+  "threat": "T4",
+  "technique": "payroll-diversion/compromised-account",
+  "summary": "The real Gmail account of the assistant asks for the change.",
+  "expect": {
+    "level": "SUSPICIOUS",
+    "signals": [],
+    "verifyByPhone": true
+  }
+}

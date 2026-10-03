@@ -1,0 +1,14 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.partnerco.io (mail.partnerco.io. [203.0.113.10]) by mx.google.com with ESMTPS id mu6ehbk0.114 for <kaushal@gmail.com>; Fri, 18 Sep 2026 03:30:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@partnerco.io header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@partnerco.io designates 203.0.113.10 as permitted sender) smtp.mailfrom=partnerco.io; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=partnerco.io
+Date: Fri, 18 Sep 2026 03:30:00 +0000
+From: "Priya Shah" <priya@partnerco.io>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Automatic reply: Atlas handoff
+Message-ID: <mu6ehbk0.114@partnerco.io>
+MIME-Version: 1.0
+Auto-Submitted: auto-replied
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+I am out of office until Monday 21 September with limited email access. For urgent Atlas matters contact Dev at dev@partnerco.io.

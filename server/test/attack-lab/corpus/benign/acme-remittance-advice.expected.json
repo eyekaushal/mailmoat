@@ -1,0 +1,9 @@
+{
+  "threat": "none",
+  "technique": "work/known-finance",
+  "summary": "Client finance team confirms a payment.",
+  "expect": {
+    "level": "SAFE",
+    "signals": []
+  }
+}
