@@ -1,0 +1,27 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.acme-corp.com (mail.acme-corp.com. [203.0.113.10]) by mx.google.com with ESMTPS id mukr1000.98 for <kaushal@gmail.com>; Mon, 28 Sep 2026 04:30:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@acme-corp.com header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@acme-corp.com designates 203.0.113.10 as permitted sender) smtp.mailfrom=acme-corp.com; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=acme-corp.com
+Date: Mon, 28 Sep 2026 04:30:00 +0000
+From: "Rahul Mehta" <rahul@acme-corp.com>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Invitation: Q4 planning @ Fri 9 Oct 2026 17:00 (IST)
+Message-ID: <mukr1000.98@acme-corp.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="----=_Mixed_mukr1000.98"
+
+------=_Mixed_mukr1000.98
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Rahul Mehta has invited you to Q4 planning.
+When: Friday 9 October 2026, 17:00 – 18:00 IST
+Where: Google Meet
+
+Join: https://meet.google.com/abc-defg-hij
+------=_Mixed_mukr1000.98
+Content-Type: text/calendar; name="invite.ics"
+Content-Disposition: attachment; filename="invite.ics"
+Content-Transfer-Encoding: base64
+
+QkVHSU46VkNBTEVOREFSCkVORDpWQ0FMRU5EQVI=
+------=_Mixed_mukr1000.98--

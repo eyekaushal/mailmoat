@@ -1,0 +1,9 @@
+{
+  "threat": "none",
+  "technique": "newsletter/shortened-links",
+  "summary": "A daily digest that uses bit.ly links.",
+  "expect": {
+    "level": "SAFE",
+    "signals": []
+  }
+}

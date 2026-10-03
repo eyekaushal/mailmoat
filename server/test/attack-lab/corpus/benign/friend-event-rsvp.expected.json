@@ -1,0 +1,9 @@
+{
+  "threat": "none",
+  "technique": "personal/contact-invite",
+  "summary": "A friend invites the user to a party.",
+  "expect": {
+    "level": "SAFE",
+    "signals": []
+  }
+}

@@ -1,0 +1,23 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.acme-corp.com (mail.acme-corp.com. [203.0.113.10]) by mx.google.com with ESMTPS id muc8vwqo.108 for <kaushal@gmail.com>; Tue, 22 Sep 2026 05:40:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@acme-corp.com header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@acme-corp.com designates 203.0.113.10 as permitted sender) smtp.mailfrom=acme-corp.com; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=acme-corp.com
+Date: Tue, 22 Sep 2026 05:40:00 +0000
+From: "Acme Finance" <finance@acme-corp.com>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Remittance advice: invoice 1182
+Message-ID: <muc8vwqo.108@acme-corp.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="----=_Mixed_muc8vwqo.108"
+
+------=_Mixed_muc8vwqo.108
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Hi Kaushal, invoice 1182 (₹1,20,000) was paid today by NEFT; the remittance advice is attached. Regards, Acme Finance
+------=_Mixed_muc8vwqo.108
+Content-Type: application/pdf; name="Remittance_1182.pdf"
+Content-Disposition: attachment; filename="Remittance_1182.pdf"
+Content-Transfer-Encoding: base64
+
+JVBERi0xLjQgbGFiIHBsYWNlaG9sZGVy
+------=_Mixed_muc8vwqo.108--

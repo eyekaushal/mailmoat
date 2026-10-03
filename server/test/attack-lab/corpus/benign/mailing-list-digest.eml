@@ -1,0 +1,19 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.design-systems-list.example (mail.design-systems-list.example. [203.0.113.10]) by mx.google.com with ESMTPS id mu2ng7k0.119 for <kaushal@gmail.com>; Tue, 15 Sep 2026 12:30:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@design-systems-list.example header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@design-systems-list.example designates 203.0.113.10 as permitted sender) smtp.mailfrom=design-systems-list.example; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=design-systems-list.example
+Date: Tue, 15 Sep 2026 12:30:00 +0000
+From: "design-systems list" <digest@design-systems-list.example>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: [design-systems] Digest, Vol 42, Issue 9
+Message-ID: <mu2ng7k0.119@design-systems-list.example>
+MIME-Version: 1.0
+List-Id: <design-systems.design-systems-list.example>
+List-Unsubscribe: <https://design-systems-list.example/unsub>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Today's topics:
+1. Token naming conventions (Lena)
+2. Re: Dark mode contrast (Oscar)
+
+Read the archive: https://design-systems-list.example/archive/42/9

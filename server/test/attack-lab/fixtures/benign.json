@@ -1,0 +1,938 @@
+{
+  "acme-remittance-advice": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": true,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "none",
+          "claims_to_be": "none",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A client's finance team confirms that an invoice was paid today and attaches the remittance advice."
+        }
+      }
+    ]
+  },
+  "amazon-order-receipt": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "receipt",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "none",
+          "claims_to_be": "brand",
+          "claimed_brand": "Amazon",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "An order confirmation for a keyboard arriving Thursday, with a link to view the order."
+        }
+      }
+    ]
+  },
+  "bank-statement-ready": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "notification",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": true,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "none",
+          "claims_to_be": "bank",
+          "claimed_brand": "HDFC Bank",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A bank says the September statement is ready and invites the user to log in to net banking to view it."
+        }
+      }
+    ]
+  },
+  "calendar-invite-from-ceo": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "calendar",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "colleague",
+          "claimed_brand": null,
+          "meeting_request": {
+            "proposed_times": ["2026-10-09T17:00:00+05:30"]
+          },
+          "expects_reply": false,
+          "summary": "A calendar invitation from a contact for a Q4 planning meeting on Friday 9 October at 5 pm."
+        }
+      }
+    ]
+  },
+  "ceo-thread-reply-approval": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "none",
+          "claims_to_be": "executive",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "The CEO approves a vendor choice for a brand refresh and asks the user to loop in a partner contact on the timeline."
+        }
+      }
+    ]
+  },
+  "clinic-appointment-reminder": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "notification",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": true,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "none",
+          "claims_to_be": "none",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A clinic reminds the user of an appointment on Tuesday 6 October at 10:30 and gives a number to call to reschedule."
+        }
+      }
+    ]
+  },
+  "conference-ticket-confirmation": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "receipt",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": true,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "none",
+          "claims_to_be": "none",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A conference ticket confirmation with the ticket attached and a link to view it online."
+        }
+      }
+    ]
+  },
+  "domain-renewal-auto": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "notification",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "none",
+          "claims_to_be": "vendor",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "The hosting provider says a domain will auto-renew in October using the card on file; no action needed."
+        }
+      }
+    ]
+  },
+  "friend-dinner-plan": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "personal",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "none",
+          "claimed_brand": null,
+          "meeting_request": {
+            "proposed_times": ["2026-10-03T20:00:00+05:30"]
+          },
+          "expects_reply": false,
+          "summary": "A friend asks whether the user is free for dinner on Saturday around 8 pm."
+        }
+      }
+    ]
+  },
+  "friend-event-rsvp": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "personal",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "none",
+          "claims_to_be": "none",
+          "claimed_brand": null,
+          "meeting_request": {
+            "proposed_times": ["2026-10-18T19:00:00+05:30"]
+          },
+          "expects_reply": false,
+          "summary": "A friend invites the user to a Diwali dinner on 18 October and asks for an RSVP by the 10th."
+        }
+      }
+    ]
+  },
+  "friend-shared-photos": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "personal",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "none",
+          "claims_to_be": "none",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A friend shares a link to trek photos."
+        }
+      }
+    ]
+  },
+  "github-deploy-notification": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "notification",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "none",
+          "claims_to_be": "brand",
+          "claimed_brand": "GitHub",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "An automated notice that a deployment workflow for a repository succeeded, with a link to the run."
+        }
+      }
+    ]
+  },
+  "google-drive-share-from-partner": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "notification",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "none",
+          "claims_to_be": "colleague",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A Google Drive notification that a contact shared a document, with a link to open it."
+        }
+      }
+    ]
+  },
+  "google-new-signin-alert": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "security_alert",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "none",
+          "claims_to_be": "brand",
+          "claimed_brand": "Google",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A notice that the user's Google account was signed in from a new Windows device, with a link to check activity."
+        }
+      }
+    ]
+  },
+  "job-applicant-cold-outreach": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "cold_outreach",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "none",
+          "claims_to_be": "none",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A front-end developer offers freelance help, shares a portfolio link and asks for a short chat."
+        }
+      }
+    ]
+  },
+  "linkedin-connection-request": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "notification",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "none",
+          "claims_to_be": "brand",
+          "claimed_brand": "LinkedIn",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A LinkedIn invitation to connect from a product lead, with accept and ignore links."
+        }
+      }
+    ]
+  },
+  "mailing-list-digest": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "newsletter",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "none",
+          "claims_to_be": "none",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A mailing-list digest listing today's discussion topics with a link to the archive."
+        }
+      }
+    ]
+  },
+  "new-client-brief": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "none",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A prospective client, referred by a contact, asks for a quote and availability for a website redesign by December."
+        }
+      }
+    ]
+  },
+  "newsletter-known-sender": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "newsletter",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "none",
+          "claims_to_be": "none",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A weekly design newsletter issue about an onboarding redesign, with links to read it."
+        }
+      }
+    ]
+  },
+  "newsletter-new-sender-preheader": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "newsletter",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "none",
+          "claims_to_be": "none",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "The first issue of a design newsletter the user signed up for, about design-system adoption, with a link to read online."
+        }
+      }
+    ]
+  },
+  "newsletter-with-shortener": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "newsletter",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "none",
+          "claims_to_be": "none",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A daily digest listing top product launches with links."
+        }
+      }
+    ]
+  },
+  "out-of-office-auto-reply": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "none",
+          "claims_to_be": "colleague",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "An out-of-office auto-reply from a contact, back on Monday, naming a colleague for urgent matters."
+        }
+      }
+    ]
+  },
+  "partner-reschedule-call": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "colleague",
+          "claimed_brand": null,
+          "meeting_request": {
+            "proposed_times": ["2026-10-01T16:00:00+05:30"]
+          },
+          "expects_reply": false,
+          "summary": "A partner contact asks to move Thursday's call from 3 pm to 4 pm."
+        }
+      }
+    ]
+  },
+  "password-changed-notice": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "security_alert",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "none",
+          "claims_to_be": "none",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A notice that the user's hosting password was changed, with a support address if it was not them."
+        }
+      }
+    ]
+  },
+  "password-reset-requested": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "security_alert",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": true,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "none",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A password reset link the user requested from their hosting provider, expiring in 30 minutes."
+        }
+      }
+    ]
+  },
+  "small-shop-shipping-update": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "receipt",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "none",
+          "claims_to_be": "none",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A shop says an order has shipped, with a tracking link."
+        }
+      }
+    ]
+  },
+  "support-ticket-reply": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "none",
+          "claims_to_be": "vendor",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "Hosting support says the server was moved to a new node and deploys should be normal again."
+        }
+      }
+    ]
+  },
+  "tax-consultant-document-request": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "none",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "An accountant asks the user to send tax documents by Friday so a return can be filed before the deadline."
+        }
+      }
+    ]
+  },
+  "utility-bill-first-time": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "notification",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": true,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "none",
+          "claims_to_be": "none",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "An electricity bill for September of 2,310 rupees due 10 October, with a link to pay online."
+        }
+      }
+    ]
+  },
+  "vendor-feedback-survey": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "none",
+          "claims_to_be": "vendor",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A known vendor asks the user to fill in a short feedback form via a link."
+        }
+      }
+    ]
+  },
+  "vendor-invoice-genuine": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": true,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": true,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "none",
+          "claims_to_be": "vendor",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A known vendor sends the September retainer invoice, payable to the usual account within 15 days."
+        }
+      }
+    ]
+  },
+  "wordpress-plugin-update": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "notification",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "none",
+          "claims_to_be": "none",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "An automatic notice from the user's own website that two plugins were updated; no action needed."
+        }
+      }
+    ]
+  }
+}

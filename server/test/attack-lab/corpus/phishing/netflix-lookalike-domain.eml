@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.netflix-account-help.com (mail.netflix-account-help.com. [203.0.113.10]) by mx.google.com with ESMTPS id muo7vlk0.50 for <kaushal@gmail.com>; Wed, 30 Sep 2026 14:45:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@netflix-account-help.com header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@netflix-account-help.com designates 203.0.113.10 as permitted sender) smtp.mailfrom=netflix-account-help.com; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=netflix-account-help.com
+Date: Wed, 30 Sep 2026 14:45:00 +0000
+From: "Netflix" <billing@netflix-account-help.com>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Action needed: payment declined
+Message-ID: <muo7vlk0.50@netflix-account-help.com>
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body style="font-family:Arial,sans-serif;color:#222;background:#ffffff"><p>Your payment was declined.</p><p><a href="https://netflix.com.account-verify.example/login" style="background:#e50914;color:#fff;padding:10px 18px;text-decoration:none">Update payment</a></p></body></html>

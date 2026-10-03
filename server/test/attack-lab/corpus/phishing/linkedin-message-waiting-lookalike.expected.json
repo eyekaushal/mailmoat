@@ -1,0 +1,9 @@
+{
+  "threat": "T5",
+  "technique": "brand/lookalike-domain",
+  "summary": "LinkedIn-branded mail from linkedin-mail.example.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S6", "S7"]
+  }
+}

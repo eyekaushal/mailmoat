@@ -1,0 +1,17 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.acme-corp.com (mail.acme-corp.com. [203.0.113.10]) by mx.google.com with ESMTPS id mulbe0w0.34 for <kaushal@gmail.com>; Mon, 28 Sep 2026 14:00:00 +0000
+Authentication-Results: mail.acme-corp.com; dkim=pass header.i=@acme-corp.com; spf=pass smtp.mailfrom=acme-corp.com; dmarc=pass header.from=acme-corp.com
+Date: Mon, 28 Sep 2026 14:00:00 +0000
+From: "Rahul Mehta" <rahul@acme-corp.com>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Confidential - project Falcon
+Message-ID: <mulbe0w0.34@acme-corp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Kaushal,
+
+We are acquiring a small studio. Our attorney will contact you with wire instructions for the deposit; it must go out today. Do not discuss this with anyone, it is market sensitive.
+
+Rahul

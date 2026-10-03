@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.outlook.com (mail.outlook.com. [203.0.113.10]) by mx.google.com with ESMTPS id mufaqduo.80 for <kaushal@gmail.com>; Thu, 24 Sep 2026 08:55:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@outlook.com header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@outlook.com designates 203.0.113.10 as permitted sender) smtp.mailfrom=outlook.com; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=outlook.com
+Date: Thu, 24 Sep 2026 08:55:00 +0000
+From: "Apple Support" <apple.support.team@outlook.com>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: =?UTF-8?B?UmVjZWlwdDogaUNsb3VkKyAyVEIgKOKCuTksOTAwKQ==?=
+Message-ID: <mufaqduo.80@outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Thank you for your purchase of iCloud+ 2TB (₹9,900). If you did not authorise this purchase, call Apple Support at 000-800-555-0133 for a refund.

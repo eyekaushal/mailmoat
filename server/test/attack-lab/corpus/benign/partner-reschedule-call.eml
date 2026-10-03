@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.partnerco.io (mail.partnerco.io. [203.0.113.10]) by mx.google.com with ESMTPS id muf6mhs0.105 for <kaushal@gmail.com>; Thu, 24 Sep 2026 07:00:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@partnerco.io header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@partnerco.io designates 203.0.113.10 as permitted sender) smtp.mailfrom=partnerco.io; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=partnerco.io
+Date: Thu, 24 Sep 2026 07:00:00 +0000
+From: "Priya Shah" <priya@partnerco.io>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Move Thursday's call?
+Message-ID: <muf6mhs0.105@partnerco.io>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Hi Kaushal, could we move Thursday's Atlas sync from 3 to 4 pm? I have a dentist appointment. Priya

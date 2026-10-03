@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.airtel-renewals.example (mail.airtel-renewals.example. [203.0.113.10]) by mx.google.com with ESMTPS id muca4x40.82 for <kaushal@gmail.com>; Tue, 22 Sep 2026 06:15:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@airtel-renewals.example header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@airtel-renewals.example designates 203.0.113.10 as permitted sender) smtp.mailfrom=airtel-renewals.example; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=airtel-renewals.example
+Date: Tue, 22 Sep 2026 06:15:00 +0000
+From: "Airtel Billing" <bills@airtel-renewals.example>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: =?UTF-8?B?UG9zdHBhaWQgYmlsbCDigrk0LDg5OSBvdmVyZHVl?=
+Message-ID: <muca4x40.82@airtel-renewals.example>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Your Airtel postpaid bill of ₹4,899 is overdue and your number will be disconnected tonight. To avoid disconnection, call 1800-555-6655 and pay by card over the phone.

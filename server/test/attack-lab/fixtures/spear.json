@@ -1,0 +1,292 @@
+{
+  "ceo-personal-gmail-client-list": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "executive",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "The sender, presenting as the CEO travelling, asks the user to send a client list with contact details to a personal address before a morning meeting."
+        }
+      }
+    ]
+  },
+  "finance-unicode-domain-invoice-approval": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": true,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "vendor",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "The sender, presenting as a client's finance team, asks the user to reply approving a payment run to be released today."
+        }
+      }
+    ]
+  },
+  "google-drive-share-spoof": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "notification",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": true,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "colleague",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A notification presenting as a Google Drive share from the CEO asks the user to sign in via a link to view a board deck."
+        }
+      }
+    ]
+  },
+  "partner-conference-registration-login": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": true,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "colleague",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "The sender, presenting as a known partner contact, invites the user to speak and asks them to register with their work email and password via a link."
+        }
+      }
+    ]
+  },
+  "partner-forged-header-form": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": true,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "colleague",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "The sender, presenting as a known partner contact, asks the user to confirm access to a shared folder by entering a password in a form."
+        }
+      }
+    ]
+  },
+  "partner-hyphen-lookalike-attachment": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": true,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "colleague",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "The sender, presenting as a known partner contact, follows up on a project and asks the user to review an attached plan before Thursday."
+        }
+      }
+    ]
+  },
+  "partner-outlook-shortener-sign-in": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": true,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "colleague",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "The sender, presenting as a known partner contact, asks the user to sign in with a Microsoft account via a shortened link to review contract redlines tonight."
+        }
+      }
+    ]
+  },
+  "partner-tld-swap": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "colleague",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "The sender, presenting as a known partner contact, asks the user to approve a revised budget via a link by end of day."
+        }
+      }
+    ]
+  },
+  "stripe-recruiter-personalised": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "cold_outreach",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "brand",
+          "claimed_brand": "Stripe",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A recruiter presenting as Stripe praises the user's recent work and asks them to complete an application via a link this week."
+        }
+      }
+    ]
+  },
+  "vendor-lookalike-macro-attachment": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": true,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "vendor",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "The sender, presenting as a known vendor contact, asks the user to open an attached document, enable editing and sign off on it."
+        }
+      }
+    ]
+  }
+}

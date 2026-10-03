@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.xn--cme-corp-skb.com (mail.xn--cme-corp-skb.com. [203.0.113.10]) by mx.google.com with ESMTPS id muds9800.91 for <kaushal@gmail.com>; Wed, 23 Sep 2026 07:30:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@xn--cme-corp-skb.com header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@xn--cme-corp-skb.com designates 203.0.113.10 as permitted sender) smtp.mailfrom=xn--cme-corp-skb.com; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=xn--cme-corp-skb.com
+Date: Wed, 23 Sep 2026 07:30:00 +0000
+From: "Acme Finance" <finance@xn--cme-corp-skb.com>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Approve payment run #44
+Message-ID: <muds9800.91@xn--cme-corp-skb.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Hi Kaushal, payment run #44 includes your invoice 1182 and two vendor payments. Reply APPROVED and we will release ₹2,40,000 today. Acme Finance

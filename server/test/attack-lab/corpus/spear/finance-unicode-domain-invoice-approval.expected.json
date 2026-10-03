@@ -1,0 +1,9 @@
+{
+  "threat": "T6",
+  "technique": "contact-lookalike/unicode",
+  "summary": "Client finance team on a Cyrillic-\"а\" version of acme-corp.com.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S7", "S8"]
+  }
+}

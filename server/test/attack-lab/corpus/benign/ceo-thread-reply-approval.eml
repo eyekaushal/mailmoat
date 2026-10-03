@@ -1,0 +1,15 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.acme-corp.com (mail.acme-corp.com. [203.0.113.10]) by mx.google.com with ESMTPS id mu6uqgdc.115 for <kaushal@gmail.com>; Fri, 18 Sep 2026 11:05:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@acme-corp.com header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@acme-corp.com designates 203.0.113.10 as permitted sender) smtp.mailfrom=acme-corp.com; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=acme-corp.com
+Date: Fri, 18 Sep 2026 11:05:00 +0000
+From: "Rahul Mehta" <rahul@acme-corp.com>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Re: Vendor shortlist
+Message-ID: <mu6uqgdc.115@acme-corp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Thanks Kaushal, approved. Go ahead with BrightPixel for the brand refresh and loop in Priya on the timeline.
+
+Rahul

@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.amazon.in (mail.amazon.in. [203.0.113.10]) by mx.google.com with ESMTPS id mumoiaao.96 for <kaushal@gmail.com>; Tue, 29 Sep 2026 12:55:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@amazon.in header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@amazon.in designates 203.0.113.10 as permitted sender) smtp.mailfrom=amazon.in; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=amazon.in
+Date: Tue, 29 Sep 2026 12:55:00 +0000
+From: "Amazon.in" <auto-confirm@amazon.in>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Your Amazon.in order #402-7781-2201
+Message-ID: <mumoiaao.96@amazon.in>
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body style="font-family:Arial,sans-serif;color:#222;background:#ffffff"><p>Hello Kaushal, thank you for your order.</p><p>Logitech MX Keys Mini — ₹8,495. Arriving Thursday.</p><p><a href="https://www.amazon.in/gp/your-account/order-details?orderID=402-7781-2201">View order</a></p></body></html>

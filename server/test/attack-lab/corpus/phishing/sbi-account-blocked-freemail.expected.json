@@ -1,0 +1,9 @@
+{
+  "threat": "T5",
+  "technique": "brand/free-mail+shortener",
+  "summary": "SBI-branded alert from a Gmail address with a tinyurl link.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S11", "S15"]
+  }
+}

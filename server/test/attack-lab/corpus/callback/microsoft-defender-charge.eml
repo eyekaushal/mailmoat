@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.defender-billing.example (mail.defender-billing.example. [203.0.113.10]) by mx.google.com with ESMTPS id muda1cw0.81 for <kaushal@gmail.com>; Tue, 22 Sep 2026 23:00:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@defender-billing.example header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@defender-billing.example designates 203.0.113.10 as permitted sender) smtp.mailfrom=defender-billing.example; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=defender-billing.example
+Date: Tue, 22 Sep 2026 23:00:00 +0000
+From: "Microsoft Defender" <no-reply@defender-billing.example>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Defender Advanced renewed: $299
+Message-ID: <muda1cw0.81@defender-billing.example>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Microsoft Defender Advanced has been renewed for $299 for one year. For cancellation or refund, contact the billing desk at +1 (833) 555-0188.

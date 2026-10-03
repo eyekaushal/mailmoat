@@ -36,10 +36,16 @@ export class BrandList {
    * @returns {Brand | undefined}
    */
   namedIn(text) {
-    const tokens = this.#confusables
-      .skeleton(text)
-      .split(/[^\p{L}\p{N}]+/u)
-      .filter(Boolean);
+    // TR39 maps a capital I to l, which catches "PayPaI" but would hide "LinkedIn", "IRS" or
+    // "ICICI"; matching the lower-cased spelling as well keeps both.
+    return (
+      this.#match(this.#confusables.skeleton(text)) ??
+      this.#match(this.#confusables.skeleton(text.toLowerCase()))
+    );
+  }
+
+  #match(skeleton) {
+    const tokens = skeleton.split(/[^\p{L}\p{N}]+/u).filter(Boolean);
     for (let start = 0; start < tokens.length; start += 1) {
       let joined = '';
       for (let end = start; end < tokens.length && joined.length < 30; end += 1) {

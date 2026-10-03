@@ -1,0 +1,9 @@
+{
+  "threat": "none",
+  "technique": "personal/contact",
+  "summary": "A friend proposing dinner.",
+  "expect": {
+    "level": "SAFE",
+    "signals": []
+  }
+}

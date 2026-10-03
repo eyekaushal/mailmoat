@@ -1,0 +1,9 @@
+{
+  "threat": "T5",
+  "technique": "brand/lookalike-domain",
+  "summary": "Netflix-branded sender on a domain Netflix does not own, link embeds netflix.com as a prefix.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S6", "S7", "S14"]
+  }
+}

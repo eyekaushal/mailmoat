@@ -1,0 +1,582 @@
+{
+  "ceo-are-you-available-probe": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "executive",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "The sender, presenting as the CEO, asks whether the user is available for an urgent favour and asks for an immediate reply."
+        }
+      }
+    ]
+  },
+  "ceo-attorney-acquisition-wire": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": true,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": true,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "executive",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "The sender, presenting as the CEO, says an attorney will send wire instructions for a deposit due today and asks for secrecy."
+        }
+      }
+    ]
+  },
+  "ceo-compromised-account-gift-cards": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": true,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": true,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "executive",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "The sender, the CEO, asks the user to buy five gift cards now, email the codes and keep it confidential."
+        }
+      }
+    ]
+  },
+  "ceo-freemail-gift-cards": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": true,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": true,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "executive",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "The sender, presenting as the CEO, asks the user to buy five gift cards today and send the codes, discreetly."
+        }
+      }
+    ]
+  },
+  "ceo-lookalike-domain": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": true,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": true,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "executive",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "The sender, presenting as the CEO, asks the user to process an urgent payment to a new vendor today and to keep it confidential."
+        }
+      }
+    ]
+  },
+  "ceo-new-mobile-number": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "executive",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "The sender, presenting as the CEO, asks the user to save a new mobile number and text it."
+        }
+      }
+    ]
+  },
+  "ceo-spoof-reply-to-gmail": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": true,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "executive",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "The sender, presenting as the CEO, asks the user to wire a lease deposit today and to reply for bank details."
+        }
+      }
+    ]
+  },
+  "finance-overdue-invoice-freemail": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": true,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "vendor",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "The sender, presenting as a client's finance team, says an invoice is overdue and asks for payment today to a given bank account."
+        }
+      }
+    ]
+  },
+  "giftcard-colleague-whatsapp-codes": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "personal",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": true,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "colleague",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "The sender, presenting as a known contact stuck at an airport, asks the user to buy two gift cards and send the codes to a phone number."
+        }
+      }
+    ]
+  },
+  "giftcard-direct-spoof-dmarc-fail": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": true,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": true,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "executive",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "The sender, presenting as the CEO, asks the user to buy six gift cards today and send the codes while keeping it discreet."
+        }
+      }
+    ]
+  },
+  "giftcard-executive-yahoo": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": true,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "executive",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "The sender, presenting as the CEO, asks the user to buy four gift cards today and send the codes."
+        }
+      }
+    ]
+  },
+  "payroll-compromised-account": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": true,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "colleague",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A known collaborator says she switched banks and asks the user to pay her at a new account from this month."
+        }
+      }
+    ]
+  },
+  "payroll-display-name-outlook": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": true,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "colleague",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "The sender, presenting as a known collaborator, asks the user to update her payout to a new bank account before the 5th."
+        }
+      }
+    ]
+  },
+  "payroll-lookalike-gmail-domain": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": true,
+            "asks_bank_detail_change": true,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "colleague",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "The sender, presenting as a known collaborator, asks the user to send this month's payment to a new bank account."
+        }
+      }
+    ]
+  },
+  "payroll-reply-to-proton": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": true,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": true,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "colleague",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "The sender, presenting as a known collaborator, asks the user to update her direct deposit to the account in an attached form."
+        }
+      }
+    ]
+  },
+  "vendor-compromised-account-bank-change": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": true,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": true,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "vendor",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A known vendor says they changed banks and asks the user to pay an invoice to the new account described in an attached letter."
+        }
+      }
+    ]
+  },
+  "vendor-freemail-bank-change": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": true,
+            "asks_bank_detail_change": true,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "vendor",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "The sender, presenting as a known vendor writing from a personal account, asks the user to pay an invoice to a new bank account."
+        }
+      }
+    ]
+  },
+  "vendor-lookalike-domain-bank-change": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": true,
+            "asks_bank_detail_change": true,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "vendor",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "The sender, presenting as a known vendor, asks the user to pay an invoice and all future invoices to a new bank account."
+        }
+      }
+    ]
+  },
+  "vendor-new-invoice-fraud": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": true,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": true,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "vendor",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "A print company the user has no history with asks for payment of an invoice to a bank account given in the email."
+        }
+      }
+    ]
+  },
+  "vendor-spoof-reply-to-bank-change": {
+    "recordedAt": null,
+    "calls": [
+      {
+        "role": "reader",
+        "model": "hand-written",
+        "output": {
+          "category": "work",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": true,
+            "asks_bank_detail_change": true,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "vendor",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "The sender, presenting as a vendor's accounts team, says the bank account changed and asks the user to pay the outstanding balance to a new account."
+        }
+      }
+    ]
+  }
+}

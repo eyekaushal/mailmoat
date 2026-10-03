@@ -1,0 +1,9 @@
+{
+  "threat": "T5",
+  "technique": "brand/lookalike-domain+embedded-domain",
+  "summary": "HDFC-branded KYC request from hdfcbank-kyc.example.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S6", "S7", "S14"]
+  }
+}

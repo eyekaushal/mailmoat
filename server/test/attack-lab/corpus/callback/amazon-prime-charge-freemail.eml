@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.gmail.com (mail.gmail.com. [203.0.113.10]) by mx.google.com with ESMTPS id mukigcw0.76 for <kaushal@gmail.com>; Mon, 28 Sep 2026 00:30:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@gmail.com header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@gmail.com designates 203.0.113.10 as permitted sender) smtp.mailfrom=gmail.com; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=gmail.com
+Date: Mon, 28 Sep 2026 00:30:00 +0000
+From: "Amazon Prime" <prime.billing.center@gmail.com>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: =?UTF-8?B?UHJpbWUgbWVtYmVyc2hpcCBjaGFyZ2VkIOKCuTE0LDk5OQ==?=
+Message-ID: <mukigcw0.76@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Your Amazon Prime membership was charged ₹14,999. To cancel and get a refund, call customer care on 1800-555-2233 within 2 hours.

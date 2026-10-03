@@ -1,0 +1,9 @@
+{
+  "threat": "T6",
+  "technique": "brand-recruiter/embedded-domain",
+  "summary": "Personalised recruiter outreach with a Stripe-prefixed application link.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S6", "S7", "S14"]
+  }
+}

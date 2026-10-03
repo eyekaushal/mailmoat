@@ -1,0 +1,18 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.brightpixel.studio (mail.brightpixel.studio. [203.0.113.10]) by mx.google.com with ESMTPS id munwmi80.37 for <kaushal@gmail.com>; Wed, 30 Sep 2026 09:30:00 +0000
+Authentication-Results: mx.google.com; dkim=fail (signature did not verify) header.i=@brightpixel.studio header.s=s1; spf=fail (google.com: domain of bounce@brightpixel.studio does not designate 198.51.100.7 as permitted sender) smtp.mailfrom=brightpixel.studio; dmarc=fail (p=REJECT sp=REJECT dis=NONE) header.from=brightpixel.studio
+Date: Wed, 30 Sep 2026 09:30:00 +0000
+From: "BrightPixel Accounts" <accounts@brightpixel.studio>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Reply-To: accounts.brightpixel@gmail.com
+Subject: Change of bank account
+Message-ID: <munwmi80.37@brightpixel.studio>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Dear Kaushal,
+
+Due to an audit our bank account has changed. Kindly remit the outstanding balance of ₹88,500 to the new account. Reply to this email for the updated details.
+
+Accounts, BrightPixel Studio

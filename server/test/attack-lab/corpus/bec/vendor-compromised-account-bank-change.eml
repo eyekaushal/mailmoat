@@ -1,0 +1,28 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.brightpixel.studio (mail.brightpixel.studio. [203.0.113.10]) by mx.google.com with ESMTPS id muksgfuo.39 for <kaushal@gmail.com>; Mon, 28 Sep 2026 05:10:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@brightpixel.studio header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@brightpixel.studio designates 203.0.113.10 as permitted sender) smtp.mailfrom=brightpixel.studio; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=brightpixel.studio
+Date: Mon, 28 Sep 2026 05:10:00 +0000
+From: "Neha Kulkarni" <neha@brightpixel.studio>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Re: Invoice 2211
+Message-ID: <muksgfuo.39@brightpixel.studio>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="----=_Mixed_muksgfuo.39"
+
+------=_Mixed_muksgfuo.39
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Hi Kaushal,
+
+One update: we have changed banks, so please use the new account for invoice 2211 (details in the attached letter). Everything else stays the same.
+
+Best,
+Neha
+------=_Mixed_muksgfuo.39
+Content-Type: application/pdf; name="Bank_change_letter.pdf"
+Content-Disposition: attachment; filename="Bank_change_letter.pdf"
+Content-Transfer-Encoding: base64
+
+JVBERi0xLjQgbGFiIHBsYWNlaG9sZGVy
+------=_Mixed_muksgfuo.39--

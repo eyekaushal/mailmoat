@@ -1,0 +1,9 @@
+{
+  "threat": "none",
+  "technique": "notification/self-hosted",
+  "summary": "Update notice from the user's own WordPress site (no DMARC policy).",
+  "expect": {
+    "level": "SAFE",
+    "signals": []
+  }
+}

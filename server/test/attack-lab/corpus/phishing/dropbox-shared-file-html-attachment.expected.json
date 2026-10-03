@@ -1,0 +1,9 @@
+{
+  "threat": "T5",
+  "technique": "brand/html-attachment",
+  "summary": "Dropbox-branded \"shared file\" that is an HTML attachment with a login form.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S6", "S7", "S19"]
+  }
+}

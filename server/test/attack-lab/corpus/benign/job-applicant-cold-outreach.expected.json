@@ -1,0 +1,9 @@
+{
+  "threat": "none",
+  "technique": "cold-outreach/person",
+  "summary": "A designer sends a portfolio looking for freelance work.",
+  "expect": {
+    "level": "SAFE",
+    "signals": []
+  }
+}

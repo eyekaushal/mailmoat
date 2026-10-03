@@ -1,0 +1,9 @@
+{
+  "threat": "none",
+  "technique": "work/known-vendor-support",
+  "summary": "Hosting support replies to a ticket.",
+  "expect": {
+    "level": "SAFE",
+    "signals": []
+  }
+}

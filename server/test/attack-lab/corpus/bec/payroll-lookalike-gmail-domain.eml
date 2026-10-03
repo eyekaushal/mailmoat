@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.gmai1.com (mail.gmai1.com. [203.0.113.10]) by mx.google.com with ESMTPS id muoxliw0.44 for <kaushal@gmail.com>; Thu, 01 Oct 2026 02:45:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@gmai1.com header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@gmai1.com designates 203.0.113.10 as permitted sender) smtp.mailfrom=gmai1.com; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=gmai1.com
+Date: Thu, 01 Oct 2026 02:45:00 +0000
+From: "Sana Iyer" <sana.iyer@gmai1.com>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Bank update for this month
+Message-ID: <muoxliw0.44@gmai1.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Hi Kaushal, I opened a new salary account. Please send this month's payment to A/C 3344556677, IFSC KKBK0000789 instead of the old one. Thanks! Sana

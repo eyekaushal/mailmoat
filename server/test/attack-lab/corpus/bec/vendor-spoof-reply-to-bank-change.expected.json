@@ -1,0 +1,10 @@
+{
+  "threat": "T4",
+  "technique": "vendor-bank-change/reply-to",
+  "summary": "Spoofed vendor address (DMARC fail) with Reply-To on Gmail.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S1", "S4", "S9"],
+    "verifyByPhone": true
+  }
+}

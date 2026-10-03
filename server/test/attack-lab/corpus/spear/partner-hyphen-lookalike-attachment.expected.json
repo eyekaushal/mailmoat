@@ -1,0 +1,9 @@
+{
+  "threat": "T6",
+  "technique": "contact-lookalike/hyphen",
+  "summary": "Flawless, personalised follow-up from partner-co.io instead of partnerco.io.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S5"]
+  }
+}

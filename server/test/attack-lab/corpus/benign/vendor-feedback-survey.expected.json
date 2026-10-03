@@ -1,0 +1,9 @@
+{
+  "threat": "none",
+  "technique": "work/known-vendor-link",
+  "summary": "A known vendor asks for feedback via a Google Form.",
+  "expect": {
+    "level": "SAFE",
+    "signals": []
+  }
+}

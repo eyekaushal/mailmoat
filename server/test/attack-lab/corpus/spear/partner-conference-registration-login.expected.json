@@ -1,0 +1,9 @@
+{
+  "threat": "T6",
+  "technique": "contact-name/credential-harvest",
+  "summary": "Partner contact invites the user to speak; registration needs the work-email login.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S7", "S9"]
+  }
+}

@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.cloudnest.dev (mail.cloudnest.dev. [203.0.113.10]) by mx.google.com with ESMTPS id mu7yx7pc.113 for <kaushal@gmail.com>; Sat, 19 Sep 2026 05:50:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@cloudnest.dev header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@cloudnest.dev designates 203.0.113.10 as permitted sender) smtp.mailfrom=cloudnest.dev; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=cloudnest.dev
+Date: Sat, 19 Sep 2026 05:50:00 +0000
+From: "CloudNest Support" <support@cloudnest.dev>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Re: [Ticket #5521] Slow deploys on nest-01
+Message-ID: <mu7yx7pc.113@cloudnest.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Hi Kaushal, we moved nest-01 to a new node and deploys should be back to normal. Reply if you still see slowness. — Marco, CloudNest Support

@@ -1,0 +1,9 @@
+{
+  "threat": "T4",
+  "technique": "gift-card/colleague-free-mail",
+  "summary": "A partner contact's name on Gmail asks for gift cards to be sent over WhatsApp.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S7", "S9"]
+  }
+}

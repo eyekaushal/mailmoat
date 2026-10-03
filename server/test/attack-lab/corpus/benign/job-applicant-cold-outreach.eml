@@ -1,0 +1,19 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.gmail.com (mail.gmail.com. [203.0.113.10]) by mx.google.com with ESMTPS id mue0tv40.106 for <kaushal@gmail.com>; Wed, 23 Sep 2026 11:30:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@gmail.com header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@gmail.com designates 203.0.113.10 as permitted sender) smtp.mailfrom=gmail.com; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=gmail.com
+Date: Wed, 23 Sep 2026 11:30:00 +0000
+From: "Arjun Nair" <arjun.nair.dev@gmail.com>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Freelance front-end help for your studio?
+Message-ID: <mue0tv40.106@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Hi Kaushal,
+
+I saw the Atlas case study and loved the typography. I am a front-end developer with 4 years of React experience, available from November. Portfolio: https://arjunnair.example
+
+Would you have 15 minutes for a chat?
+
+Arjun

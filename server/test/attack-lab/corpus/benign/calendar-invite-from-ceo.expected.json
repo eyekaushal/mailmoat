@@ -1,0 +1,9 @@
+{
+  "threat": "none",
+  "technique": "calendar/contact",
+  "summary": "Calendar invitation from a contact.",
+  "expect": {
+    "level": "SAFE",
+    "signals": []
+  }
+}

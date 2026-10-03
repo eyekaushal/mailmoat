@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.northwind-labs.example (mail.northwind-labs.example. [203.0.113.10]) by mx.google.com with ESMTPS id mu0sndhc.122 for <kaushal@gmail.com>; Mon, 14 Sep 2026 05:20:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@northwind-labs.example header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@northwind-labs.example designates 203.0.113.10 as permitted sender) smtp.mailfrom=northwind-labs.example; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=northwind-labs.example
+Date: Mon, 14 Sep 2026 05:20:00 +0000
+From: "Dev Patel" <dev@northwind-labs.example>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Website redesign - quote?
+Message-ID: <mu0sndhc.122@northwind-labs.example>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Hi Kaushal, Priya at PartnerCo recommended you. We are a 12-person analytics startup and need a marketing site redesign by December. Could you send a rough quote and your availability? Thanks, Dev

@@ -1,0 +1,9 @@
+{
+  "threat": "T7",
+  "technique": "brand-name/unknown-domain",
+  "summary": "Microsoft Defender renewal callback.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S7", "S9"]
+  }
+}

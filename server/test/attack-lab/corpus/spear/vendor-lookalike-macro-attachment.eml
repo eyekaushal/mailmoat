@@ -1,0 +1,27 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.brightpixel-studio.com (mail.brightpixel-studio.com. [203.0.113.10]) by mx.google.com with ESMTPS id mukwdwg0.86 for <kaushal@gmail.com>; Mon, 28 Sep 2026 07:00:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@brightpixel-studio.com header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@brightpixel-studio.com designates 203.0.113.10 as permitted sender) smtp.mailfrom=brightpixel-studio.com; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=brightpixel-studio.com
+Date: Mon, 28 Sep 2026 07:00:00 +0000
+From: "Neha Kulkarni" <neha@brightpixel-studio.com>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Brand guidelines v3 for sign-off
+Message-ID: <mukwdwg0.86@brightpixel-studio.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="----=_Mixed_mukwdwg0.86"
+
+------=_Mixed_mukwdwg0.86
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Hi Kaushal,
+
+The v3 brand guidelines are attached. Enable editing to see the tracked changes and sign off on page 4.
+
+Neha
+------=_Mixed_mukwdwg0.86
+Content-Type: application/vnd.ms-word.document.macroEnabled.12; name="Brand_Guidelines_v3.docm"
+Content-Disposition: attachment; filename="Brand_Guidelines_v3.docm"
+Content-Transfer-Encoding: base64
+
+UEsgcGxhY2Vob2xkZXI=
+------=_Mixed_mukwdwg0.86--

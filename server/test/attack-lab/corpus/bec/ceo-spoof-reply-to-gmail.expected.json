@@ -1,0 +1,9 @@
+{
+  "threat": "T4",
+  "technique": "ceo-fraud/reply-to",
+  "summary": "Spoofed CEO address (DMARC fail) with replies routed to a free-mail account.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S1", "S4"]
+  }
+}

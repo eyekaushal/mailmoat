@@ -1,0 +1,9 @@
+{
+  "threat": "T5",
+  "technique": "brand/userinfo-trick",
+  "summary": "Spoofed apple.com; the link puts appleid.apple.com before an @ sign.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S1", "S17"]
+  }
+}

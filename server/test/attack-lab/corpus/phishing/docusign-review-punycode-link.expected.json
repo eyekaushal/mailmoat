@@ -1,0 +1,9 @@
+{
+  "threat": "T5",
+  "technique": "brand/punycode-link",
+  "summary": "DocuSign-branded request with a punycode link host.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S6", "S7", "S8"]
+  }
+}

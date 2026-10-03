@@ -1,0 +1,9 @@
+{
+  "threat": "none",
+  "technique": "receipt/small-organisation",
+  "summary": "Ticket confirmation from a conference the user bought a ticket for.",
+  "expect": {
+    "level": "SAFE",
+    "signals": []
+  }
+}

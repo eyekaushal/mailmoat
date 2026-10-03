@@ -1,0 +1,9 @@
+{
+  "threat": "T7",
+  "technique": "brand/dmarc-fail",
+  "summary": "Spoofed PayPal invoice with a number to call.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S1", "S9"]
+  }
+}

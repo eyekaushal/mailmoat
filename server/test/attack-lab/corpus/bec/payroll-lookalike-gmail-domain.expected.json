@@ -1,0 +1,10 @@
+{
+  "threat": "T4",
+  "technique": "payroll-diversion/lookalike-domain",
+  "summary": "An assistant the user pays writes from gmai1.com to redirect her payout.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S5"],
+    "verifyByPhone": true
+  }
+}

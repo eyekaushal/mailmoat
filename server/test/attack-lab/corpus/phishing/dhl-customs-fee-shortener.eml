@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.dhl-parcel-tracking.example (mail.dhl-parcel-tracking.example. [203.0.113.10]) by mx.google.com with ESMTPS id mukyvx6o.53 for <kaushal@gmail.com>; Mon, 28 Sep 2026 08:10:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@dhl-parcel-tracking.example header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@dhl-parcel-tracking.example designates 203.0.113.10 as permitted sender) smtp.mailfrom=dhl-parcel-tracking.example; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=dhl-parcel-tracking.example
+Date: Mon, 28 Sep 2026 08:10:00 +0000
+From: "DHL Express" <notify@dhl-parcel-tracking.example>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Parcel on hold: customs fee due
+Message-ID: <mukyvx6o.53@dhl-parcel-tracking.example>
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body style="font-family:Arial,sans-serif;color:#222;background:#ffffff"><p>Your parcel 4471 2290 11 is held at customs. Pay the ₹149 fee to release it.</p><p><a href="https://bit.ly/3xYz9Qk" style="background:#e50914;color:#fff;padding:10px 18px;text-decoration:none">Pay fee</a></p></body></html>

@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.hdfc-secure-alerts.example (mail.hdfc-secure-alerts.example. [203.0.113.10]) by mx.google.com with ESMTPS id muhv959c.78 for <kaushal@gmail.com>; Sat, 26 Sep 2026 04:05:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@hdfc-secure-alerts.example header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@hdfc-secure-alerts.example designates 203.0.113.10 as permitted sender) smtp.mailfrom=hdfc-secure-alerts.example; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=hdfc-secure-alerts.example
+Date: Sat, 26 Sep 2026 04:05:00 +0000
+From: "HDFC Bank Fraud Desk" <alerts@hdfc-secure-alerts.example>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Suspicious transaction blocked
+Message-ID: <muhv959c.78@hdfc-secure-alerts.example>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+We blocked a transaction of ₹48,200 on your account ending 4417. Call our fraud desk immediately on 1800-555-7788 to confirm your identity and restore access.

@@ -1,0 +1,27 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.orionprint-invoices.example (mail.orionprint-invoices.example. [203.0.113.10]) by mx.google.com with ESMTPS id muj9fzk0.40 for <kaushal@gmail.com>; Sun, 27 Sep 2026 03:30:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@orionprint-invoices.example header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@orionprint-invoices.example designates 203.0.113.10 as permitted sender) smtp.mailfrom=orionprint-invoices.example; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=orionprint-invoices.example
+Date: Sun, 27 Sep 2026 03:30:00 +0000
+From: "Orion Print Co" <billing@orionprint-invoices.example>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Invoice ORN-5520 due
+Message-ID: <muj9fzk0.40@orionprint-invoices.example>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="----=_Mixed_muj9fzk0.40"
+
+------=_Mixed_muj9fzk0.40
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Dear Customer,
+
+Invoice ORN-5520 for ₹36,400 (print collateral) is due on 5 October. Please pay to Orion Print Co, A/C 9988776655, IFSC ICIC0000221, and email the UTR.
+
+Accounts, Orion Print Co
+------=_Mixed_muj9fzk0.40
+Content-Type: application/pdf; name="Invoice_ORN-5520.pdf"
+Content-Disposition: attachment; filename="Invoice_ORN-5520.pdf"
+Content-Transfer-Encoding: base64
+
+JVBERi0xLjQgbGFiIHBsYWNlaG9sZGVy
+------=_Mixed_muj9fzk0.40--

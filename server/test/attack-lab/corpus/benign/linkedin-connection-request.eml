@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.linkedin.com (mail.linkedin.com. [203.0.113.10]) by mx.google.com with ESMTPS id muaqeqw0.110 for <kaushal@gmail.com>; Mon, 21 Sep 2026 04:15:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@linkedin.com header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@linkedin.com designates 203.0.113.10 as permitted sender) smtp.mailfrom=linkedin.com; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=linkedin.com
+Date: Mon, 21 Sep 2026 04:15:00 +0000
+From: "LinkedIn" <invitations@linkedin.com>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Devi Raman wants to connect
+Message-ID: <muaqeqw0.110@linkedin.com>
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body style="font-family:Arial,sans-serif;color:#222;background:#ffffff"><p>Devi Raman, Product Lead at Orbit Collective, would like to connect.</p><p><a href="https://www.linkedin.com/comm/people/invite/accept/88a">Accept</a> · <a href="https://www.linkedin.com/comm/people/invite/ignore/88a">Ignore</a></p></body></html>

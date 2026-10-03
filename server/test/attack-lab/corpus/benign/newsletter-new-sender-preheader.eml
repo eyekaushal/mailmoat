@@ -1,0 +1,15 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.pragmaticdesigner.example (mail.pragmaticdesigner.example. [203.0.113.10]) by mx.google.com with ESMTPS id muneen40.94 for <kaushal@gmail.com>; Wed, 30 Sep 2026 01:00:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@pragmaticdesigner.example header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@pragmaticdesigner.example designates 203.0.113.10 as permitted sender) smtp.mailfrom=pragmaticdesigner.example; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=pragmaticdesigner.example
+Date: Wed, 30 Sep 2026 01:00:00 +0000
+From: "The Pragmatic Designer" <newsletter@pragmaticdesigner.example>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Issue 1: why your design system has no users
+Message-ID: <muneen40.94@pragmaticdesigner.example>
+MIME-Version: 1.0
+List-Unsubscribe: <https://pragmaticdesigner.example/u/1>
+List-Unsubscribe-Post: List-Unsubscribe=One-Click
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body style="font-family:Arial,sans-serif;color:#222;background:#ffffff"><div style="display:none;max-height:0;overflow:hidden">Why most design systems fail at adoption and what to do instead this quarter</div><h2>Issue 1</h2><p>Welcome! You signed up last week. This issue covers why design systems fail at adoption and the three habits of the teams that succeed.</p><p><a href="https://pragmaticdesigner.example/issues/1">Read online</a></p><p style="font-size:11px"><a href="https://pragmaticdesigner.example/u/1">Unsubscribe</a></p></body></html>

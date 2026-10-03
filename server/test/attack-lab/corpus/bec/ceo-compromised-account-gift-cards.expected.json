@@ -1,0 +1,9 @@
+{
+  "threat": "T4",
+  "technique": "ceo-fraud/compromised-account",
+  "summary": "The CEO's real, authenticated account asks for secret gift cards; only the content gives it away.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": []
+  }
+}

@@ -1,0 +1,17 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.acme-c0rp.com (mail.acme-c0rp.com. [203.0.113.10]) by mx.google.com with ESMTPS id muozmts0.29 for <kaushal@gmail.com>; Thu, 01 Oct 2026 03:42:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@acme-c0rp.com header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@acme-c0rp.com designates 203.0.113.10 as permitted sender) smtp.mailfrom=acme-c0rp.com; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=acme-c0rp.com
+Date: Thu, 01 Oct 2026 03:42:00 +0000
+From: "Rahul Mehta" <rahul@acme-c0rp.com>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Are you at your desk?
+Message-ID: <muozmts0.29@acme-c0rp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Kaushal,
+
+I need you to process an urgent payment to a new vendor today before the board call. I will send the account details once you confirm. Keep this between us until the deal is announced.
+
+Rahul

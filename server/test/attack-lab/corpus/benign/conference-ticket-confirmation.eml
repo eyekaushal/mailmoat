@@ -1,0 +1,23 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.jsconfindia.example (mail.jsconfindia.example. [203.0.113.10]) by mx.google.com with ESMTPS id mucdj39c.107 for <kaushal@gmail.com>; Tue, 22 Sep 2026 07:50:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@jsconfindia.example header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@jsconfindia.example designates 203.0.113.10 as permitted sender) smtp.mailfrom=jsconfindia.example; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=jsconfindia.example
+Date: Tue, 22 Sep 2026 07:50:00 +0000
+From: "JSConf India" <tickets@jsconfindia.example>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Your ticket for JSConf India 2026
+Message-ID: <mucdj39c.107@jsconfindia.example>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="----=_Mixed_mucdj39c.107"
+
+------=_Mixed_mucdj39c.107
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body style="font-family:Arial,sans-serif;color:#222;background:#ffffff"><p>Thanks for registering, Kaushal! Your ticket (JSI-4471) is attached and also available online.</p><p><a href="https://jsconfindia.example/tickets/JSI-4471">View ticket</a></p></body></html>
+------=_Mixed_mucdj39c.107
+Content-Type: application/pdf; name="ticket-JSI-4471.pdf"
+Content-Disposition: attachment; filename="ticket-JSI-4471.pdf"
+Content-Transfer-Encoding: base64
+
+JVBERi0xLjQgbGFiIHBsYWNlaG9sZGVy
+------=_Mixed_mucdj39c.107--

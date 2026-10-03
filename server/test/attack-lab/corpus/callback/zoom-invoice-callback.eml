@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.zoom-invoices.example (mail.zoom-invoices.example. [203.0.113.10]) by mx.google.com with ESMTPS id muggpg00.79 for <kaushal@gmail.com>; Fri, 25 Sep 2026 04:30:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@zoom-invoices.example header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@zoom-invoices.example designates 203.0.113.10 as permitted sender) smtp.mailfrom=zoom-invoices.example; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=zoom-invoices.example
+Date: Fri, 25 Sep 2026 04:30:00 +0000
+From: "Zoom Video Communications" <billing@zoom-invoices.example>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Your Zoom Pro invoice ($199.90)
+Message-ID: <muggpg00.79@zoom-invoices.example>
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body style="font-family:Arial,sans-serif;color:#222;background:#ffffff"><p>Your Zoom Pro annual plan was renewed for $199.90.</p><p>To cancel within the 48-hour window, call +1-650-555-0124.</p></body></html>

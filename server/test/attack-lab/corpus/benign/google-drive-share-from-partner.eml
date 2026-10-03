@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.google.com (mail.google.com. [203.0.113.10]) by mx.google.com with ESMTPS id mui8ajeo.101 for <kaushal@gmail.com>; Sat, 26 Sep 2026 10:10:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@google.com header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@google.com designates 203.0.113.10 as permitted sender) smtp.mailfrom=google.com; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=google.com
+Date: Sat, 26 Sep 2026 10:10:00 +0000
+From: "Priya Shah (via Google Drive)" <drive-shares-dm-noreply@google.com>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Document shared with you: "Atlas handoff checklist"
+Message-ID: <mui8ajeo.101@google.com>
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body style="font-family:Arial,sans-serif;color:#222;background:#ffffff"><p>Priya Shah shared a document.</p><p><a href="https://docs.google.com/document/d/1AbCdEf/edit">Open</a></p></body></html>

@@ -1,0 +1,9 @@
+{
+  "threat": "T7",
+  "technique": "brand-name/unknown-domain",
+  "summary": "Zoom-branded invoice with a cancellation number.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S6", "S7", "S9"]
+  }
+}

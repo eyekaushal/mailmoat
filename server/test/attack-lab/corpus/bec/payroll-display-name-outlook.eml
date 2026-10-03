@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.outlook.com (mail.outlook.com. [203.0.113.10]) by mx.google.com with ESMTPS id munldew0.45 for <kaushal@gmail.com>; Wed, 30 Sep 2026 04:15:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@outlook.com header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@outlook.com designates 203.0.113.10 as permitted sender) smtp.mailfrom=outlook.com; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=outlook.com
+Date: Wed, 30 Sep 2026 04:15:00 +0000
+From: "Sana Iyer" <sana.iyer.work@outlook.com>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Payout details changed
+Message-ID: <munldew0.45@outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Hi Kaushal, quick one: my bank changed, please update my payout to A/C 5566778899 (Axis, IFSC UTIB0000321) before the 5th. Sana

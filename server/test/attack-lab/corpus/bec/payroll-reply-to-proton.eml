@@ -1,0 +1,24 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.hr-payroll-update.example (mail.hr-payroll-update.example. [203.0.113.10]) by mx.google.com with ESMTPS id mukmdthc.47 for <kaushal@gmail.com>; Mon, 28 Sep 2026 02:20:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@hr-payroll-update.example header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@hr-payroll-update.example designates 203.0.113.10 as permitted sender) smtp.mailfrom=hr-payroll-update.example; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=hr-payroll-update.example
+Date: Mon, 28 Sep 2026 02:20:00 +0000
+From: "Sana Iyer" <sana@hr-payroll-update.example>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Reply-To: sana.iyer.new@proton.me
+Subject: Direct deposit update
+Message-ID: <mukmdthc.47@hr-payroll-update.example>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="----=_Mixed_mukmdthc.47"
+
+------=_Mixed_mukmdthc.47
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Hello Kaushal, please update my direct deposit to the new account in the attached form. Reply to confirm once done. Regards, Sana Iyer
+------=_Mixed_mukmdthc.47
+Content-Type: application/pdf; name="Direct_Deposit_Form.pdf"
+Content-Disposition: attachment; filename="Direct_Deposit_Form.pdf"
+Content-Transfer-Encoding: base64
+
+JVBERi0xLjQgbGFiIHBsYWNlaG9sZGVy
+------=_Mixed_mukmdthc.47--

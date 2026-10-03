@@ -1,0 +1,15 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.cloudnest.dev (mail.cloudnest.dev. [203.0.113.10]) by mx.google.com with ESMTPS id mu4wwb40.116 for <kaushal@gmail.com>; Thu, 17 Sep 2026 02:30:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@cloudnest.dev header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@cloudnest.dev designates 203.0.113.10 as permitted sender) smtp.mailfrom=cloudnest.dev; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=cloudnest.dev
+Date: Thu, 17 Sep 2026 02:30:00 +0000
+From: "CloudNest" <billing@cloudnest.dev>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: kaushal-studio.example renews automatically on 15 Oct
+Message-ID: <mu4wwb40.116@cloudnest.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Your domain kaushal-studio.example will renew automatically on 15 October for ₹1,199 using the card on file. No action is needed.
+
+CloudNest Billing

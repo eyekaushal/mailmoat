@@ -1,0 +1,9 @@
+{
+  "threat": "T5",
+  "technique": "brand/dmarc-fail+embedded-domain",
+  "summary": "Spoofed coinbase.com asking to log in and cancel a withdrawal.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S1", "S14"]
+  }
+}

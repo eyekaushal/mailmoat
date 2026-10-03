@@ -1,0 +1,19 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.acme-corp.com (mail.acme-corp.com. [203.0.113.10]) by mx.google.com with ESMTPS id mup1f4lc.30 for <kaushal@gmail.com>; Thu, 01 Oct 2026 04:32:00 +0000
+Authentication-Results: mx.google.com; dkim=fail (signature did not verify) header.i=@acme-corp.com header.s=s1; spf=fail (google.com: domain of bounce@acme-corp.com does not designate 198.51.100.7 as permitted sender) smtp.mailfrom=acme-corp.com; dmarc=fail (p=REJECT sp=REJECT dis=NONE) header.from=acme-corp.com
+Date: Thu, 01 Oct 2026 04:32:00 +0000
+From: "Rahul Mehta" <rahul@acme-corp.com>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Reply-To: rahul.mehta.office@gmail.com
+Subject: Quick request
+Message-ID: <mup1f4lc.30@acme-corp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Hi Kaushal,
+
+I am in meetings all day. Can you wire the deposit for the new office lease today? Reply here and I will send the bank details.
+
+Thanks,
+Rahul

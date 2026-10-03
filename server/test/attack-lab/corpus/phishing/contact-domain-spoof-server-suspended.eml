@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.cloudnest.dev (mail.cloudnest.dev. [203.0.113.10]) by mx.google.com with ESMTPS id mtypmr9c.69 for <kaushal@gmail.com>; Sat, 12 Sep 2026 18:20:00 +0000
+Authentication-Results: mx.google.com; dkim=fail (signature did not verify) header.i=@cloudnest.dev header.s=s1; spf=fail (google.com: domain of bounce@cloudnest.dev does not designate 198.51.100.7 as permitted sender) smtp.mailfrom=cloudnest.dev; dmarc=fail (p=REJECT sp=REJECT dis=NONE) header.from=cloudnest.dev
+Date: Sat, 12 Sep 2026 18:20:00 +0000
+From: "CloudNest Support" <support@cloudnest.dev>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Your server will be suspended in 12 hours
+Message-ID: <mtypmr9c.69@cloudnest.dev>
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><title></title></head><body style="font-family:Arial,sans-serif;color:#222;background:#ffffff"><p>Payment for server nest-01 failed. Log in to update billing or the server will be suspended.</p><p><a href="https://cloudnest-dev-billing.example/login" style="background:#e50914;color:#fff;padding:10px 18px;text-decoration:none">Update billing</a></p></body></html>

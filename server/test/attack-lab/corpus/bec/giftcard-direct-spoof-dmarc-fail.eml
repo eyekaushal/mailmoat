@@ -1,0 +1,13 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.acme-corp.com (mail.acme-corp.com. [203.0.113.10]) by mx.google.com with ESMTPS id mugjqr6o.42 for <kaushal@gmail.com>; Fri, 25 Sep 2026 05:55:00 +0000
+Authentication-Results: mx.google.com; dkim=fail (signature did not verify) header.i=@acme-corp.com header.s=s1; spf=fail (google.com: domain of bounce@acme-corp.com does not designate 198.51.100.7 as permitted sender) smtp.mailfrom=acme-corp.com; dmarc=fail (p=REJECT sp=REJECT dis=NONE) header.from=acme-corp.com
+Date: Fri, 25 Sep 2026 05:55:00 +0000
+From: "Rahul Mehta" <rahul@acme-corp.com>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Team surprise
+Message-ID: <mugjqr6o.42@acme-corp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Hi Kaushal, I want to surprise the team with Amazon gift cards. Please buy 6 x ₹5,000 and send me the codes today. Keep it discreet so the surprise is not spoilt. Rahul

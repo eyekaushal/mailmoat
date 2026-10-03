@@ -1,0 +1,9 @@
+{
+  "threat": "T5",
+  "technique": "brand/dmarc-fail+embedded-domain",
+  "summary": "Spoofed accounts.google.com; link host starts with accounts.google.com.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S1", "S14"]
+  }
+}

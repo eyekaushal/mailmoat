@@ -1,0 +1,9 @@
+{
+  "threat": "none",
+  "technique": "notification/appointment",
+  "summary": "Clinic reminder with a number to call to reschedule.",
+  "expect": {
+    "level": "SAFE",
+    "signals": []
+  }
+}

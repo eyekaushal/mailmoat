@@ -1,0 +1,15 @@
+Delivered-To: kaushal@gmail.com
+Received: from mail.billing-center.example (mail.billing-center.example. [203.0.113.10]) by mx.google.com with ESMTPS id muoqgbmo.73 for <kaushal@gmail.com>; Wed, 30 Sep 2026 23:25:00 +0000
+Authentication-Results: mx.google.com; dkim=pass header.i=@billing-center.example header.s=s1 header.b=K3fQ9x; spf=pass (google.com: domain of bounce@billing-center.example designates 203.0.113.10 as permitted sender) smtp.mailfrom=billing-center.example; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=billing-center.example
+Date: Wed, 30 Sep 2026 23:25:00 +0000
+From: "NortonLifeLock" <renewals@billing-center.example>
+To: "Kaushal Shahare" <kaushal@gmail.com>
+Subject: Your subscription has renewed: $499.99
+Message-ID: <muoqgbmo.73@billing-center.example>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Your NortonLifeLock subscription ($499.99) renewed today and will be charged to your card on file. If you did not authorise this, call +1-800-555-0100 within 24 hours to cancel.
+
+Billing Team

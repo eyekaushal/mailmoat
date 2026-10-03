@@ -1,0 +1,9 @@
+{
+  "threat": "none",
+  "technique": "receipt/small-shop",
+  "summary": "Shipping update from a small online shop.",
+  "expect": {
+    "level": "SAFE",
+    "signals": ["S3"]
+  }
+}

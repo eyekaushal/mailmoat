@@ -1,0 +1,10 @@
+{
+  "threat": "T1",
+  "technique": "multilingual-hidden",
+  "summary": "Meeting notes with instructions hidden via multilingual-hidden.",
+  "expect": {
+    "level": "DANGEROUS",
+    "injection": true,
+    "signals": ["S12", "S13"]
+  }
+}

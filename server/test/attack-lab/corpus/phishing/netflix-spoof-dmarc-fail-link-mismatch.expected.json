@@ -1,0 +1,9 @@
+{
+  "threat": "T5",
+  "technique": "brand/dmarc-fail+link-mismatch",
+  "summary": "Spoofed netflix.com with a link whose text shows netflix.com but goes elsewhere.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S1", "S14"]
+  }
+}

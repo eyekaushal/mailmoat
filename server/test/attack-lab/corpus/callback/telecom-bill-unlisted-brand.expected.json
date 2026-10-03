@@ -1,0 +1,9 @@
+{
+  "threat": "T7",
+  "technique": "brand-not-in-list",
+  "summary": "A brand mailmoat does not know (Airtel): only the Reader's claim + first contact can catch it.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S9", "S10"]
+  }
+}

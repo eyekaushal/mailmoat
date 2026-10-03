@@ -1,0 +1,9 @@
+{
+  "threat": "T4",
+  "technique": "vendor-bank-change/cold-invoice",
+  "summary": "An invoice from a vendor the user has never dealt with, with bank details for payment.",
+  "expect": {
+    "level": "DANGEROUS",
+    "signals": ["S9", "S10"]
+  }
+}
