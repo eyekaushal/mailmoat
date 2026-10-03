@@ -17,12 +17,14 @@ import { Database } from '../src/db/Database.js';
 import { Migrator } from '../src/db/Migrator.js';
 import { AuditLogRepository } from '../src/db/repositories/AuditLogRepository.js';
 import { ContactRepository } from '../src/db/repositories/ContactRepository.js';
+import { DraftRepository } from '../src/db/repositories/DraftRepository.js';
 import { EmailRepository } from '../src/db/repositories/EmailRepository.js';
 import { RuleRepository } from '../src/db/repositories/RuleRepository.js';
 import { SenderRepository } from '../src/db/repositories/SenderRepository.js';
 import { SettingsRepository } from '../src/db/repositories/SettingsRepository.js';
 import { SyncStateRepository } from '../src/db/repositories/SyncStateRepository.js';
 import { VerdictRepository } from '../src/db/repositories/VerdictRepository.js';
+import { DraftService } from '../src/features/DraftService.js';
 import { GmailClient } from '../src/google/GmailClient.js';
 import { GoogleAuth } from '../src/google/GoogleAuth.js';
 import { LlmClient } from '../src/llm/LlmClient.js';
@@ -38,6 +40,7 @@ import { HiddenContentDetector } from '../src/security/ingest/HiddenContentDetec
 import { LinkExtractor } from '../src/security/ingest/LinkExtractor.js';
 import { MimeParser } from '../src/security/ingest/MimeParser.js';
 import { TextNormalizer } from '../src/security/ingest/TextNormalizer.js';
+import { Drafter } from '../src/security/reader/Drafter.js';
 import { Reader } from '../src/security/reader/Reader.js';
 import { RiskEngine } from '../src/security/risk/RiskEngine.js';
 import { RiskRules } from '../src/security/risk/RiskRules.js';
@@ -88,24 +91,23 @@ const auditLog = new AuditLog(new AuditLogRepository(db));
 const verdicts = new VerdictRepository(db);
 const models = new ModelConfig();
 const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+const llm = new LlmClient({
+  anthropic: new Anthropic({ apiKey: config.anthropicApiKey, maxRetries: 3, timeout: 60_000 }),
+  models,
+  auditLog,
+  logger,
+});
+const ingestor = new EmailIngestor({
+  mimeParser: new MimeParser(),
+  authResultsParser: new AuthResultsParser(),
+  linkExtractor: new LinkExtractor(),
+  hiddenContentDetector: new HiddenContentDetector(),
+  textNormalizer: new TextNormalizer(),
+});
 const pipeline = new SecurityPipeline({
   gmail,
-  ingestor: new EmailIngestor({
-    mimeParser: new MimeParser(),
-    authResultsParser: new AuthResultsParser(),
-    linkExtractor: new LinkExtractor(),
-    hiddenContentDetector: new HiddenContentDetector(),
-    textNormalizer: new TextNormalizer(),
-  }),
-  reader: new Reader({
-    llm: new LlmClient({
-      anthropic: new Anthropic({ apiKey: config.anthropicApiKey, maxRetries: 3, timeout: 60_000 }),
-      models,
-      auditLog,
-      logger,
-    }),
-    logger,
-  }),
+  ingestor,
+  reader: new Reader({ llm, logger }),
   signalEngine: new SignalEngine({ signals: new SignalCatalog().create(), logger }),
   riskEngine: new RiskEngine(new RiskRules()),
   contacts,
@@ -127,12 +129,17 @@ const ruleEngine = new RuleEngine({
     registry: new ToolRegistry([new ApplyLabelTool({ gmail }), new ArchiveTool({ gmail })]),
     auditLog,
   }),
-  // The DraftService arrives in B19; until then "Draft reply" is recorded as a failed action.
-  drafts: {
-    async createReply() {
-      throw new Error('Draft replies are not available yet (B19)');
-    },
-  },
+  drafts: new DraftService({
+    gmail,
+    ingestor,
+    drafter: new Drafter({ llm }),
+    emails,
+    verdicts,
+    repository: new DraftRepository(db),
+    settings,
+    auditLog,
+    logger,
+  }),
   settings,
   auditLog,
   logger,

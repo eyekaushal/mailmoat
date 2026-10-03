@@ -57,3 +57,6 @@ export class MemoryError extends MailmoatError {}
 
 /** A rule setting is invalid (unknown rule, security rule, disallowed action) or an action failed. */
 export class RuleError extends MailmoatError {}
+
+/** A reply could not be drafted: unknown or risky email, or the quarantined Drafter failed. */
+export class DraftError extends MailmoatError {}
