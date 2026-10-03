@@ -1,0 +1,91 @@
+@import 'tailwindcss';
+
+/* Design tokens. Light by default; dark follows the OS. Risk colours are always paired with an
+   icon and a word (PRD §9: never colour alone). */
+:root {
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --surface-2: #eef0f4;
+  --line: #dfe3ea;
+  --fg: #16181d;
+  --muted: #5f6673;
+  --accent: #4f46e5;
+  --accent-soft: #e9e8fd;
+  --accent-fg: #ffffff;
+  --safe: #0f8a5f;
+  --safe-soft: #e3f6ee;
+  --warn: #b26b00;
+  --warn-soft: #fff1d6;
+  --danger: #c62828;
+  --danger-soft: #fde7e7;
+  --neutral: #5f6673;
+  --neutral-soft: #eef0f4;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1115;
+    --surface: #171a21;
+    --surface-2: #1f2330;
+    --line: #2a2f3b;
+    --fg: #e8eaf0;
+    --muted: #9aa3b2;
+    --accent: #818cf8;
+    --accent-soft: #272a4a;
+    --accent-fg: #0f1115;
+    --safe: #34d399;
+    --safe-soft: #0f2e24;
+    --warn: #fbbf24;
+    --warn-soft: #3a2a07;
+    --danger: #f87171;
+    --danger-soft: #3b1414;
+    --neutral: #9aa3b2;
+    --neutral-soft: #1f2330;
+    color-scheme: dark;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-fg: var(--accent-fg);
+  --color-safe: var(--safe);
+  --color-safe-soft: var(--safe-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-neutral: var(--neutral);
+  --color-neutral-soft: var(--neutral-soft);
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Keyboard users must always see where they are (PRD §9 Usability). */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
