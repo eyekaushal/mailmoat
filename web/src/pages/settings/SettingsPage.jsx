@@ -1,8 +1,9 @@
-import { CheckCircle2, Trash2, XCircle } from 'lucide-react';
+import { CheckCircle, Trash, XCircle } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { Button } from '../../components/Button.jsx';
 import { FormField, INPUT_CLASSES } from '../../components/FormField.jsx';
 import { LoadingState } from '../../components/LoadingState.jsx';
+import { WALLPAPERS, wallpaperPreview } from '../../components/Wallpaper.jsx';
 import { useApi, useApiClient } from '../../lib/useApi.js';
 
 const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -18,7 +19,7 @@ function Section({ title, description, children }) {
 }
 
 function Notice({ ok, children }) {
-  const Icon = ok ? CheckCircle2 : XCircle;
+  const Icon = ok ? CheckCircle : XCircle;
   return (
     <p
       role="status"
@@ -40,6 +41,7 @@ export function SettingsPage() {
       <h1 className="text-xl font-semibold tracking-tight">Settings</h1>
       <AnthropicSection anthropic={view.anthropic} client={client} onChange={mutate} />
       <GoogleSection google={view.google} client={client} onChange={mutate} />
+      <WallpaperSection current={view.settings.wallpaper} client={client} onChange={mutate} />
       {/* Keyed on the saved values so the form resets whenever the server's copy changes. */}
       <PreferencesForm
         key={JSON.stringify(view.settings)}
@@ -197,6 +199,64 @@ function GoogleSection({ google, client, onChange }) {
         </div>
       )}
       {error && <Notice ok={false}>{error}</Notice>}
+    </Section>
+  );
+}
+
+/** The wallpaper behind the panels (DESIGN.md §7); saved as soon as a tile is picked. */
+function WallpaperSection({ current, client, onChange }) {
+  const [notice, setNotice] = useState(null);
+  async function pick(wallpaper) {
+    if (wallpaper === current) return;
+    setNotice(null);
+    try {
+      await client.put('/settings', { wallpaper });
+      await onChange();
+    } catch (caught) {
+      setNotice({ ok: false, text: caught.message });
+    }
+  }
+  return (
+    <Section
+      title="Wallpaper"
+      description="The painting behind the panels. Two Monets, a gradient, or none."
+    >
+      <div
+        role="radiogroup"
+        aria-label="Wallpaper"
+        className="grid grid-cols-2 gap-3 sm:grid-cols-4"
+      >
+        {WALLPAPERS.map(({ id, label, hint }) => {
+          const selected = id === current;
+          return (
+            <button
+              key={id}
+              type="button"
+              role="radio"
+              aria-checked={selected}
+              title={hint}
+              onClick={() => pick(id)}
+              className={`group rounded-md p-1 text-left transition-colors duration-150 ease-out-soft ${
+                selected ? 'bg-accent-soft' : 'hover:bg-surface-2'
+              }`}
+            >
+              <span
+                aria-hidden="true"
+                style={wallpaperPreview(id)}
+                className={`block aspect-[4/3] w-full rounded-sm bg-cover bg-center shadow-[inset_0_0_0_1px_var(--line)] ${
+                  selected ? 'ring-2 ring-accent ring-offset-1' : ''
+                }`}
+              />
+              <span
+                className={`mt-1.5 block px-1 text-sm ${selected ? 'font-medium text-ink' : 'text-secondary'}`}
+              >
+                {label}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+      {notice && <Notice ok={notice.ok}>{notice.text}</Notice>}
     </Section>
   );
 }
@@ -517,7 +577,7 @@ function DangerZone({ client }) {
             disabled={confirm !== 'DELETE' || state === 'busy'}
             onClick={erase}
           >
-            <Trash2 aria-hidden="true" className="size-4" /> Delete everything
+            <Trash aria-hidden="true" className="size-4" /> Delete everything
           </Button>
           {state && state !== 'busy' && <Notice ok={false}>{state}</Notice>}
         </div>

@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="r-bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0f3f61"/>
+      <stop offset="1" stop-color="#17689b"/>
+    </linearGradient>
+    <linearGradient id="r-beam" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffd166" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#ffd166" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="r-beam-l" x1="1" y1="0" x2="0" y2="0">
+      <stop offset="0" stop-color="#ffd166" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#ffd166" stop-opacity="0"/>
+    </linearGradient>
+    <clipPath id="r-clip"><circle cx="32" cy="32" r="30"/></clipPath>
+    <clipPath id="r-tower"><path d="M27 24h10l3.5 24h-17z"/></clipPath>
+  </defs>
+  <g clip-path="url(#r-clip)">
+    <rect width="64" height="64" fill="url(#r-bg)"/>
+    <!-- beams -->
+    <path d="M38 18l30-8v16z" fill="url(#r-beam)"/>
+    <path d="M26 18L-4 10v16z" fill="url(#r-beam-l)"/>
+    <!-- rocks -->
+    <path d="M14 50l8-7 6 3 5-5 7 4 4 5z" fill="#1d2d3f"/>
+    <path d="M22 43l6 3 5-5 7 4-4 1-4-2-4 3z" fill="#34475f"/>
+    <!-- spiral-striped tower -->
+    <g clip-path="url(#r-tower)">
+      <rect x="20" y="22" width="26" height="28" fill="#f6efe0"/>
+      <g fill="#c8463a">
+        <path d="M18 31l24-7v4l-24 7z"/>
+        <path d="M18 40l28-8v4l-28 8z"/>
+        <path d="M18 49l30-9v4l-30 9z"/>
+      </g>
+      <rect x="32" y="22" width="14" height="28" fill="#000" fill-opacity="0.16"/>
+    </g>
+    <rect x="24.5" y="21.5" width="15" height="3" rx="1.4" fill="#1d2d3f"/>
+    <rect x="27.5" y="14" width="9" height="7.5" rx="1.8" fill="#ffd166"/>
+    <rect x="27.5" y="14" width="4.5" height="7.5" fill="#fff" fill-opacity="0.3"/>
+    <path d="M26 13.5h12l-6-5z" fill="#1d2d3f"/>
+    <!-- water -->
+    <path d="M0 52c4 0 4 2.6 8 2.6s4-2.6 8-2.6 4 2.6 8 2.6 4-2.6 8-2.6 4 2.6 8 2.6 4-2.6 8-2.6 4 2.6 8 2.6 4-2.6 8-2.6" fill="none" stroke="#9fd4f0" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M0 57c4 0 4 2.6 8 2.6s4-2.6 8-2.6 4 2.6 8 2.6 4-2.6 8-2.6 4 2.6 8 2.6 4-2.6 8-2.6 4 2.6 8 2.6 4-2.6 8-2.6" fill="none" stroke="#9fd4f0" stroke-opacity="0.5" stroke-width="1.6" stroke-linecap="round"/>
+    <!-- gull -->
+    <path d="M44 30c1.5-1.5 3-1.5 4.5 0M48.5 30c1.5-1.5 3-1.5 4.5 0" fill="none" stroke="#fff" stroke-opacity="0.8" stroke-width="1" stroke-linecap="round"/>
+  </g>
+</svg>

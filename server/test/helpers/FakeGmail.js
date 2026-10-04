@@ -1,4 +1,4 @@
-import { HistoryExpiredError } from '../../src/core/errors.js';
+import { HistoryExpiredError, NotFoundError } from '../../src/core/errors.js';
 
 /**
  * In-memory stand-in for GmailClient's read methods, for sync tests.
@@ -22,6 +22,7 @@ export class FakeGmail {
     subject = 'Hello',
     receivedAt = new Date('2026-10-01T10:00:00Z'),
     headers = {},
+    snippet = 'Hello there &amp; welcome',
   }) {
     this.messages.set(id, {
       id,
@@ -29,6 +30,7 @@ export class FakeGmail {
       labelIds,
       internalDate: receivedAt,
       headers: { from, to, subject, ...headers },
+      snippet,
     });
     this.historyId += 1;
     this.history.push({ historyId: this.historyId, id });
@@ -50,6 +52,20 @@ export class FakeGmail {
       .filter((entry) => entry.historyId > Number(startHistoryId))
       .map((entry) => entry.id);
     return { messageIds, historyId: String(this.historyId), nextPageToken: undefined };
+  }
+
+  async getThread(threadId) {
+    const messages = [...this.messages.values()]
+      .filter((m) => m.threadId === threadId)
+      .map(({ id, threadId: thread, labelIds, internalDate }) => ({
+        id,
+        threadId: thread,
+        labelIds,
+        internalDate,
+      }))
+      .sort((a, b) => a.internalDate - b.internalDate);
+    if (messages.length === 0) throw new NotFoundError('Unknown thread');
+    return { threadId, messages };
   }
 
   async listMessageIds({ query = '' } = {}) {

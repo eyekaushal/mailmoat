@@ -10,6 +10,7 @@ import { EmailRepository } from '../../src/db/repositories/EmailRepository.js';
 import { SettingsRepository } from '../../src/db/repositories/SettingsRepository.js';
 import { VerdictRepository } from '../../src/db/repositories/VerdictRepository.js';
 import { SecurityPipeline } from '../../src/security/SecurityPipeline.js';
+import { TextNormalizer } from '../../src/security/ingest/TextNormalizer.js';
 import { Reader } from '../../src/security/reader/Reader.js';
 import { RiskEngine } from '../../src/security/risk/RiskEngine.js';
 import { RiskRules } from '../../src/security/risk/RiskRules.js';
@@ -338,7 +339,7 @@ export class AttackLab {
 
 /** Builds the sync layer's EmailRecord from the raw headers, as MessageImporter would. */
 class LabMapper {
-  #mapper = new EmailMetadataMapper();
+  #mapper = new EmailMetadataMapper({ textNormalizer: new TextNormalizer() });
 
   toRecord(message, headers) {
     return this.#mapper.toRecord({

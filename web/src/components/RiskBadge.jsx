@@ -1,13 +1,13 @@
-import { OctagonAlert, ShieldCheck, ShieldQuestion, TriangleAlert } from 'lucide-react';
+import { Shield, ShieldCheck, Warning, WarningOctagon } from '@phosphor-icons/react';
 
 /** Every risk level is an icon plus a word, never a colour alone (PRD §9). */
 const RISK_META = {
   SAFE: { label: 'Safe', Icon: ShieldCheck, tone: 'safe' },
-  SUSPICIOUS: { label: 'Suspicious', Icon: TriangleAlert, tone: 'warn' },
-  DANGEROUS: { label: 'Dangerous', Icon: OctagonAlert, tone: 'danger' },
+  SUSPICIOUS: { label: 'Suspicious', Icon: Warning, tone: 'warn' },
+  DANGEROUS: { label: 'Dangerous', Icon: WarningOctagon, tone: 'danger' },
 };
 
-const UNKNOWN = { label: 'Not analysed', Icon: ShieldQuestion, tone: 'neutral' };
+const UNKNOWN = { label: 'Not analysed', Icon: Shield, tone: 'neutral' };
 
 const TONE_CLASSES = {
   safe: 'bg-safe-soft text-safe',

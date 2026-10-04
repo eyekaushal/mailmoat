@@ -1,8 +1,14 @@
-import { CalendarPlus, Mail, Reply, ShieldAlert, Wrench } from 'lucide-react';
+import {
+  ArrowBendUpLeft,
+  CalendarPlus,
+  Envelope,
+  ShieldWarning,
+  Wrench,
+} from '@phosphor-icons/react';
 
 const KIND_META = {
-  email: { title: 'Send email', confirm: 'Send', Icon: Mail },
-  reply: { title: 'Reply', confirm: 'Save draft', Icon: Reply },
+  email: { title: 'Send email', confirm: 'Send', Icon: Envelope },
+  reply: { title: 'Reply', confirm: 'Save draft', Icon: ArrowBendUpLeft },
   event: { title: 'Calendar event', confirm: 'Save', Icon: CalendarPlus },
   action: { title: 'Action', confirm: 'Confirm', Icon: Wrench },
 };
@@ -100,7 +106,7 @@ export function PreviewCard({ card, onDecide, busy = false, children }) {
       </dl>
       {(card.reason || fromEmail) && (
         <p className="flex items-start gap-2 border-t border-line px-4 py-2 text-xs text-muted">
-          <ShieldAlert aria-hidden="true" className="mt-0.5 size-3.5 shrink-0" />
+          <ShieldWarning aria-hidden="true" className="mt-0.5 size-3.5 shrink-0" />
           <span>
             {card.reason}
             {card.reason && fromEmail ? ' ' : ''}

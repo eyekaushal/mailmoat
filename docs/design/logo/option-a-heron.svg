@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="h-bird" x1="20" y1="10" x2="44" y2="52" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2f7a74"/>
+      <stop offset="1" stop-color="#174a46"/>
+    </linearGradient>
+    <linearGradient id="h-water" x1="8" y1="0" x2="56" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#9fd3c7"/>
+      <stop offset="1" stop-color="#6fb8aa"/>
+    </linearGradient>
+  </defs>
+  <!-- the heron: the sentinel that stands in the moat and lets nothing past -->
+  <path d="M30 42c0-9-7-11-7-19 0-6 5-9 10-8" fill="none" stroke="url(#h-bird)" stroke-width="4.6" stroke-linecap="round"/>
+  <circle cx="33.5" cy="15.5" r="3.8" fill="url(#h-bird)"/>
+  <path d="M36.5 15.5l10 2.2-10 1.6z" fill="#e6a23c"/>
+  <ellipse cx="31" cy="42.5" rx="11.5" ry="6.4" fill="url(#h-bird)" transform="rotate(-14 31 42.5)"/>
+  <path d="M27.5 48.5V56M34 48V56" stroke="#174a46" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M9 57.5c3.8 0 3.8 2.4 7.6 2.4s3.8-2.4 7.6-2.4 3.8 2.4 7.6 2.4 3.8-2.4 7.6-2.4 3.8 2.4 7.6 2.4 3.8-2.4 7.6-2.4" fill="none" stroke="url(#h-water)" stroke-width="2.8" stroke-linecap="round"/>
+</svg>

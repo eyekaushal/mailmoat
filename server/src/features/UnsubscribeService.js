@@ -45,6 +45,7 @@ export class UnsubscribeService {
   listSenders(filter) {
     return this.#deps.senders.list(filter).map((sender) => ({
       address: sender.address,
+      name: sender.name,
       status: sender.status,
       emailCount: sender.emailCount,
       readCount: sender.readCount,

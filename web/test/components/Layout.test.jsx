@@ -1,33 +1,44 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { Layout } from '../../src/components/Layout.jsx';
-import { NAV_ITEMS } from '../../src/components/Sidebar.jsx';
+import { NAV_ITEMS } from '../../src/components/Rail.jsx';
 import { ApiClient } from '../../src/lib/ApiClient.js';
 import { ApiProvider } from '../../src/lib/useApi.js';
+import { TooltipProvider } from '../../src/ui/Tooltip.jsx';
 
-function fakeFetch(health, approvals = []) {
+function fakeFetch(health, approvals = [], settings = {}) {
   return async (url) => {
-    const body = url === '/api/health' ? health : url === '/api/approvals' ? approvals : {};
+    const body =
+      url === '/api/health'
+        ? health
+        : url === '/api/approvals'
+          ? approvals
+          : url === '/api/settings'
+            ? { settings }
+            : {};
     return new Response(JSON.stringify(body), {
       headers: { 'content-type': 'application/json' },
     });
   };
 }
 
-function renderShell({ health, approvals, at = '/inbox' }) {
-  const client = new ApiClient({ fetch: fakeFetch(health, approvals) });
+function renderShell({ health, approvals, settings, at = '/inbox' }) {
+  const client = new ApiClient({ fetch: fakeFetch(health, approvals, settings) });
   return render(
     <ApiProvider client={client}>
-      <MemoryRouter initialEntries={[at]}>
-        <Routes>
-          <Route element={<Layout />}>
-            <Route path="/inbox" element={<h1>Inbox screen</h1>} />
-            <Route path="/approvals" element={<h1>Approvals screen</h1>} />
-          </Route>
-          <Route path="/setup" element={<h1>Setup wizard</h1>} />
-        </Routes>
-      </MemoryRouter>
+      <TooltipProvider>
+        <MemoryRouter initialEntries={[at]}>
+          <Routes>
+            <Route element={<Layout />}>
+              <Route path="/inbox" element={<h1>Inbox screen</h1>} />
+              <Route path="/approvals" element={<h1>Approvals screen</h1>} />
+              <Route path="/settings" element={<h1>Settings screen</h1>} />
+            </Route>
+            <Route path="/setup" element={<h1>Setup wizard</h1>} />
+          </Routes>
+        </MemoryRouter>
+      </TooltipProvider>
     </ApiProvider>,
   );
 }
@@ -41,21 +52,60 @@ const connected = {
 };
 
 describe('Layout', () => {
-  it('renders the seven screens in the sidebar and the current page', async () => {
+  beforeEach(() => window.localStorage.clear());
+
+  it('renders the icon rail with the seven screens, the current page and the hint bar', async () => {
     renderShell({ health: connected });
     const nav = await screen.findByRole('navigation', { name: 'Main' });
-    for (const { label } of NAV_ITEMS) expect(nav.textContent).toContain(label);
+    for (const { label } of NAV_ITEMS)
+      expect(screen.getByRole('link', { name: label })).toBeTruthy();
+    expect(nav.textContent).not.toContain('Inbox'); // labels live in tooltips, not beside icons
     expect(screen.getByText('Inbox screen')).toBeTruthy();
-    expect(screen.getByRole('link', { name: /Inbox/ }).getAttribute('aria-current')).toBe('page');
-    await waitFor(() => expect(screen.getByText('kaushal@example.com')).toBeTruthy());
-    expect(screen.getByText(/120 emails/)).toBeTruthy();
-    expect(screen.getByText('Anthropic key set')).toBeTruthy();
+    const inbox = screen.getByRole('link', { name: 'Inbox' });
+    expect(inbox.getAttribute('aria-current')).toBe('page');
+    expect(inbox.className).toContain('bg-accent-soft');
+    expect(screen.getByRole('link', { name: 'Settings' }).className).not.toContain(
+      'bg-accent-soft',
+    );
+    expect(screen.getByRole('note', { name: 'Keyboard hints' }).textContent).toContain('to search');
+    expect(document.querySelector('.wallpaper').dataset.wallpaper).toBe('tide');
   });
 
   it('shows the pending approvals count on the Approvals item', async () => {
     renderShell({ health: connected, approvals: [{ id: 'a' }, { id: 'b' }], at: '/approvals' });
     await waitFor(() => expect(screen.getByLabelText('2 pending').textContent).toBe('2'));
     expect(screen.getByText('Approvals screen')).toBeTruthy();
+  });
+
+  it('opens the account menu with name, email, status and Settings', async () => {
+    renderShell({ health: connected, settings: { userName: 'Kaushal', wallpaper: 'valley' } });
+    const account = await screen.findByRole('button', { name: 'Account' });
+    await waitFor(() =>
+      expect(document.querySelector('.wallpaper').dataset.wallpaper).toBe('valley'),
+    );
+    fireEvent.pointerDown(account, { button: 0, ctrlKey: false, pointerType: 'mouse' });
+    await waitFor(() => expect(screen.getByText('kaushal@example.com')).toBeTruthy());
+    expect(screen.getByText('Kaushal')).toBeTruthy();
+    expect(screen.getByText(/120 emails/)).toBeTruthy();
+    expect(screen.getByText('Anthropic key set')).toBeTruthy();
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Settings' }));
+    await waitFor(() => expect(screen.getByText('Settings screen')).toBeTruthy());
+  });
+
+  it('hides the keyboard hints until the account menu brings them back', async () => {
+    renderShell({ health: connected });
+    const bar = await screen.findByRole('note', { name: 'Keyboard hints' });
+    fireEvent.click(screen.getByRole('button', { name: 'Hide keyboard hints' }));
+    expect(screen.queryByRole('note', { name: 'Keyboard hints' })).toBeNull();
+    expect(window.localStorage.getItem('mailmoat.keyHints')).toBe('hidden');
+    fireEvent.pointerDown(screen.getByRole('button', { name: 'Account' }), {
+      button: 0,
+      ctrlKey: false,
+      pointerType: 'mouse',
+    });
+    fireEvent.click(await screen.findByRole('menuitem', { name: 'Keyboard hints' }));
+    expect(screen.getByRole('note', { name: 'Keyboard hints' })).not.toBe(bar);
+    expect(window.localStorage.getItem('mailmoat.keyHints')).toBeNull();
   });
 
   it('hands over to the setup wizard until both connections exist', async () => {

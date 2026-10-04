@@ -34,12 +34,14 @@ describe('API request schemas', () => {
     expect(SettingsPatchSchema.parse({ trustedSenders: [' Boss@Acme.com '] })).toEqual({
       trustedSenders: ['boss@acme.com'],
     });
+    expect(SettingsPatchSchema.parse({ wallpaper: 'valley' })).toEqual({ wallpaper: 'valley' });
     for (const bad of [
       { unknown: 1 },
       { pollIntervalSeconds: 10 },
       { workingHours: { days: [7], start: '09:00', end: '18:00' } },
       { workingHours: { days: [1], start: '9am', end: '18:00' } },
       { userName: 'x'.repeat(81) },
+      { wallpaper: 'https://evil.example/x.jpg' },
     ]) {
       expect(SettingsPatchSchema.safeParse(bad).success, JSON.stringify(bad)).toBe(false);
     }

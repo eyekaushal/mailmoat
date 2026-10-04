@@ -29,6 +29,7 @@ export const SettingsSchema = z.strictObject({
   draftFooter: z.string().trim().max(500),
   meetingDurationMinutes: z.number().int().min(15).max(240),
   draftRetentionDays: z.number().int().min(1).max(90),
+  wallpaper: z.enum(['tide', 'valley', 'gradient', 'none']),
 });
 export const SettingsPatchSchema = SettingsSchema.partial();
 
@@ -49,6 +50,11 @@ export const EmailListQuerySchema = z.object({
   risk: z.enum(RISK_LEVELS).optional(),
   cursor: z.string().max(400).optional(),
   limit: LIMIT,
+});
+/** Live Gmail search; `cursor` is Gmail's opaque page token. */
+export const SearchQuerySchema = z.object({
+  q: z.string().trim().min(1).max(500),
+  cursor: z.string().max(2000).optional(),
 });
 export const DraftReplySchema = z.strictObject({
   instructions: z.string().trim().max(2000).nullable().default(null),

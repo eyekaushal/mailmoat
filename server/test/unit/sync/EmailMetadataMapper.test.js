@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
+import { TextNormalizer } from '../../../src/security/ingest/TextNormalizer.js';
 import { EmailMetadataMapper } from '../../../src/sync/EmailMetadataMapper.js';
 
-const mapper = new EmailMetadataMapper();
+const mapper = new EmailMetadataMapper({ textNormalizer: new TextNormalizer() });
 
 function metadata(overrides = {}) {
   return {
@@ -41,10 +42,28 @@ describe('EmailMetadataMapper', () => {
     expect(mapper.toRecord(metadata()).date).toBe('2026-10-01T10:00:00.000Z');
   });
 
-  it('stores only a hash of the subject', () => {
+  it('keeps the subject hash and the normalised subject for the inbox list', () => {
     const record = mapper.toRecord(metadata());
     expect(record.subjectHash).toMatch(/^[0-9a-f]{64}$/);
-    expect(JSON.stringify(record)).not.toContain('Quick question');
+    expect(record.subject).toBe('Quick question');
+    expect(
+      mapper.toRecord(metadata({ headers: { subject: '\u200BＰａｙＰａｌ  \u202Einvoice' } }))
+        .subject,
+    ).toBe('PayPal invoice');
+    expect(mapper.toRecord(metadata({ headers: { subject: undefined } })).subject).toBe('');
+    expect(
+      mapper.toRecord(metadata({ headers: { subject: 'x'.repeat(400) } })).subject,
+    ).toHaveLength(300);
+  });
+
+  it("decodes and normalises Gmail's snippet, capped at 160 characters", () => {
+    expect(mapper.toRecord(metadata()).snippet).toBe('');
+    expect(
+      mapper.toText({ headers: {}, snippet: 'Rahul&#39;s deck &amp; notes &lt;draft&gt;' }),
+    ).toEqual({ subject: '', snippet: "Rahul's deck & notes <draft>" });
+    const long = mapper.toText({ headers: {}, snippet: 'word '.repeat(60) }).snippet;
+    expect(long.length).toBeLessThanOrEqual(160);
+    expect(long.endsWith('…')).toBe(true);
   });
 
   it('keeps recipient display names for contact history', () => {

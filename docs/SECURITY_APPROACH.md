@@ -216,7 +216,7 @@ Responsibilities (class `EmailIngestor`):
    - HTML comments containing prose; text in `alt`/`title` attributes that looks like instructions.
    - Zero-width characters (`U+200B–U+200D`, `U+2060`, `U+FEFF`) and bidi overrides (`U+202A–U+202E`, `U+2066–U+2069`).
 6. Produce the **Reader text**: visible text only, normalised (NFKC), length-capped, with hidden content removed.
-7. Store only metadata plus a hash of the body in SQLite by default (bodies are fetched on demand), limiting what sits on disk.
+7. Store only metadata plus a hash of the body in SQLite (bodies are fetched on demand), limiting what sits on disk. Since 4 Oct 2026 the subject and a ≤ 160-character snippet of the *visible* text (step 6, so hidden content never reaches it) are also stored for the inbox list; both are untrusted text, rendered as plain text only and never passed to the Planner (P1).
 
 ### 7.2 Layer 2 — Signal Engine (deterministic)
 

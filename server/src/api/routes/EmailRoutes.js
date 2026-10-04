@@ -10,12 +10,13 @@ import {
 } from '@mailmoat/shared/schemas/api';
 import { TaggedValue } from '../../agent/TaggedValue.js';
 import { NotFoundError } from '../../core/errors.js';
+import { Avatar } from '../Avatar.js';
 import { validate } from '../validate.js';
 
 /**
- * Inbox (PRD F5, §13): stored metadata, verdicts and the Reader's typed fields, plus the
- * per-email actions (archive, draft reply, propose/save a meeting, trust, not phishing). Email
- * text is never stored, so nothing here returns a body; the Reader summary is AI output of an
+ * Inbox (PRD F5, §13): stored metadata, subject, snippet, verdicts and the Reader's typed fields,
+ * plus the per-email actions (archive, draft reply, propose/save a meeting, trust, not phishing).
+ * Bodies are never stored, so nothing here returns one; the Reader summary is AI output of an
  * untrusted email and the UI shows it as plain text, marked as such.
  */
 export class EmailRoutes {
@@ -51,7 +52,14 @@ export class EmailRoutes {
 
     router.get('/emails', (request, response) => {
       const { label, risk, cursor, limit } = validate(EmailListQuerySchema, request.query);
-      response.json(emails.page({ ruleId: label, level: risk, cursor, limit }));
+      const { items, nextCursor } = emails.page({ ruleId: label, level: risk, cursor, limit });
+      response.json({
+        items: items.map((item) => ({
+          ...item,
+          avatar: Avatar.for({ name: item.fromName, address: item.fromAddr }),
+        })),
+        nextCursor,
+      });
     });
     router.get('/emails/counts', (_request, response) => response.json(emails.unreadCounts()));
 

@@ -14,6 +14,7 @@ const settings = {
   draftFooter: '',
   meetingDurationMinutes: 30,
   draftRetentionDays: 7,
+  wallpaper: 'tide',
 };
 const view = {
   settings,
@@ -105,5 +106,21 @@ describe('SettingsPage', () => {
     expect(server.calls.find((call) => call.path === '/data/delete-all').body).toEqual({
       confirm: 'DELETE',
     });
+  });
+});
+
+describe('SettingsPage wallpaper', () => {
+  it('saves the wallpaper as soon as a tile is picked', async () => {
+    const server = fakeServer({
+      'GET /settings': view,
+      'PUT /settings': (body) => ({ ...view, settings: { ...settings, ...body } }),
+    });
+    renderPage(<SettingsPage />, { server });
+    const tide = await screen.findByRole('radio', { name: 'Low tide' });
+    expect(tide.getAttribute('aria-checked')).toBe('true');
+    fireEvent.click(screen.getByRole('radio', { name: 'Valley' }));
+    await waitFor(() =>
+      expect(server.calls.find((c) => c.method === 'PUT')?.body).toEqual({ wallpaper: 'valley' }),
+    );
   });
 });

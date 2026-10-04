@@ -6,6 +6,7 @@ export const BIDI_CONTROL_CHARS = /[\u202A-\u202E\u2066-\u2069]/g;
 // eslint-disable-next-line no-control-regex
 const CONTROL_CHARS = /[\u0000-\u0008\u000B-\u001F\u007F-\u009F]/g;
 const MAX_READER_CHARS = 12_000;
+const MAX_SNIPPET_CHARS = 160;
 
 /** Turns untrusted text into the clean, bounded form the Reader and signals work on. */
 export class TextNormalizer {
@@ -39,5 +40,19 @@ export class TextNormalizer {
       text: normalized.slice(0, MAX_READER_CHARS),
       truncated: normalized.length > MAX_READER_CHARS,
     };
+  }
+
+  /**
+   * The one-line preview the inbox list shows: normalised, on one line, at most 160 characters,
+   * cut at a word boundary with an ellipsis when longer.
+   * @param {string} text
+   * @returns {string}
+   */
+  snippet(text) {
+    const line = this.normalize(text).replace(/\s*\n\s*/g, ' ');
+    if (line.length <= MAX_SNIPPET_CHARS) return line;
+    const cut = line.slice(0, MAX_SNIPPET_CHARS - 1);
+    const atWord = cut.lastIndexOf(' ');
+    return `${(atWord > MAX_SNIPPET_CHARS / 2 ? cut.slice(0, atWord) : cut).trimEnd()}…`;
   }
 }

@@ -1,3 +1,5 @@
+import { NotFoundError } from '../../src/core/errors.js';
+
 /**
  * In-memory Gmail for the attack lab: serves the corpus emails as raw messages and reports every
  * write (labels, archive) to the {@link RecordingToolbox}, so the lab can prove that handling an
@@ -22,6 +24,35 @@ export class FakeGmail {
       internalDate,
       raw,
     });
+  }
+
+  /** One message per thread in the corpus; enough for the thread route to work in the demo. */
+  async getThread(threadId) {
+    const messages = [...this.#messages.values()]
+      .filter((message) => message.threadId === threadId)
+      .map(({ id, threadId: thread, labelIds, internalDate }) => ({
+        id,
+        threadId: thread,
+        labelIds: [...labelIds],
+        internalDate,
+      }))
+      .sort((a, b) => a.internalDate - b.internalDate);
+    if (messages.length === 0) throw new NotFoundError('Unknown thread');
+    return { threadId, messages };
+  }
+
+  /** Demo stand-in for Gmail search: every word of the query must appear in the raw message. */
+  async listMessageIds({ query = '', maxResults = 100 } = {}) {
+    const words = query.toLowerCase().split(/\s+/).filter(Boolean);
+    const ids = [...this.#messages.values()]
+      .filter((message) => {
+        const haystack = message.raw.toString('utf8').toLowerCase();
+        return words.every((word) => haystack.includes(word));
+      })
+      .sort((a, b) => b.internalDate - a.internalDate)
+      .slice(0, maxResults)
+      .map((message) => message.id);
+    return { ids, nextPageToken: undefined };
   }
 
   async getRawMessage(id) {

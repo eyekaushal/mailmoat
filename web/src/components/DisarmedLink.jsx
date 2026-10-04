@@ -1,4 +1,4 @@
-import { ExternalLink, Link2Off } from 'lucide-react';
+import { ArrowSquareOut, LinkBreak } from '@phosphor-icons/react';
 import { useState } from 'react';
 
 /** @param {string} href */
@@ -39,11 +39,11 @@ export function DisarmedLink({ href, text, level, signals = [] }) {
           className="inline-flex items-center gap-1 font-mono text-accent underline-offset-2 hover:underline"
         >
           {host}
-          <ExternalLink aria-hidden="true" className="size-3.5" />
+          <ArrowSquareOut aria-hidden="true" className="size-3.5" />
         </a>
       ) : (
         <span className="inline-flex items-center gap-1 font-mono text-muted">
-          <Link2Off aria-hidden="true" className="size-3.5" />
+          <LinkBreak aria-hidden="true" className="size-3.5" />
           {host}
         </span>
       )}

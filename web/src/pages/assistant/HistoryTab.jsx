@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronRight } from 'lucide-react';
+import { CaretDown, CaretRight } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { Link } from 'react-router';
 import { INPUT_CLASSES } from '../../components/FormField.jsx';
@@ -83,7 +83,7 @@ export function HistoryTab() {
 function HistoryRow({ row, ruleName }) {
   const [open, setOpen] = useState(false);
   const { data: detail } = useApi(open ? `/emails/${row.gmailId}` : null);
-  const Chevron = open ? ChevronDown : ChevronRight;
+  const Chevron = open ? CaretDown : CaretRight;
   return (
     <>
       <tr className={row.status === 'failed' ? 'text-muted' : ''}>

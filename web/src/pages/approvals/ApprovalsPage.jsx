@@ -1,4 +1,4 @@
-import { CheckSquare } from 'lucide-react';
+import { CheckSquare } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { ApprovalCard } from '../../components/ApprovalCard.jsx';
 import { EmptyState } from '../../components/EmptyState.jsx';

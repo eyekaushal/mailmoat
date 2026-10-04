@@ -1,4 +1,4 @@
-import { CheckCircle2, KeyRound, XCircle } from 'lucide-react';
+import { CheckCircle, Key, XCircle } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { Button, ExternalButton } from '../../components/Button.jsx';
 import { FormField, INPUT_CLASSES } from '../../components/FormField.jsx';
@@ -183,7 +183,7 @@ export function AnthropicStep({ anthropic, onSaved, onContinue }) {
 
       {!showForm && (
         <div className="flex items-center gap-3 rounded-lg border border-safe/40 bg-safe-soft p-4">
-          <CheckCircle2 aria-hidden="true" className="size-5 text-safe" />
+          <CheckCircle aria-hidden="true" className="size-5 text-safe" />
           <div className="flex-1 text-sm">
             <p className="font-medium">Key saved</p>
             <p className="font-mono text-muted">
@@ -248,7 +248,7 @@ export function AnthropicStep({ anthropic, onSaved, onContinue }) {
               >
                 {(id) => (
                   <div className="relative">
-                    <KeyRound
+                    <Key
                       aria-hidden="true"
                       className="pointer-events-none absolute top-2.5 left-3 size-4 text-muted"
                     />
@@ -274,7 +274,7 @@ export function AnthropicStep({ anthropic, onSaved, onContinue }) {
                   className={`flex items-center gap-2 text-sm ${test.ok ? 'text-safe' : 'text-danger'}`}
                 >
                   {test.ok ? (
-                    <CheckCircle2 aria-hidden="true" className="size-4" />
+                    <CheckCircle aria-hidden="true" className="size-4" />
                   ) : (
                     <XCircle aria-hidden="true" className="size-4" />
                   )}

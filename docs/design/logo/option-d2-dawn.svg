@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="w-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#a9d3ef"/>
+      <stop offset="0.6" stop-color="#ffd9b8"/>
+      <stop offset="1" stop-color="#ffc08a"/>
+    </linearGradient>
+    <linearGradient id="w-sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5aa5c9"/>
+      <stop offset="1" stop-color="#2d6f98"/>
+    </linearGradient>
+    <radialGradient id="w-sun" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#fff2c2"/>
+      <stop offset="0.6" stop-color="#ffd27a"/>
+      <stop offset="1" stop-color="#ffd27a" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="w-clip"><circle cx="32" cy="32" r="30"/></clipPath>
+  </defs>
+  <g clip-path="url(#w-clip)">
+    <rect width="64" height="64" fill="url(#w-sky)"/>
+    <circle cx="46" cy="40" r="12" fill="url(#w-sun)"/>
+    <rect x="0" y="45" width="64" height="20" fill="url(#w-sea)"/>
+    <path d="M0 46.5c4 0 4 2 8 2s4-2 8-2 4 2 8 2 4-2 8-2 4 2 8 2 4-2 8-2 4 2 8 2 4-2 8-2" fill="none" stroke="#fff" stroke-opacity="0.55" stroke-width="1.4"/>
+    <!-- rock -->
+    <path d="M17 49l7-5h16l7 5z" fill="#3f4a5a"/>
+    <!-- tower -->
+    <path d="M27.5 25h4.5v19h-7.5z" fill="#ffffff"/>
+    <path d="M32 25h4.5l3 19H32z" fill="#dfe6ee"/>
+    <path d="M27.8 30h4.2v4h-4.7zM32 30h4.4l.6 4H32zM27 37h5v4h-5.6zM32 37h5l.6 4H32z" fill="#2b4a6b"/>
+    <path d="M32 30h4.4l.6 4H32zM32 37h5l.6 4H32z" fill="#000" fill-opacity="0.18"/>
+    <rect x="25" y="22.5" width="14" height="3" rx="1.2" fill="#2b4a6b"/>
+    <rect x="28" y="15" width="8" height="7.5" rx="1.5" fill="#ffb84d"/>
+    <rect x="28" y="15" width="4" height="7.5" fill="#fff" fill-opacity="0.3"/>
+    <path d="M26.5 14.5h11l-5.5-4.5z" fill="#2b4a6b"/>
+    <!-- soft beam -->
+    <path d="M38 18l26-6v14z" fill="#fff" fill-opacity="0.35"/>
+    <path d="M26 18L0 12v14z" fill="#fff" fill-opacity="0.35"/>
+  </g>
+  <circle cx="32" cy="32" r="29.5" fill="none" stroke="#2b4a6b" stroke-opacity="0.12"/>
+</svg>

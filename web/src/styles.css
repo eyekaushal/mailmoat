@@ -1,61 +1,83 @@
 @import 'tailwindcss';
+/* Inter Variable (latin, weight axis) for machines without SF Pro; bundled, so the CSP keeps
+   font-src 'self'. */
+@import '@fontsource-variable/inter/wght.css';
 
-/* Design tokens. Light by default; dark follows the OS. Risk colours are always paired with an
-   icon and a word (PRD §9: never colour alone). */
+/* Design tokens (docs/DESIGN.md §2–§5). Light only. Risk colours are always paired with an icon
+   or a word (PRD §9: never colour alone). */
 :root {
-  --bg: #f5f6f8;
-  --surface: #ffffff;
-  --surface-2: #eef0f4;
-  --line: #dfe3ea;
-  --fg: #16181d;
-  --muted: #5f6673;
-  --accent: #4f46e5;
-  --accent-soft: #e9e8fd;
+  --canvas: #f3f1ec;
+  --panel: rgba(255, 255, 255, 0.85);
+  --panel-solid: #ffffff;
+  --rail: rgba(255, 255, 255, 0.55);
+  --surface-2: rgba(29, 29, 31, 0.04);
+  --surface-3: rgba(29, 29, 31, 0.07);
+  --line: rgba(29, 29, 31, 0.07);
+  --line-strong: rgba(29, 29, 31, 0.14);
+  --ink: #1d1d1f;
+  --secondary: #6e6e73;
+  --tertiary: #a1a1a6;
+  --accent: #2a4a7f;
+  --accent-soft: rgba(42, 74, 127, 0.1);
   --accent-fg: #ffffff;
-  --safe: #0f8a5f;
-  --safe-soft: #e3f6ee;
-  --warn: #b26b00;
-  --warn-soft: #fff1d6;
-  --danger: #c62828;
-  --danger-soft: #fde7e7;
-  --neutral: #5f6673;
-  --neutral-soft: #eef0f4;
+  --unread: #e0a83c;
+
+  --danger: #c8463a;
+  --danger-soft: #fbe9e6;
+  --safe: #2f7d5b;
+  --safe-soft: #e3f3ea;
+  --warn: #9a6400;
+  --warn-soft: #fff3d6;
+  --neutral: #6e6e73;
+  --neutral-soft: rgba(29, 29, 31, 0.06);
+
+  /* Label palette: one hue per category, tinted background with darker text. */
+  --tag-reply: #fff1cc;
+  --tag-reply-ink: #8a5a00;
+  --tag-awaiting: #fde8d2;
+  --tag-awaiting-ink: #8f4a12;
+  --tag-fyi: #e3eefb;
+  --tag-fyi-ink: #1f4f7a;
+  --tag-newsletter: #ece7fb;
+  --tag-newsletter-ink: #4f3fa3;
+  --tag-marketing: #fbe3ec;
+  --tag-marketing-ink: #9a2f5a;
+  --tag-calendar: #dff3e9;
+  --tag-calendar-ink: #1f6b4a;
+  --tag-receipt: #edf1d8;
+  --tag-receipt-ink: #55681c;
+  --tag-notification: #e8ecf1;
+  --tag-notification-ink: #4a5568;
+  --tag-cold: #e3f1f5;
+  --tag-cold-ink: #2b6577;
+  --tag-risk: #fbe9e6;
+  --tag-risk-ink: #a0362c;
+
+  --shadow-panel: 0 1px 2px rgba(20, 24, 40, 0.05), 0 8px 24px rgba(20, 24, 40, 0.05);
+  --shadow-pop: 0 2px 6px rgba(20, 24, 40, 0.08), 0 12px 32px rgba(20, 24, 40, 0.14);
+  --ease: cubic-bezier(0.2, 0.7, 0.3, 1);
   color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0f1115;
-    --surface: #171a21;
-    --surface-2: #1f2330;
-    --line: #2a2f3b;
-    --fg: #e8eaf0;
-    --muted: #9aa3b2;
-    --accent: #818cf8;
-    --accent-soft: #272a4a;
-    --accent-fg: #0f1115;
-    --safe: #34d399;
-    --safe-soft: #0f2e24;
-    --warn: #fbbf24;
-    --warn-soft: #3a2a07;
-    --danger: #f87171;
-    --danger-soft: #3b1414;
-    --neutral: #9aa3b2;
-    --neutral-soft: #1f2330;
-    color-scheme: dark;
-  }
-}
-
 @theme inline {
-  --color-bg: var(--bg);
-  --color-surface: var(--surface);
+  --color-canvas: var(--canvas);
+  --color-panel: var(--panel);
+  --color-panel-solid: var(--panel-solid);
+  --color-rail: var(--rail);
+  --color-surface: var(--panel-solid);
   --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
   --color-line: var(--line);
-  --color-fg: var(--fg);
-  --color-muted: var(--muted);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-fg: var(--ink);
+  --color-secondary: var(--secondary);
+  --color-muted: var(--secondary);
+  --color-tertiary: var(--tertiary);
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
   --color-accent-fg: var(--accent-fg);
+  --color-unread: var(--unread);
   --color-safe: var(--safe);
   --color-safe-soft: var(--safe-soft);
   --color-warn: var(--warn);
@@ -64,9 +86,54 @@
   --color-danger-soft: var(--danger-soft);
   --color-neutral: var(--neutral);
   --color-neutral-soft: var(--neutral-soft);
+  --color-tag-reply: var(--tag-reply);
+  --color-tag-reply-ink: var(--tag-reply-ink);
+  --color-tag-awaiting: var(--tag-awaiting);
+  --color-tag-awaiting-ink: var(--tag-awaiting-ink);
+  --color-tag-fyi: var(--tag-fyi);
+  --color-tag-fyi-ink: var(--tag-fyi-ink);
+  --color-tag-newsletter: var(--tag-newsletter);
+  --color-tag-newsletter-ink: var(--tag-newsletter-ink);
+  --color-tag-marketing: var(--tag-marketing);
+  --color-tag-marketing-ink: var(--tag-marketing-ink);
+  --color-tag-calendar: var(--tag-calendar);
+  --color-tag-calendar-ink: var(--tag-calendar-ink);
+  --color-tag-receipt: var(--tag-receipt);
+  --color-tag-receipt-ink: var(--tag-receipt-ink);
+  --color-tag-notification: var(--tag-notification);
+  --color-tag-notification-ink: var(--tag-notification-ink);
+  --color-tag-cold: var(--tag-cold);
+  --color-tag-cold-ink: var(--tag-cold-ink);
+  --color-tag-risk: var(--tag-risk);
+  --color-tag-risk-ink: var(--tag-risk-ink);
+
+  --shadow-panel: var(--shadow-panel);
+  --shadow-pop: var(--shadow-pop);
+  --ease-out-soft: var(--ease);
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
   --font-sans:
-    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', 'Inter Variable', Inter,
+    sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --text-xs: 11px;
+  --text-xs--line-height: 14px;
+  --text-sm: 12px;
+  --text-sm--line-height: 16px;
+  --text-base: 13px;
+  --text-base--line-height: 18px;
+  --text-md: 15px;
+  --text-md--line-height: 22px;
+  --text-lg: 17px;
+  --text-lg--line-height: 24px;
+  --text-xl: 20px;
+  --text-xl--line-height: 26px;
+  --text-2xl: 24px;
+  --text-2xl--line-height: 30px;
 }
 
 html,
@@ -77,15 +144,92 @@ body,
 
 body {
   margin: 0;
-  background: var(--bg);
-  color: var(--fg);
+  background: var(--canvas);
+  color: var(--ink);
   font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 18px;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 /* Keyboard users must always see where they are (PRD §9 Usability). */
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: 6px;
+}
+
+/* Wallpaper layer (DESIGN.md §7): the painting is tone, not focus, so the panels above it blur
+   it and it only shows in the gutters and through the rail. */
+.wallpaper {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--canvas);
+  background-size: cover;
+  background-position: center;
+  pointer-events: none;
+}
+.wallpaper[data-wallpaper='tide'] {
+  background-image: url('/wallpapers/tide.jpg');
+}
+.wallpaper[data-wallpaper='valley'] {
+  background-image: url('/wallpapers/valley.jpg');
+}
+.wallpaper[data-wallpaper='gradient'] {
+  background-image: linear-gradient(160deg, #f6efe2 0%, #e9eef5 55%, #dfe9f3 100%);
+}
+
+.panel {
+  background: var(--panel);
+  backdrop-filter: blur(24px) saturate(1.15);
+  -webkit-backdrop-filter: blur(24px) saturate(1.15);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-panel);
+}
+
+.rail {
+  background: var(--rail);
+  backdrop-filter: blur(24px) saturate(1.15);
+  -webkit-backdrop-filter: blur(24px) saturate(1.15);
+}
+
+/* Radix pop-ups: solid, soft shadow, 160 ms fade and slide from the trigger side. */
+.pop {
+  background: var(--panel-solid);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-pop);
+  animation: pop-in 160ms var(--ease);
+}
+.pop[data-side='top'] {
+  --pop-from: translateY(4px);
+}
+.pop[data-side='bottom'] {
+  --pop-from: translateY(-4px);
+}
+.pop[data-side='left'] {
+  --pop-from: translateX(4px);
+}
+.pop[data-side='right'] {
+  --pop-from: translateX(-4px);
+}
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: var(--pop-from, none);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
 }

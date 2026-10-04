@@ -1,4 +1,4 @@
-import { Sparkles } from 'lucide-react';
+import { Sparkle } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { Button } from '../../components/Button.jsx';
 import { CategoryBadge } from '../../components/CategoryBadge.jsx';
@@ -86,7 +86,7 @@ export function EmailList({ query, selectedId, onSelect }) {
                   </time>
                 </div>
                 <p className="mt-0.5 flex items-start gap-1 text-sm text-muted">
-                  <Sparkles
+                  <Sparkle
                     aria-label="AI summary of an untrusted email"
                     className="mt-0.5 size-3.5 shrink-0"
                   />

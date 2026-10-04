@@ -1,4 +1,4 @@
-import { Lock } from 'lucide-react';
+import { Lock } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { Button } from '../../components/Button.jsx';
 import { LoadingState } from '../../components/LoadingState.jsx';

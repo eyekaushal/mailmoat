@@ -4,3 +4,6 @@ package-lock.json
 
 # Generated from Unicode confusables.txt
 server/src/security/signals/data/confusables.json
+
+# Hand-laid logo review page and SVG sources
+docs/design/

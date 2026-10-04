@@ -28,10 +28,10 @@ export class SenderRepository {
 
   /**
    * The Bulk Unsubscribe listing (PRD F9.1): per sender, counts plus the latest inbound email's
-   * unsubscribe facts and verdict. Sorted by email count, or by read rate (least read first).
+   * display name (attacker-controlled; shown as plain text only), unsubscribe facts and verdict. Sorted by email count, or by read rate (least read first).
    * @param {{ since?: string, sort?: 'count'|'read', limit?: number }} [filter]
-   * @returns {{ address: string, status: string, emailCount: number, readCount: number,
-   *   lastReceived: string | null, latest: { gmailId: string, unsubscribeUrl: string | null,
+   * @returns {{ address: string, name: string | null, status: string, emailCount: number,
+   *   readCount: number, lastReceived: string | null, latest: { gmailId: string, unsubscribeUrl: string | null,
    *   oneClick: boolean, level: string | null } | null }[]}
    */
   list({ since, sort = 'count', limit = 200 } = {}) {
@@ -42,7 +42,7 @@ export class SenderRepository {
     const params = since ? [since, limit] : [limit];
     return this.#db
       .all(
-        `SELECT s.*, e.gmail_id AS latest_id, e.unsubscribe_url, e.one_click, v.level
+        `SELECT s.*, e.gmail_id AS latest_id, e.from_name, e.unsubscribe_url, e.one_click, v.level
          FROM senders s
          LEFT JOIN emails e ON e.gmail_id = (
            SELECT gmail_id FROM emails
@@ -55,6 +55,7 @@ export class SenderRepository {
       )
       .map((row) => ({
         address: row.address,
+        name: row.from_name ?? null,
         status: row.status,
         emailCount: row.email_count,
         readCount: row.read_count,
@@ -92,6 +93,7 @@ export class SenderRepository {
     return (
       row && {
         address: row.address,
+        name: row.from_name ?? null,
         status: row.status,
         emailCount: row.email_count,
         readCount: row.read_count,

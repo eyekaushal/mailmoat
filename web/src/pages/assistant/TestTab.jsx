@@ -1,4 +1,4 @@
-import { EyeOff, FlaskConical } from 'lucide-react';
+import { EyeSlash, Flask } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { Button } from '../../components/Button.jsx';
 import { DisarmedLink } from '../../components/DisarmedLink.jsx';
@@ -65,7 +65,7 @@ export function TestTab() {
         </label>
         <div className="flex items-center gap-3">
           <Button type="submit" disabled={busy || (!gmailId && !raw.trim())}>
-            <FlaskConical aria-hidden="true" className="size-4" />{' '}
+            <Flask aria-hidden="true" className="size-4" />{' '}
             {busy ? 'Analysing…' : 'Run the pipeline'}
           </Button>
           <span className="text-xs text-muted">
@@ -100,7 +100,7 @@ function TestResult({ result }) {
       {result.hidden.length > 0 && (
         <div className="rounded-lg border border-warn/40 bg-warn-soft/40 p-3 text-sm">
           <p className="flex items-center gap-2 font-medium">
-            <EyeOff aria-hidden="true" className="size-4 text-warn" /> Hidden content found (
+            <EyeSlash aria-hidden="true" className="size-4 text-warn" /> Hidden content found (
             {result.hidden.length})
           </p>
           <ul className="mt-2 space-y-1">

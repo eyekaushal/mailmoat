@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="k-ink" x1="22" y1="14" x2="42" y2="54" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#3b5b80"/>
+      <stop offset="1" stop-color="#1f3652"/>
+    </linearGradient>
+  </defs>
+  <!-- the keeper's mark: one confident line, a halo of light -->
+  <path d="M14 12a18 18 0 0 1 36 0" fill="none" stroke="#f3b544" stroke-width="2.4" stroke-linecap="round" stroke-opacity="0.95"/>
+  <path d="M8 10a24 24 0 0 1 48 0" fill="none" stroke="#f3b544" stroke-width="2" stroke-linecap="round" stroke-opacity="0.5"/>
+  <path d="M19.5 9.5a12.5 12.5 0 0 1 25 0" fill="none" stroke="#f3b544" stroke-width="2.6" stroke-linecap="round"/>
+  <!-- tower -->
+  <path d="M27 24h10l3.5 24h-17z" fill="none" stroke="url(#k-ink)" stroke-width="3.2" stroke-linejoin="round"/>
+  <path d="M26.3 33.5h11.4M25.5 40.5h13" stroke="url(#k-ink)" stroke-width="3.2" stroke-linecap="round"/>
+  <rect x="24" y="20.5" width="16" height="3.5" rx="1.6" fill="url(#k-ink)"/>
+  <rect x="27.5" y="13" width="9" height="7.5" rx="1.8" fill="#f3b544"/>
+  <path d="M14 52h36" stroke="url(#k-ink)" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M10 58c4 0 4 2.4 8 2.4s4-2.4 8-2.4 4 2.4 8 2.4 4-2.4 8-2.4 4 2.4 8 2.4" fill="none" stroke="#5d9fc9" stroke-width="2.6" stroke-linecap="round"/>
+</svg>

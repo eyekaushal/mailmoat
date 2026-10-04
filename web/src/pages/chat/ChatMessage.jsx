@@ -1,11 +1,18 @@
-import { Check, CircleDashed, LoaderCircle, ShieldOff, Sparkles, User } from 'lucide-react';
+import {
+  Check,
+  CircleDashed,
+  CircleNotch,
+  ShieldSlash,
+  Sparkle,
+  User,
+} from '@phosphor-icons/react';
 import { PreviewCard } from '../../components/PreviewCard.jsx';
 
 const STEP_ICONS = {
-  running: { Icon: LoaderCircle, className: 'animate-spin text-accent' },
+  running: { Icon: CircleNotch, className: 'animate-spin text-accent' },
   done: { Icon: Check, className: 'text-safe' },
   pending: { Icon: CircleDashed, className: 'text-warn' },
-  denied: { Icon: ShieldOff, className: 'text-danger' },
+  denied: { Icon: ShieldSlash, className: 'text-danger' },
 };
 
 function describeItem(item) {
@@ -29,7 +36,7 @@ function Result({ result }) {
         <span className="font-mono">{tool}</span>
         {untrusted && (
           <span className="ml-auto inline-flex items-center gap-1">
-            <Sparkles aria-hidden="true" className="size-3" /> from untrusted email content
+            <Sparkle aria-hidden="true" className="size-3" /> from untrusted email content
           </span>
         )}
       </p>
@@ -133,7 +140,7 @@ export function ChatMessage({
       ))}
       {live && content.statusText && !content.text && (
         <p className="flex items-center gap-2 text-sm text-muted">
-          <LoaderCircle aria-hidden="true" className="size-4 animate-spin" /> {content.statusText}
+          <CircleNotch aria-hidden="true" className="size-4 animate-spin" /> {content.statusText}
         </p>
       )}
       {content.text && (
