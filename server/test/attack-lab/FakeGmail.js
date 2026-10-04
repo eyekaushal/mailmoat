@@ -15,18 +15,18 @@ export class FakeGmail {
     this.#toolbox = toolbox;
   }
 
-  /** @param {{ id: string, raw: Buffer, internalDate: Date }} message */
-  addMessage({ id, raw, internalDate }) {
+  /** @param {{ id: string, raw: Buffer, internalDate: Date, threadId?: string }} message */
+  addMessage({ id, raw, internalDate, threadId = `thread-${id}` }) {
     this.#messages.set(id, {
       id,
-      threadId: `thread-${id}`,
+      threadId,
       labelIds: ['INBOX', 'UNREAD'],
       internalDate,
       raw,
     });
   }
 
-  /** One message per thread in the corpus; enough for the thread route to work in the demo. */
+  /** The messages of one thread, oldest first, as the thread route expects. */
   async getThread(threadId) {
     const messages = [...this.#messages.values()]
       .filter((message) => message.threadId === threadId)

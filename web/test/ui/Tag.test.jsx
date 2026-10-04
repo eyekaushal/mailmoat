@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { LABELS, Tag, labelFor } from '../../src/ui/Tag.jsx';
+import { LABELS, RISK_LABELS, Tag, labelFor, riskLabelFor } from '../../src/ui/Tag.jsx';
 
 describe('Tag', () => {
   it('covers the nine labels in palette order and picks the first a row has', () => {
@@ -31,5 +31,17 @@ describe('Tag', () => {
     expect(container.textContent).toBe('To reply');
     rerender(<Tag label="dangerous" />);
     expect(container.firstChild).toBeNull();
+  });
+
+  it('names the risk of an opened email: nothing for SAFE, the word otherwise, in the risk tint', () => {
+    expect(riskLabelFor({ level: 'SAFE' })).toBeNull();
+    expect(riskLabelFor({ level: 'SUSPICIOUS' })).toBe(RISK_LABELS.SUSPICIOUS);
+    expect(riskLabelFor({ level: 'DANGEROUS' }).label).toBe('Dangerous');
+    expect(riskLabelFor(null).label).toBe('Not checked');
+    expect(labelFor(['dangerous'])).toBeNull();
+    const { container } = render(<Tag label={RISK_LABELS.DANGEROUS} />);
+    expect(container.textContent).toBe('Dangerous');
+    expect(container.firstChild.className).toContain('bg-tag-risk');
+    expect(container.firstChild.className).toContain('text-tag-risk-ink');
   });
 });

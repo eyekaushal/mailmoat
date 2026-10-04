@@ -10,6 +10,7 @@ export function storeEmail(
   gmailId,
   {
     fromAddr = 'rahul@acme-corp.com',
+    threadId = `t-${gmailId}`,
     fromName = null,
     direction = 'inbound',
     date = '2026-10-07T09:00:00.000Z',
@@ -27,7 +28,7 @@ export function storeEmail(
 ) {
   const record = {
     gmailId,
-    threadId: `t-${gmailId}`,
+    threadId,
     direction,
     fromAddr,
     fromDomain: fromAddr.split('@')[1],

@@ -35,3 +35,13 @@ export function longDate(ymd) {
 function sameDay(a, b) {
   return a.toDateString() === b.toDateString();
 }
+
+/** The full moment an opened message arrived: "Mon 5 Oct, 09:12" (with the year when older). */
+export function dateTime(iso, now = new Date()) {
+  const date = new Date(iso);
+  const options = { weekday: 'short', day: 'numeric', month: 'short' };
+  if (date.getFullYear() !== now.getFullYear()) options.year = 'numeric';
+  const day = date.toLocaleDateString([], options);
+  const time = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  return `${day}, ${time}`;
+}

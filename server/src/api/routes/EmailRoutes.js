@@ -16,8 +16,9 @@ import { validate } from '../validate.js';
 /**
  * Inbox (PRD F5, §13): stored metadata, subject, snippet, verdicts and the Reader's typed fields,
  * plus the per-email actions (archive, draft reply, propose/save a meeting, trust, not phishing).
- * Bodies are never stored, so nothing here returns one; the Reader summary is AI output of an
- * untrusted email and the UI shows it as plain text, marked as such.
+ * Bodies are never stored and never pass through here (the thread route serves the reading
+ * view); the Reader summary is AI output of an untrusted email and the UI shows it as plain
+ * text, labelled as such.
  */
 export class EmailRoutes {
   #deps;
@@ -47,7 +48,6 @@ export class EmailRoutes {
   router() {
     const { emails, verdicts, rules, contacts, audit, drafts, meetings, auditLog, now } =
       this.#deps;
-    const { gmail, ingestor } = this.#deps;
     const router = Router();
 
     router.get('/emails', (request, response) => {
@@ -95,25 +95,27 @@ export class EmailRoutes {
       });
     });
 
-    // The body is never stored (PRD §9): the detail view fetches it from Gmail on open and the
-    // browser only ever gets the visible text, disarmed links and HTML it sanitises itself.
-    router.get('/emails/:id/content', async (request, response) => {
+    // The right panel's sender card: who they are, whether the user trusts them, and the newest
+    // message of each recent thread from them (a list shape, never the agent's).
+    router.get('/emails/:id/sender', (request, response) => {
       const record = this.#record(request.params);
-      const { raw } = await gmail.getRawMessage(record.gmailId);
-      const email = await ingestor.ingest(raw);
+      const contact = contacts.get(record.fromAddr);
       response.json({
-        gmailId: record.gmailId,
-        subject: email.subject,
-        from: email.from,
-        to: email.to,
-        cc: email.cc,
-        replyTo: email.replyTo,
-        text: email.readerText,
-        textTruncated: email.readerTextTruncated,
-        links: email.links.map(({ href, text, host }) => ({ href, text, host })),
-        hidden: email.hidden,
-        attachments: email.attachments,
-        html: email.html,
+        threadId: record.threadId,
+        address: record.fromAddr,
+        name: record.fromName,
+        trusted: contact?.trusted ?? false,
+        sentCount: contact?.sentCount ?? 0,
+        receivedCount: contact?.receivedCount ?? 0,
+        avatar: Avatar.for({ name: record.fromName, address: record.fromAddr }),
+        threads: emails.listThreadsFrom(record.fromAddr, 5).map((item) => ({
+          threadId: item.threadId,
+          gmailId: item.gmailId,
+          subject: item.subject,
+          date: item.date,
+          isRead: item.isRead,
+          verdict: item.verdict && { level: item.verdict.level },
+        })),
       });
     });
 

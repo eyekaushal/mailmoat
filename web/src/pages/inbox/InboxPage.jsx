@@ -1,24 +1,18 @@
 import { MagnifyingGlass, X } from '@phosphor-icons/react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router';
+import { isTyping } from '../../lib/keyboard.js';
 import { termsOf } from '../../ui/Highlight.jsx';
 import { IconButton } from '../../ui/IconButton.jsx';
 import { SearchLine } from '../../ui/SearchLine.jsx';
-import { EmailDetail } from './EmailDetail.jsx';
 import { EmailList } from './EmailList.jsx';
 import { InboxTabs, queryForTab } from './InboxTabs.jsx';
-
-function isTyping(target) {
-  return (
-    target instanceof HTMLElement &&
-    (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)
-  );
-}
+import { ReadingView } from './ReadingView.jsx';
 
 /**
  * The inbox (PLAN §13.5): title row with the search line, label tabs, the list grouped by day.
  * Tab and query live in the URL so they survive opening an email. An open email takes the whole
- * column (the reading view of R04); the right panel is the shell's `Aside`.
+ * column (`ReadingView`); the right panel is the shell's `Aside`.
  */
 export function InboxPage() {
   const { gmailId } = useParams();
@@ -59,7 +53,7 @@ export function InboxPage() {
 
   if (gmailId) {
     return (
-      <EmailDetail key={gmailId} gmailId={gmailId} onClose={() => navigate(`/inbox${suffix}`)} />
+      <ReadingView key={gmailId} gmailId={gmailId} onClose={() => navigate(`/inbox${suffix}`)} />
     );
   }
 

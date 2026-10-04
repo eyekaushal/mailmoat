@@ -8,12 +8,14 @@ import {
   Newspaper,
   Receipt,
   Snowflake,
+  Warning,
+  WarningOctagon,
 } from '@phosphor-icons/react';
 
 /**
  * The label palette (DESIGN.md §2), one entry per assistant rule, in priority order: a row that
  * matched several rules wears the first one found here. Suspicious and Dangerous are not labels
- * in the list; they appear on the opened email only (R04).
+ * in the list; they appear on the opened email only (`RISK_LABELS`).
  */
 export const LABELS = Object.freeze([
   {
@@ -56,6 +58,40 @@ export const LABELS = Object.freeze([
   },
   { id: 'cold_email', label: 'Cold', Icon: Snowflake, tone: 'bg-tag-cold text-tag-cold-ink' },
 ]);
+
+/**
+ * The risk words an opened email wears (PLAN §13.1 decision 4): one quiet tag, never a banner.
+ * SAFE mail wears nothing; mail the pipeline has not judged is not safe either (invariant 6).
+ */
+export const RISK_LABELS = Object.freeze({
+  SUSPICIOUS: {
+    id: 'suspicious',
+    label: 'Suspicious',
+    Icon: Warning,
+    tone: 'bg-tag-risk text-tag-risk-ink',
+  },
+  DANGEROUS: {
+    id: 'dangerous',
+    label: 'Dangerous',
+    Icon: WarningOctagon,
+    tone: 'bg-tag-risk text-tag-risk-ink',
+  },
+  UNCHECKED: {
+    id: 'unchecked',
+    label: 'Not checked',
+    Icon: null,
+    tone: 'bg-surface-3 text-secondary',
+  },
+});
+
+/**
+ * @param {{ level: string } | null | undefined} verdict
+ * @returns {(typeof RISK_LABELS)[keyof typeof RISK_LABELS] | null} the tag, or null for SAFE
+ */
+export function riskLabelFor(verdict) {
+  if (!verdict) return RISK_LABELS.UNCHECKED;
+  return RISK_LABELS[verdict.level] ?? null;
+}
 
 /**
  * @param {string[] | null | undefined} ruleIds the rules an email matched

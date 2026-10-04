@@ -174,31 +174,46 @@ describe('InboxPage', () => {
       'GET /emails/counts': counts,
       'GET /emails': { items: [row('a')], nextCursor: null },
       'GET /emails/a': {
-        email: row('a'),
+        email: { ...row('a'), threadId: 't-a' },
         verdict: row('a').verdict,
         readerForm: null,
         signals: [],
         rules: [],
         sender: { trusted: false, sentCount: 1, receivedCount: 1 },
       },
-      'GET /emails/a/content': {
-        gmailId: 'a',
-        subject: 'Quarterly deck',
-        from: { name: 'Rahul', address: 'rahul@acme-corp.com' },
-        to: [],
-        cc: [],
-        text: 'Hi',
-        links: [],
-        hidden: [],
-        attachments: [],
-        html: null,
+      'GET /threads/t-a': {
+        threadId: 't-a',
+        messages: [
+          {
+            gmailId: 'a',
+            direction: 'inbound',
+            date: today.toISOString(),
+            isRead: false,
+            verdict: row('a').verdict,
+            unreadable: false,
+            subject: 'Quarterly deck',
+            from: { name: 'Rahul', address: 'rahul@acme-corp.com' },
+            to: [],
+            cc: [],
+            text: 'Hi',
+            textTruncated: false,
+            links: [],
+            attachments: [],
+            avatar: { initials: 'R', hue: 10 },
+          },
+        ],
       },
     });
     renderPage(<InboxPage />, { server, path: '/inbox?tab=to_reply', route: '/inbox/:gmailId?' });
     await waitFor(() => expect(screen.getByText('Rahul')).toBeTruthy());
     fireEvent.click(screen.getByText('Quarterly deck'));
-    await waitFor(() => expect(screen.getByRole('heading', { level: 1 })).toBeTruthy());
+    await waitFor(() =>
+      expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Quarterly deck'),
+    );
     expect(screen.queryByRole('tablist', { name: 'Inbox tabs' })).toBeNull();
     expect(screen.getByRole('article')).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Back to inbox' }));
+    await waitFor(() => expect(screen.getByRole('tablist', { name: 'Inbox tabs' })).toBeTruthy());
+    expect(screen.getByRole('tab', { selected: true }).textContent).toContain('To reply');
   });
 });
