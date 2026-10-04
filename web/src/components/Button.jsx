@@ -12,6 +12,15 @@ const BASE =
   'inline-flex h-8 items-center justify-center gap-2 rounded-md px-3 text-base font-medium transition-colors duration-150 ease-out-soft disabled:cursor-not-allowed disabled:opacity-45';
 
 /**
+ * The button look for an element that is not a `<button>` (a download link, for instance).
+ * @param {keyof typeof VARIANTS} [variant]
+ * @param {string} [className]
+ */
+export function buttonClasses(variant = 'primary', className = '') {
+  return `${BASE} ${VARIANTS[variant]} ${className}`;
+}
+
+/**
  * @param {{ variant?: keyof typeof VARIANTS, className?: string } &
  *   import('react').ButtonHTMLAttributes<HTMLButtonElement>} props
  */

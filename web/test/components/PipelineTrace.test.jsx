@@ -62,6 +62,40 @@ describe('PipelineTrace', () => {
     expect(screen.getByText('Asks for an urgent wire <img src=x>')).toBeTruthy();
   });
 
+  it('wears the quiet risk tag for the verdict and plain, lowercase-free headings (R06)', () => {
+    render(<PipelineTrace trace={trace} />);
+    const tag = screen.getByText('Dangerous');
+    expect(tag.className).toContain('bg-tag-risk');
+    expect(document.querySelector('[data-level]')).toBeNull();
+    const headings = screen.getAllByRole('heading', { level: 3 }).map((h) => h.textContent);
+    expect(headings).toEqual([
+      'Authentication',
+      'Signals (2)',
+      'Reader (quarantined, no tools)',
+      'Verdict (deterministic floor, AI can only raise)',
+      'Rules (1)',
+      'Audit events (1)',
+    ]);
+    for (const heading of screen.getAllByRole('heading', { level: 3 })) {
+      expect(heading.className).not.toContain('uppercase');
+    }
+    expect(screen.getAllByText('high', { selector: 'span' })).toHaveLength(2);
+    expect(document.querySelector('.bg-danger-soft, .bg-warn-soft')).toBeNull();
+  });
+
+  it('says "Not flagged" for a SAFE verdict instead of a Safe label', () => {
+    render(
+      <PipelineTrace
+        trace={{ ...trace, verdict: { level: 'SAFE', score: 0, floor: 'SAFE', reasons: [] } }}
+        preview
+      />,
+    );
+    expect(screen.getByText('Not flagged')).toBeTruthy();
+    expect(screen.queryByText('Safe')).toBeNull();
+    expect(screen.getByText('Rules that would run (1)')).toBeTruthy();
+    expect(screen.queryByText(/Audit events/)).toBeNull();
+  });
+
   it('explains a failed Reader and missing pieces', () => {
     render(
       <PipelineTrace

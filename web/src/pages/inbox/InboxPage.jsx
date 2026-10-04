@@ -21,7 +21,10 @@ export function InboxPage() {
   const [searchOpen, setSearchOpen] = useState(false);
   const tab = params.get('tab') ?? 'all';
   const q = params.get('q') ?? '';
-  const suffix = params.size > 0 ? `?${params}` : '';
+  // `trace` only opens the explanation on one email; it does not belong on the list URL.
+  const listParams = new URLSearchParams(params);
+  listParams.delete('trace');
+  const suffix = listParams.size > 0 ? `?${listParams}` : '';
   const query = q ? `/search?q=${encodeURIComponent(q)}` : queryForTab(tab);
   const terms = useMemo(() => termsOf(q), [q]);
 

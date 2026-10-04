@@ -73,7 +73,7 @@ const thread = (last = {}) => ({
   ],
 });
 
-function open(routes, props = {}) {
+function open(routes, props = {}, path = '/') {
   const server = fakeServer({
     'GET /emails/a': detail(),
     'GET /threads/t1': thread(),
@@ -82,6 +82,7 @@ function open(routes, props = {}) {
   const onClose = vi.fn();
   const view = renderPage(<ReadingView gmailId="a" onClose={onClose} now={now} {...props} />, {
     server,
+    path,
   });
   return { server, onClose, ...view };
 }
@@ -175,6 +176,32 @@ describe('ReadingView', () => {
     expect(server.calls.find((c) => c.path === '/emails/a/not-phishing').body).toEqual({
       notPhishing: true,
     });
+  });
+
+  it('opens the trace at once when Security Center links with ?trace=1', async () => {
+    const { server } = open(
+      {
+        'GET /emails/a': detail({ verdict: SUSPICIOUS }),
+        'GET /threads/t1': thread({ verdict: SUSPICIOUS }),
+        'GET /emails/a/trace': {
+          gmailId: 'a',
+          direction: 'inbound',
+          auth: { dmarc: 'fail' },
+          signals: [],
+          reader: { failed: false, form: detail().readerForm },
+          verdict: { ...SUSPICIOUS, floor: 'SUSPICIOUS', reasons: ['First-time sender'] },
+          rules: [],
+          events: [],
+        },
+      },
+      {},
+      '/inbox/a?trace=1',
+    );
+    await waitFor(() => expect(screen.getByText('First-time sender')).toBeTruthy());
+    expect(
+      screen.getByRole('button', { name: 'Why was this flagged?' }).getAttribute('aria-expanded'),
+    ).toBe('true');
+    expect(server.calls.some((c) => c.path === '/emails/a/trace')).toBe(true);
   });
 
   it('asks before drafting from suspicious mail, drafts with r, archives with e and goes back', async () => {

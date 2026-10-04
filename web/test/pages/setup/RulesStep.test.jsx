@@ -34,11 +34,13 @@ describe('RulesStep', () => {
     renderPage(<RulesStep onFinish={onFinish} />, { server });
     await waitFor(() => expect(screen.getByText('Marketing')).toBeTruthy());
     expect(screen.getByRole('switch', { name: 'Dangerous enabled' }).disabled).toBe(true);
-    expect(screen.getByText('always on')).toBeTruthy();
+    expect(screen.getByLabelText('Always on')).toBeTruthy();
+    expect(screen.getAllByText('Label')).toHaveLength(2);
+    expect(screen.getByText('Archive')).toBeTruthy();
     const toggle = screen.getByRole('switch', { name: 'Marketing enabled' });
-    expect(toggle.checked).toBe(true);
+    expect(toggle.getAttribute('aria-checked')).toBe('true');
     fireEvent.click(toggle);
-    await waitFor(() => expect(toggle.checked).toBe(false));
+    await waitFor(() => expect(toggle.getAttribute('aria-checked')).toBe('false'));
     const patch = server.calls.find((call) => call.method === 'PATCH');
     expect(patch).toEqual({ method: 'PATCH', path: '/rules/marketing', body: { enabled: false } });
     fireEvent.click(screen.getByRole('button', { name: 'Finish setup' }));

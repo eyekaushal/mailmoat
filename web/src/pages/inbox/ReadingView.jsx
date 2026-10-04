@@ -8,7 +8,7 @@ import {
   UserMinus,
 } from '@phosphor-icons/react';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 import { useSWRConfig } from 'swr';
 import { Button } from '../../components/Button.jsx';
 import { LoadingState } from '../../components/LoadingState.jsx';
@@ -46,7 +46,9 @@ export function ReadingView({ gmailId, onClose, now }) {
   const [busy, setBusy] = useState(null);
   const [proposal, setProposal] = useState(null);
   const [confirm, setConfirm] = useState(null);
-  const [whyOpen, setWhyOpen] = useState(false);
+  // Security Center links here with `?trace=1`, so the explanation opens with the email.
+  const [params] = useSearchParams();
+  const [whyOpen, setWhyOpen] = useState(params.get('trace') === '1');
   const { data: trace } = useApi(whyOpen ? `/emails/${gmailId}/trace` : null);
 
   const verdict = data?.verdict ?? null;
