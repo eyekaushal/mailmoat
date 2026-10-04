@@ -53,6 +53,20 @@
   --tag-risk: #fbe9e6;
   --tag-risk-ink: #a0362c;
 
+  /* Action chips (Assistant rules, DESIGN.md §2). */
+  --chip-archive: #e8ecf1;
+  --chip-archive-ink: #4a5568;
+  --chip-label: #e3eefb;
+  --chip-label-ink: #1f4f7a;
+  --chip-draft: #fff1cc;
+  --chip-draft-ink: #8a5a00;
+  --chip-read: #edf1d8;
+  --chip-read-ink: #55681c;
+  --chip-trust: #dff3e9;
+  --chip-trust-ink: #1f6b4a;
+  --chip-block: #fbe3ec;
+  --chip-block-ink: #9a2f5a;
+
   --shadow-panel: 0 1px 2px rgba(20, 24, 40, 0.05), 0 8px 24px rgba(20, 24, 40, 0.05);
   --shadow-pop: 0 2px 6px rgba(20, 24, 40, 0.08), 0 12px 32px rgba(20, 24, 40, 0.14);
   --ease: cubic-bezier(0.2, 0.7, 0.3, 1);
@@ -106,6 +120,18 @@
   --color-tag-cold-ink: var(--tag-cold-ink);
   --color-tag-risk: var(--tag-risk);
   --color-tag-risk-ink: var(--tag-risk-ink);
+  --color-chip-archive: var(--chip-archive);
+  --color-chip-archive-ink: var(--chip-archive-ink);
+  --color-chip-label: var(--chip-label);
+  --color-chip-label-ink: var(--chip-label-ink);
+  --color-chip-draft: var(--chip-draft);
+  --color-chip-draft-ink: var(--chip-draft-ink);
+  --color-chip-read: var(--chip-read);
+  --color-chip-read-ink: var(--chip-read-ink);
+  --color-chip-trust: var(--chip-trust);
+  --color-chip-trust-ink: var(--chip-trust-ink);
+  --color-chip-block: var(--chip-block);
+  --color-chip-block-ink: var(--chip-block-ink);
 
   --shadow-panel: var(--shadow-panel);
   --shadow-pop: var(--shadow-pop);

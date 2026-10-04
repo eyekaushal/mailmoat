@@ -4,21 +4,9 @@ import { Avatar } from '../../ui/Avatar.jsx';
 import { Highlight } from '../../ui/Highlight.jsx';
 import { IconButton } from '../../ui/IconButton.jsx';
 import { Row } from '../../ui/Row.jsx';
+import { RiskDot } from '../../ui/RiskDot.jsx';
 import { Tag, labelFor } from '../../ui/Tag.jsx';
 import { Tooltip } from '../../ui/Tooltip.jsx';
-
-const RISK_WORDS = { SUSPICIOUS: 'Suspicious', DANGEROUS: 'Dangerous' };
-
-/**
- * What the dot before the sender says. SAFE mail gets no dot and no word (PLAN §13.1 decision 4);
- * mail the pipeline has not judged yet is not safe either (invariant 6), so it gets a hollow one.
- * @param {{ level: string } | null | undefined} verdict
- * @returns {string | null}
- */
-export function riskNote(verdict) {
-  if (!verdict) return 'Not checked yet';
-  return RISK_WORDS[verdict.level] ?? null;
-}
 
 /**
  * One inbox row (PLAN §13.5): unread dot · avatar · sender · one label · subject · snippet · time,
@@ -28,7 +16,6 @@ export function riskNote(verdict) {
  */
 export function EmailRow({ email, terms, now, onOpen, onArchive, onReply, onTrust }) {
   const label = labelFor(email.rules);
-  const risk = riskNote(email.verdict);
   const sender = email.fromName || email.fromAddr;
   return (
     <Row
@@ -60,17 +47,7 @@ export function EmailRow({ email, terms, now, onOpen, onArchive, onReply, onTrus
         hue={email.avatar?.hue}
       />
       <span className="flex w-44 shrink-0 items-center gap-1.5">
-        {risk && (
-          <Tooltip label={risk}>
-            <span
-              role="img"
-              aria-label={risk}
-              className={`size-1.5 shrink-0 rounded-full ${
-                email.verdict ? 'bg-danger' : 'border border-tertiary'
-              }`}
-            />
-          </Tooltip>
-        )}
+        <RiskDot verdict={email.verdict} />
         <span className={`truncate ${email.isRead ? '' : 'font-medium'}`}>
           <Highlight text={sender} terms={terms} />
         </span>

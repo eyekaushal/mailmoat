@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { EmailRow, riskNote } from '../../../src/pages/inbox/EmailRow.jsx';
+import { EmailRow } from '../../../src/pages/inbox/EmailRow.jsx';
+import { riskNote } from '../../../src/ui/RiskDot.jsx';
 import { TooltipProvider } from '../../../src/ui/Tooltip.jsx';
 
 const now = new Date(2026, 9, 5, 12, 0, 0);

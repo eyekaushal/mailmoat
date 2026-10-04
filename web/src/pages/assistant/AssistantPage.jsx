@@ -1,40 +1,34 @@
+import { ClockCounterClockwise, Flask, ListChecks } from '@phosphor-icons/react';
 import { useSearchParams } from 'react-router';
+import { Tabs } from '../../ui/Tabs.jsx';
 import { HistoryTab } from './HistoryTab.jsx';
 import { RulesTab } from './RulesTab.jsx';
 import { TestTab } from './TestTab.jsx';
 
 const TABS = [
-  { id: 'rules', label: 'Rules', Component: RulesTab },
-  { id: 'test', label: 'Test', Component: TestTab },
-  { id: 'history', label: 'History', Component: HistoryTab },
+  { id: 'rules', label: 'Rules', Icon: ListChecks, Component: RulesTab },
+  { id: 'test', label: 'Test', Icon: Flask, Component: TestTab },
+  { id: 'history', label: 'History', Icon: ClockCounterClockwise, Component: HistoryTab },
 ];
 
-/** PRD F4: the Assistant page with Rules / Test / History tabs. */
+/** PRD F4, PLAN §13.7: the Assistant on the main panel, with Rules / Test / History tabs. */
 export function AssistantPage() {
   const [params, setParams] = useSearchParams();
   const active = TABS.find((tab) => tab.id === params.get('tab')) ?? TABS[0];
   return (
-    <div className="mx-auto max-w-5xl px-4 py-6 sm:px-8">
-      <h1 className="text-xl font-semibold tracking-tight">Assistant</h1>
-      <div
-        role="tablist"
-        aria-label="Assistant tabs"
-        className="mt-4 mb-6 flex gap-1 border-b border-line"
-      >
-        {TABS.map((tab) => (
-          <button
-            key={tab.id}
-            role="tab"
-            type="button"
-            aria-selected={tab.id === active.id}
-            onClick={() => setParams(tab.id === 'rules' ? {} : { tab: tab.id })}
-            className={`border-b-2 px-3 py-2 text-sm ${tab.id === active.id ? 'border-accent font-medium' : 'border-transparent text-muted hover:text-fg'}`}
-          >
-            {tab.label}
-          </button>
-        ))}
+    <div className="flex h-full flex-col">
+      <header className="flex h-14 shrink-0 items-center px-5">
+        <h1 className="text-xl font-medium tracking-tight">Assistant</h1>
+      </header>
+      <Tabs
+        value={active.id}
+        onChange={(id) => setParams(id === 'rules' ? {} : { tab: id })}
+        label="Assistant tabs"
+        items={TABS}
+      />
+      <div className="min-h-0 flex-1 overflow-y-auto border-t border-line">
+        <active.Component />
       </div>
-      <active.Component />
     </div>
   );
 }

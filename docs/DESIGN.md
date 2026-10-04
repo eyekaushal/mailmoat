@@ -105,6 +105,9 @@ radius 4, no border, no icon inside the tag in the list (the icon belongs to the
 
 Archive `#e8ecf1`/`#4a5568` · Label `#e3eefb`/`#1f4f7a` · Draft `#fff1cc`/`#8a5a00` ·
 Mark read `#edf1d8`/`#55681c` · Trust `#dff3e9`/`#1f6b4a` · Block `#fbe3ec`/`#9a2f5a`.
+The rule actions wear them as: `label` → Label, `archive` → Archive, `draft_reply` → Draft,
+`alert` → Block (the security tint), `log` → neutral (`surface-3`, `secondary` text). A chip the
+user may toggle is a button with `aria-pressed`; unselected it is quiet (`surface-2`, `secondary`).
 
 ### Avatars
 

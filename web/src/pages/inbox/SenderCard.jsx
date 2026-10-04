@@ -5,9 +5,8 @@ import { LoadingState } from '../../components/LoadingState.jsx';
 import { shortDate } from '../../lib/dates.js';
 import { useApi, useApiClient } from '../../lib/useApi.js';
 import { Avatar } from '../../ui/Avatar.jsx';
+import { RiskDot } from '../../ui/RiskDot.jsx';
 import { Switch } from '../../ui/Switch.jsx';
-import { Tooltip } from '../../ui/Tooltip.jsx';
-import { riskNote } from './EmailRow.jsx';
 
 /**
  * The right panel while an email is open (PLAN §13.6): who sent it, the trusted toggle, and the
@@ -82,43 +81,28 @@ export function SenderCard({ gmailId, now }) {
           <p className="text-sm text-tertiary">Nothing stored from them yet.</p>
         ) : (
           <ul className="-mx-2">
-            {data.threads.map((thread) => {
-              const risk = riskNote(thread.verdict);
-              return (
-                <li key={thread.threadId}>
-                  <Link
-                    to={`/inbox/${thread.gmailId}`}
-                    aria-current={thread.threadId === data.threadId ? 'true' : undefined}
-                    className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-base transition-colors duration-150 ease-out-soft hover:bg-surface-2 ${
-                      thread.threadId === data.threadId ? 'bg-accent-soft' : ''
-                    }`}
+            {data.threads.map((thread) => (
+              <li key={thread.threadId}>
+                <Link
+                  to={`/inbox/${thread.gmailId}`}
+                  aria-current={thread.threadId === data.threadId ? 'true' : undefined}
+                  className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-base transition-colors duration-150 ease-out-soft hover:bg-surface-2 ${
+                    thread.threadId === data.threadId ? 'bg-accent-soft' : ''
+                  }`}
+                >
+                  <RiskDot verdict={thread.verdict} />
+                  <span className={`min-w-0 flex-1 truncate ${thread.isRead ? '' : 'font-medium'}`}>
+                    {thread.subject || '(no subject)'}
+                  </span>
+                  <time
+                    dateTime={thread.date}
+                    className="shrink-0 text-sm text-tertiary tabular-nums"
                   >
-                    {risk && (
-                      <Tooltip label={risk}>
-                        <span
-                          role="img"
-                          aria-label={risk}
-                          className={`size-1.5 shrink-0 rounded-full ${
-                            thread.verdict ? 'bg-danger' : 'border border-tertiary'
-                          }`}
-                        />
-                      </Tooltip>
-                    )}
-                    <span
-                      className={`min-w-0 flex-1 truncate ${thread.isRead ? '' : 'font-medium'}`}
-                    >
-                      {thread.subject || '(no subject)'}
-                    </span>
-                    <time
-                      dateTime={thread.date}
-                      className="shrink-0 text-sm text-tertiary tabular-nums"
-                    >
-                      {shortDate(thread.date, now)}
-                    </time>
-                  </Link>
-                </li>
-              );
-            })}
+                    {shortDate(thread.date, now)}
+                  </time>
+                </Link>
+              </li>
+            ))}
           </ul>
         )}
       </section>
