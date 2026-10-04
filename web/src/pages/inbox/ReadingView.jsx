@@ -8,11 +8,12 @@ import {
   UserMinus,
 } from '@phosphor-icons/react';
 import { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router';
+import { useSearchParams } from 'react-router';
 import { useSWRConfig } from 'swr';
 import { Button } from '../../components/Button.jsx';
 import { LoadingState } from '../../components/LoadingState.jsx';
 import { PipelineTrace } from '../../components/PipelineTrace.jsx';
+import { useAskAi } from '../../components/ask/AskAiProvider.jsx';
 import { isTyping } from '../../lib/keyboard.js';
 import { useApi, useApiClient } from '../../lib/useApi.js';
 import { Dialog } from '../../ui/Dialog.jsx';
@@ -36,8 +37,8 @@ export function defaultExpanded(messages, gmailId) {
  */
 export function ReadingView({ gmailId, onClose, now }) {
   const client = useApiClient();
-  const navigate = useNavigate();
   const { mutate: mutateAll } = useSWRConfig();
+  const ask = useAskAi();
   const { data, error, mutate } = useApi(`/emails/${gmailId}`);
   const threadId = data?.email.threadId ?? null;
   const { data: thread, error: threadError } = useApi(threadId ? `/threads/${threadId}` : null);
@@ -232,7 +233,7 @@ export function ReadingView({ gmailId, onClose, now }) {
           <IconButton
             label="Ask AI about this email"
             icon={Sparkle}
-            onClick={() => navigate(`/chat?emailId=${gmailId}`)}
+            onClick={() => ask.show({ emailId: gmailId })}
           />
         </div>
       </header>

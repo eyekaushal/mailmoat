@@ -49,6 +49,25 @@ describe('InboxTabs', () => {
 });
 
 describe('InboxPage', () => {
+  it('walks the rows with j and k so Enter can open the focused one', async () => {
+    const server = fakeServer({
+      'GET /emails/counts': counts,
+      'GET /emails': { items: [row('a'), row('b', { subject: 'Second' })], nextCursor: null },
+    });
+    renderPage(<InboxPage />, { server, path: '/inbox', route: '/inbox' });
+    await waitFor(() => expect(screen.getByText('Second')).toBeTruthy());
+    const rows = document.querySelectorAll('[data-row]');
+    expect(rows).toHaveLength(2);
+    fireEvent.keyDown(document.body, { key: 'j' });
+    expect(document.activeElement).toBe(rows[0]);
+    fireEvent.keyDown(document.body, { key: 'j' });
+    expect(document.activeElement).toBe(rows[1]);
+    fireEvent.keyDown(document.body, { key: 'j' });
+    expect(document.activeElement).toBe(rows[1]);
+    fireEvent.keyDown(document.body, { key: 'k' });
+    expect(document.activeElement).toBe(rows[0]);
+  });
+
   it('shows quiet tabs with counts and single-line rows under date headings', async () => {
     const server = fakeServer({
       'GET /emails/counts': counts,

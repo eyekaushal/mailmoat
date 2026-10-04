@@ -1,8 +1,9 @@
-import { CalendarPlus, XCircle } from '@phosphor-icons/react';
+import { CalendarPlus, X } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { Button } from '../../components/Button.jsx';
 import { FormField, INPUT_CLASSES } from '../../components/FormField.jsx';
 import { useApiClient } from '../../lib/useApi.js';
+import { IconButton } from '../../ui/IconButton.jsx';
 
 function slotLabel({ start, end }, timeZone) {
   const s = new Date(start);
@@ -136,14 +137,13 @@ export function MeetingCard({ proposal, onSaved, onCancel }) {
               className="inline-flex items-center gap-1 rounded-md bg-surface-2 px-2 py-1 font-mono text-xs"
             >
               {address}
-              <button
-                type="button"
-                aria-label={`Remove ${address}`}
+              <IconButton
+                label={`Remove ${address}`}
+                icon={X}
+                size={12}
+                className="size-5"
                 onClick={() => setAttendees(attendees.filter((a) => a !== address))}
-                className="text-muted hover:text-danger"
-              >
-                <XCircle aria-hidden="true" className="size-3.5" />
-              </button>
+              />
             </li>
           ))}
         </ul>

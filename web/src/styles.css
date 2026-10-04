@@ -179,11 +179,16 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Keyboard users must always see where they are (PRD §9 Usability). */
+/* Keyboard users must always see where they are (PRD §9 Usability). A control inside a wrapper
+   that draws the ring itself (the Ask AI composer) opts out with `data-inset-focus`: utilities
+   sit in a layer, so only an unlayered rule can override this one. */
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-radius: 6px;
+}
+[data-inset-focus]:focus-visible {
+  outline: none;
 }
 
 /* Wallpaper layer (DESIGN.md §7): the painting is tone, not focus, so the panels above it blur

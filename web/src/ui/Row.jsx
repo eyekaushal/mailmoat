@@ -1,16 +1,28 @@
 /**
  * A 40 px list row (DESIGN.md §8). The whole row is one button that opens the item; `trailing`
  * (usually the time) sits at the right edge and gives way to `actions` on hover or keyboard focus.
- * The actions are siblings of the row button, never nested inside it.
- * @param {{ selected?: boolean, onOpen?: () => void, trailing?: import('react').ReactNode,
- *   actions?: import('react').ReactNode, children: import('react').ReactNode, className?: string }} props
+ * The actions are siblings of the row button, never nested inside it. `data-row` lets `j` / `k`
+ * walk the rows; `onKeyDown` receives the keys pressed while the row has focus.
+ * @param {{ selected?: boolean, onOpen?: () => void, onKeyDown?: (event: KeyboardEvent) => void,
+ *   trailing?: import('react').ReactNode, actions?: import('react').ReactNode,
+ *   children: import('react').ReactNode, className?: string }} props
  */
-export function Row({ selected = false, onOpen, trailing, actions, children, className = '' }) {
+export function Row({
+  selected = false,
+  onOpen,
+  onKeyDown,
+  trailing,
+  actions,
+  children,
+  className = '',
+}) {
   return (
     <li className={`group relative ${className}`}>
       <button
         type="button"
+        data-row=""
         onClick={onOpen}
+        onKeyDown={onKeyDown}
         aria-current={selected ? 'true' : undefined}
         className={`flex h-10 w-full items-center gap-3 px-4 text-left transition-colors duration-150 ease-out-soft hover:bg-surface-2 ${
           selected ? 'bg-accent-soft shadow-[inset_2px_0_0_var(--accent)]' : ''

@@ -198,6 +198,10 @@ tab), 600 nowhere. Letter-spacing −0.01 em at 17 px and above. Numbers in list
   Assistant, Approvals, Unsubscribe, Security, Settings), the approvals count as a small
   bubble, the account footer at the bottom (avatar; menu shows avatar · name · email · chevron,
   connection status, Settings, keyboard hints).
+- **Ask AI panel** (`AskPanel`, R07): a 380 px panel between the rail and the main column, opened
+  from the rail's Ask AI item, from "Ask AI about this email", or with `?ask=1`; it stays open
+  across screens until closed. A centred prompt and suggestion chips until the first question,
+  then plain-text answers with numbered sources and preview cards.
 - **Main column**: one panel, min 640 px, title row 56 px, then the screen.
 - **Right panel**: 300 px, Today when nothing is open, the sender card when an email is open
   (R03/R04). Hidden under 1100 px.

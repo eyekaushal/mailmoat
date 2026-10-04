@@ -39,6 +39,21 @@ function renderRow(props) {
   );
 }
 
+describe('EmailRow keys', () => {
+  it('archives with e and replies with r while the row has focus', () => {
+    const onArchive = vi.fn();
+    const onReply = vi.fn();
+    renderRow({ email: email(), onArchive, onReply });
+    const button = document.querySelector('[data-row]');
+    fireEvent.keyDown(button, { key: 'e' });
+    expect(onArchive).toHaveBeenCalledTimes(1);
+    fireEvent.keyDown(button, { key: 'r' });
+    expect(onReply).toHaveBeenCalledTimes(1);
+    fireEvent.keyDown(button, { key: 'e', metaKey: true });
+    expect(onArchive).toHaveBeenCalledTimes(1);
+  });
+});
+
 describe('riskNote', () => {
   it('names the level for non-safe mail, flags unjudged mail and says nothing for SAFE', () => {
     expect(riskNote({ level: 'DANGEROUS' })).toBe('Dangerous');

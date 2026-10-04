@@ -10,7 +10,8 @@ import { Tooltip } from '../../ui/Tooltip.jsx';
 
 /**
  * One inbox row (PLAN §13.5): unread dot · avatar · sender · one label · subject · snippet · time,
- * with archive / reply / trust on hover. Nothing AI-generated is shown here.
+ * with archive / reply / trust on hover, and `e` / `r` while the row has focus. Nothing
+ * AI-generated is shown here.
  * @param {{ email: object, terms?: string[], now?: Date, onOpen: () => void,
  *   onArchive: () => void, onReply: () => void, onTrust: () => void }} props
  */
@@ -20,6 +21,11 @@ export function EmailRow({ email, terms, now, onOpen, onArchive, onReply, onTrus
   return (
     <Row
       onOpen={onOpen}
+      onKeyDown={(event) => {
+        if (event.metaKey || event.ctrlKey || event.altKey) return;
+        if (event.key === 'e') onArchive();
+        else if (event.key === 'r') onReply();
+      }}
       trailing={
         <time dateTime={email.date} className="text-sm text-tertiary tabular-nums">
           {shortDate(email.date, now)}
