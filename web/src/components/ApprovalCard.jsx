@@ -1,3 +1,4 @@
+import { dateTime } from '../lib/dates.js';
 import { PreviewCard } from './PreviewCard.jsx';
 
 /** Which preview a pending tool call gets (mirrors the chat's card kinds). */
@@ -8,17 +9,26 @@ const CARD_KINDS = {
   create_calendar_event: 'event',
 };
 
+const STATUS_WORDS = {
+  PENDING: null,
+  APPROVED: 'Approved',
+  REJECTED: 'Rejected',
+  DENIED: 'Refused',
+  EXPIRED: 'Expired',
+};
+
 /**
- * One row of the Approvals page: a stored ASK decision shown as a preview card with when it was
- * requested and its current status.
+ * One card of the Approvals page: a stored ASK decision as a preview card, with when it was
+ * requested and, once decided, its outcome in the header.
  * @param {{
  *   approval: { id: string, tool: string, status: string, reason?: string, requestedAt: string,
  *     args: Record<string, { value: unknown, sources: { type: string, id?: string }[] }> },
  *   onDecide?: (action: 'approve' | 'reject') => void,
  *   busy?: boolean,
+ *   now?: Date,
  * }} props
  */
-export function ApprovalCard({ approval, onDecide, busy }) {
+export function ApprovalCard({ approval, onDecide, busy, now }) {
   const card = {
     approvalId: approval.id,
     kind: CARD_KINDS[approval.tool] ?? 'action',
@@ -32,19 +42,19 @@ export function ApprovalCard({ approval, onDecide, busy }) {
     ),
   };
   const pending = approval.status === 'PENDING';
+  const status =
+    approval.status in STATUS_WORDS ? STATUS_WORDS[approval.status] : approval.status.toLowerCase();
   return (
-    <div>
-      <p className="mb-1 flex items-center gap-2 text-xs text-muted">
-        <time dateTime={approval.requestedAt}>
-          Requested {new Date(approval.requestedAt).toLocaleString()}
-        </time>
-        {!pending && (
-          <span className="rounded bg-surface-2 px-1.5 py-0.5 font-medium uppercase">
-            {approval.status.toLowerCase()}
-          </span>
-        )}
-      </p>
-      <PreviewCard card={card} onDecide={pending ? onDecide : undefined} busy={busy} />
-    </div>
+    <PreviewCard
+      card={card}
+      onDecide={pending ? onDecide : undefined}
+      busy={busy}
+      aside={
+        <>
+          {status && <span className="mr-2 text-secondary">{status}</span>}
+          <time dateTime={approval.requestedAt}>{dateTime(approval.requestedAt, now)}</time>
+        </>
+      }
+    />
   );
 }

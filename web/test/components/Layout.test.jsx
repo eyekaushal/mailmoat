@@ -28,7 +28,9 @@ function fakeFetch(health, approvals = [], settings = {}) {
             ? { settings }
             : url === '/api/summary/today'
               ? TODAY
-              : {};
+              : url === '/api/chats'
+                ? []
+                : {};
     return new Response(JSON.stringify(body), {
       headers: { 'content-type': 'application/json' },
     });
@@ -69,8 +71,8 @@ describe('Layout', () => {
   it('renders the icon rail with the seven screens, the current page and the hint bar', async () => {
     renderShell({ health: connected });
     const nav = await screen.findByRole('navigation', { name: 'Main' });
-    for (const { label } of NAV_ITEMS)
-      expect(screen.getByRole('link', { name: label })).toBeTruthy();
+    for (const { label, panel } of NAV_ITEMS)
+      expect(screen.getByRole(panel ? 'button' : 'link', { name: label })).toBeTruthy();
     expect(nav.textContent).not.toContain('Inbox'); // labels live in tooltips, not beside icons
     expect(screen.getByText('Inbox screen')).toBeTruthy();
     const inbox = screen.getByRole('link', { name: 'Inbox' });
@@ -130,6 +132,31 @@ describe('Layout', () => {
     fireEvent.click(await screen.findByRole('menuitem', { name: 'Keyboard hints' }));
     expect(screen.getByRole('note', { name: 'Keyboard hints' })).not.toBe(bar);
     expect(window.localStorage.getItem('mailmoat.keyHints')).toBeNull();
+  });
+
+  it('opens Ask AI as a side panel from the rail, from ?ask=1, and closes it again', async () => {
+    renderShell({ health: connected });
+    const toggle = await screen.findByRole('button', { name: 'Ask AI' });
+    expect(screen.queryByRole('complementary', { name: 'Ask AI' })).toBeNull();
+    expect(toggle.getAttribute('aria-pressed')).toBe('false');
+    fireEvent.click(toggle);
+    const panel = screen.getByRole('complementary', { name: 'Ask AI' });
+    expect(panel.textContent).toContain('Find, write, schedule, or ask anything');
+    expect(toggle.getAttribute('aria-pressed')).toBe('true');
+    expect(toggle.className).toContain('bg-accent-soft');
+    expect(screen.getByText('Inbox screen')).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Close Ask AI' }));
+    expect(screen.queryByRole('complementary', { name: 'Ask AI' })).toBeNull();
+    screen.getByRole('complementary'); // Today is still there on the right
+  });
+
+  it('deep-links to the panel with ?ask=1 and opens the shortcut list on ?', async () => {
+    renderShell({ health: connected, at: '/inbox?ask=1' });
+    expect(await screen.findByRole('complementary', { name: 'Ask AI' })).toBeTruthy();
+    fireEvent.keyDown(document.body, { key: '?' });
+    const dialog = await screen.findByRole('dialog');
+    expect(dialog.textContent).toContain('Keyboard shortcuts');
+    expect(dialog.textContent).toContain('Move down and up the list');
   });
 
   it('hands over to the setup wizard until both connections exist', async () => {

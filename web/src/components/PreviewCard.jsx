@@ -5,6 +5,7 @@ import {
   ShieldWarning,
   Wrench,
 } from '@phosphor-icons/react';
+import { Button } from './Button.jsx';
 
 const KIND_META = {
   email: { title: 'Send email', confirm: 'Send', Icon: Envelope },
@@ -63,17 +64,19 @@ function describeSource(source) {
 }
 
 /**
- * The preview of an action waiting for the user (PRD F8.3): the exact content as plain text and,
- * for every value, where it came from. Nothing here is clickable or rendered as HTML.
+ * The preview of an action waiting for the user (PRD F8.3, PLAN §13.7): a quiet card with the
+ * exact content as plain text and, under every value, a small line saying where it came from.
+ * One primary button, Reject as text. Nothing here is clickable or rendered as HTML.
  * @param {{
  *   card: { approvalId: string, kind: string, tool: string, reason?: string,
  *     fields: Record<string, { value: unknown, sources: { type: string, from?: string, date?: string }[] }> },
  *   onDecide?: (action: 'approve' | 'reject') => void,
  *   busy?: boolean,
+ *   aside?: import('react').ReactNode, the right end of the header (when it was requested)
  *   children?: import('react').ReactNode,
  * }} props
  */
-export function PreviewCard({ card, onDecide, busy = false, children }) {
+export function PreviewCard({ card, onDecide, busy = false, aside, children }) {
   const { title, confirm, Icon } = KIND_META[card.kind] ?? KIND_META.action;
   const fields = Object.entries(card.fields ?? {});
   const fromEmail = fields.some(([, field]) =>
@@ -81,32 +84,33 @@ export function PreviewCard({ card, onDecide, busy = false, children }) {
   );
 
   return (
-    <article className="rounded-lg border border-line bg-surface shadow-sm">
-      <header className="flex items-center gap-2 border-b border-line px-4 py-3">
-        <Icon aria-hidden="true" className="size-4 text-accent" />
-        <h3 className="text-sm font-semibold">{title}</h3>
-        <span className="ml-auto font-mono text-xs text-muted">{card.tool}</span>
+    <article className="rounded-md bg-surface-2 px-4 py-3">
+      <header className="flex items-center gap-2">
+        <Icon aria-hidden="true" size={16} className="shrink-0 text-secondary" />
+        <h3 className="text-base font-medium">{title}</h3>
+        {(card.kind === 'action' || !KIND_META[card.kind]) && (
+          <span className="text-sm text-tertiary">{card.tool.replaceAll('_', ' ')}</span>
+        )}
+        {aside && <span className="ml-auto text-sm text-tertiary">{aside}</span>}
       </header>
-      <dl className="space-y-3 px-4 py-3">
-        {fields.map(([name, field]) => (
-          <div key={name}>
-            <dt className="text-xs font-medium uppercase tracking-wide text-muted">
-              {labelFor(name)}
-            </dt>
-            <dd className="mt-0.5 text-sm break-words whitespace-pre-wrap">
-              {textOf(field.value)}
-            </dd>
-            {field.sources?.length > 0 && (
-              <dd className="mt-0.5 text-xs text-muted">
-                From {field.sources.map(describeSource).join(' and ')}
-              </dd>
-            )}
-          </div>
-        ))}
-      </dl>
+      {fields.length > 0 && (
+        <dl className="mt-3 space-y-2.5">
+          {fields.map(([name, field]) => (
+            <div key={name}>
+              <dt className="text-sm text-secondary">{labelFor(name)}</dt>
+              <dd className="text-base break-words whitespace-pre-wrap">{textOf(field.value)}</dd>
+              {field.sources?.length > 0 && (
+                <dd className="text-sm text-tertiary">
+                  From {field.sources.map(describeSource).join(' and ')}
+                </dd>
+              )}
+            </div>
+          ))}
+        </dl>
+      )}
       {(card.reason || fromEmail) && (
-        <p className="flex items-start gap-2 border-t border-line px-4 py-2 text-xs text-muted">
-          <ShieldWarning aria-hidden="true" className="mt-0.5 size-3.5 shrink-0" />
+        <p className="mt-3 flex items-start gap-1.5 text-sm text-secondary">
+          <ShieldWarning aria-hidden="true" size={14} className="mt-px shrink-0" />
           <span>
             {card.reason}
             {card.reason && fromEmail ? ' ' : ''}
@@ -116,23 +120,13 @@ export function PreviewCard({ card, onDecide, busy = false, children }) {
       )}
       {children}
       {onDecide && (
-        <footer className="flex justify-end gap-2 border-t border-line px-4 py-3">
-          <button
-            type="button"
-            disabled={busy}
-            onClick={() => onDecide('reject')}
-            className="rounded-md border border-line px-3 py-1.5 text-sm hover:bg-surface-2 disabled:opacity-50"
-          >
+        <footer className="mt-3 flex items-center justify-end gap-2">
+          <Button variant="ghost" disabled={busy} onClick={() => onDecide('reject')}>
             Reject
-          </button>
-          <button
-            type="button"
-            disabled={busy}
-            onClick={() => onDecide('approve')}
-            className="rounded-md bg-accent px-3 py-1.5 text-sm font-medium text-accent-fg hover:opacity-90 disabled:opacity-50"
-          >
+          </Button>
+          <Button disabled={busy} onClick={() => onDecide('approve')}>
             {confirm}
-          </button>
+          </Button>
         </footer>
       )}
     </article>

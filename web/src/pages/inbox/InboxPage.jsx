@@ -9,6 +9,15 @@ import { EmailList } from './EmailList.jsx';
 import { InboxTabs, queryForTab } from './InboxTabs.jsx';
 import { ReadingView } from './ReadingView.jsx';
 
+/** `j` / `k`: focus the next or previous row; Enter then opens it, `e` / `r` act on it. */
+function moveFocus(direction) {
+  const rows = [...document.querySelectorAll('[data-row]')];
+  if (rows.length === 0) return;
+  const index = rows.indexOf(document.activeElement);
+  const next = index === -1 ? (direction > 0 ? 0 : rows.length - 1) : index + direction;
+  rows[Math.max(0, Math.min(rows.length - 1, next))]?.focus();
+}
+
 /**
  * The inbox (PLAN §13.5): title row with the search line, label tabs, the list grouped by day.
  * Tab and query live in the URL so they survive opening an email. An open email takes the whole
@@ -21,7 +30,10 @@ export function InboxPage() {
   const [searchOpen, setSearchOpen] = useState(false);
   const tab = params.get('tab') ?? 'all';
   const q = params.get('q') ?? '';
-  const suffix = params.size > 0 ? `?${params}` : '';
+  // `trace` only opens the explanation on one email; it does not belong on the list URL.
+  const listParams = new URLSearchParams(params);
+  listParams.delete('trace');
+  const suffix = listParams.size > 0 ? `?${listParams}` : '';
   const query = q ? `/search?q=${encodeURIComponent(q)}` : queryForTab(tab);
   const terms = useMemo(() => termsOf(q), [q]);
 
@@ -43,6 +55,9 @@ export function InboxPage() {
       if (event.key === '/') {
         event.preventDefault();
         setSearchOpen(true);
+      } else if (event.key === 'j' || event.key === 'k') {
+        event.preventDefault();
+        moveFocus(event.key === 'j' ? 1 : -1);
       } else if (event.key === 'Escape' && q && !searchOpen) {
         update({ q: null });
       }

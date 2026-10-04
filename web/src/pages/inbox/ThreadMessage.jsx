@@ -2,9 +2,8 @@ import { Paperclip } from '@phosphor-icons/react';
 import { DisarmedLink } from '../../components/DisarmedLink.jsx';
 import { dateTime, shortDate } from '../../lib/dates.js';
 import { Avatar } from '../../ui/Avatar.jsx';
+import { RiskDot } from '../../ui/RiskDot.jsx';
 import { Tag, riskLabelFor } from '../../ui/Tag.jsx';
-import { Tooltip } from '../../ui/Tooltip.jsx';
-import { riskNote } from './EmailRow.jsx';
 
 const PREVIEW_CHARS = 160;
 
@@ -13,21 +12,6 @@ export function previewOf(message) {
   if (message.unreadable) return 'This message could not be read';
   const text = (message.text ?? '').replace(/\s+/g, ' ').trim();
   return text ? text.slice(0, PREVIEW_CHARS) : '(no visible text)';
-}
-
-function RiskDot({ note }) {
-  if (!note) return null;
-  return (
-    <Tooltip label={note}>
-      <span
-        role="img"
-        aria-label={note}
-        className={`size-1.5 shrink-0 rounded-full ${
-          note === 'Not checked yet' ? 'border border-tertiary' : 'bg-danger'
-        }`}
-      />
-    </Tooltip>
-  );
 }
 
 /**
@@ -66,7 +50,7 @@ export function ThreadMessage({ message, expanded, onToggle, opened = false, sum
         >
           {avatar('md')}
           <span className="flex w-44 shrink-0 items-center gap-1.5">
-            {inbound && <RiskDot note={riskNote(message.verdict)} />}
+            {inbound && <RiskDot verdict={message.verdict} />}
             <span className="truncate font-medium">{name}</span>
           </span>
           <span className="min-w-0 flex-1 truncate text-secondary">{previewOf(message)}</span>

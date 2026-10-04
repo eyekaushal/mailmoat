@@ -2,7 +2,7 @@ import { X } from '@phosphor-icons/react';
 import { KeyHint } from '../ui/KeyHint.jsx';
 import { Tooltip } from '../ui/Tooltip.jsx';
 
-/** The hints shown along the bottom (DESIGN.md §7); the keys themselves are wired in R07. */
+/** The hints shown along the bottom (DESIGN.md §7); `?` opens the full list (`KeyboardHelp`). */
 export const KEY_HINTS = Object.freeze([
   { keys: ['/'], text: 'to search' },
   { keys: ['e'], text: 'to archive' },

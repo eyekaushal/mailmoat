@@ -234,9 +234,10 @@ A set of small classes, each implementing `Signal.evaluate(email, context) → S
 | S6 | `LOOKALIKE_BRAND_DOMAIN` | Same test against a bundled list of frequently impersonated brands (banks, Google, Microsoft, PayPal, Netflix, Amazon, DHL, …) |
 | S7 | `DISPLAY_NAME_IMPERSONATION` | Display name contains a brand or a known contact's name, but the address domain is not theirs |
 | S8 | `PUNYCODE_DOMAIN` | Any `xn--` label in the sender or link domains |
-| S9 | `FIRST_TIME_SENDER` | The user has never received from *or sent to* this address |
-| S10 | `FIRST_TIME_DOMAIN` | …nor anyone at this domain |
+| S9 | `FIRST_TIME_SENDER` | The user has never written to this address (received-only history is attacker-controllable). Not raised for a listed brand's own domain when Google's stamp says DMARC passed (B28) |
+| S10 | `FIRST_TIME_DOMAIN` | …nor anyone at this domain; same brand exemption |
 | S11 | `FREEMAIL_CLAIMS_ORG` | Sender uses a free-mail domain but the display name or signature claims a company or executive role (from the Reader's `claims_to_be`) |
+| S22 | `BRAND_CLAIM_UNOWNED` | The Reader's `claimed_brand` names a listed brand, but the From domain is not one that brand sends from (B28). The claim is the Reader's; the ownership check is code |
 
 **Content structure**
 
@@ -248,11 +249,12 @@ A set of small classes, each implementing `Signal.evaluate(email, context) → S
 | S15 | `LINK_SHORTENER` | Link uses a known URL shortener |
 | S16 | `LINK_IP_LITERAL` | Link host is a raw IP address |
 | S17 | `LINK_USERINFO_TRICK` | URL of the form `https://paypal.com@evil.com/` |
-| S18 | `LINK_FIRST_SEEN_DOMAIN` | Link domain never seen in the user's mail history |
+| S18 | `LINK_FIRST_SEEN_DOMAIN` | Link domain never seen in the user's mail history (the sender's own DMARC-aligned domain counts as seen, B28) |
 | S19 | `RISKY_ATTACHMENT` | `.html/.htm/.shtml` (fake login pages), `.iso/.img`, `.lnk`, `.js/.vbs`, macro-enabled Office, password-protected archives |
 | S20 | `AUTH_FORM_IN_HTML` | Email HTML contains a `<form>` or password input |
+| S21 | `BANK_DETAILS_IN_BODY` | The visible text carries payment instructions: an account number, IBAN, IFSC, SWIFT/BIC, routing number or sort code (B28). A genuine first bill links to the biller's site; invoice fraud writes the account into the email |
 
-Signals S14–S20 are also reused by the Safe Display layer to annotate links.
+Signals S14–S20 are also reused by the Safe Display layer to annotate links. S7 (contact-name branch), S9, S10 and S18 share one attacker-proof exemption: Google's own stamp says the From domain passed DMARC **and** that domain is in the brand list, so genuine receipts, sign-in alerts and platform relays (Drive shares) are not "unfamiliar". A forged relay fails DMARC and keeps every signal.
 
 ### 7.3 Layer 3 — Reader (quarantined AI)
 
@@ -324,11 +326,13 @@ Why this shape:
 | Combination | Level |
 |---|---|
 | `asks_bank_detail_change` (any sender) | ≥ SUSPICIOUS, **always** plus "verify by phone" banner |
-| `asks_bank_detail_change` or `asks_for_payment` **and** any of S4, S9, S10, S11 | DANGEROUS |
-| `asks_for_credentials` **and** (S9 or S14 or S18) | DANGEROUS |
-| `claims_to_be ∈ {executive, bank, brand, it_support, government}` **and** (S9 or S10 or S7) | ≥ SUSPICIOUS |
+| `asks_bank_detail_change` or `asks_for_payment` **and** (S4 or S11) | DANGEROUS |
+| `asks_bank_detail_change` or `asks_for_payment` **and** (S9 or S10) **and** payment pressure: S21 bank details in the body, any `claims_to_be` other than `none`, `urgency = high`, `asks_for_secrecy` or `asks_bank_detail_change` | DANGEROUS (B28: a first bill that only links to the biller's own authenticated site gets no rule) |
+| `asks_for_credentials` **and** (S10 or S14 or S18) | DANGEROUS (B28: S10 not S9, so a new `no-reply@` address at a domain the user already deals with is routine) |
+| `claims_to_be ∈ {executive, bank, it_support, government}` **and** (S9 or S10 or S7) | ≥ SUSPICIOUS |
+| `claims_to_be = brand` **and** (S6 or S7 or S22) | ≥ SUSPICIOUS (B28: the Reader calls any organisation a brand, so the claim counts only when code finds a listed brand behind it) |
 | `urgency = high` **and** `asks_for_secrecy` **and** any money/credential intent | DANGEROUS |
-| `asks_to_call_number` **and** `claims_to_be = brand` **and** S9 | DANGEROUS |
+| `asks_to_call_number` **and** `claims_to_be ∈ {brand, bank, it_support, government}` **and** (S9 or S10) | DANGEROUS |
 | `asks_to_change_ai_behaviour` | ≥ SUSPICIOUS (logged as injection attempt) |
 
 **Step 3 — score** (for ranking and the UI meter only): sum of per-signal weights, capped at 100. The level is `max(floor, combination result, score band)`. Weights and bands start as documented defaults and are tuned only via the attack lab (§11), never by hand-picking examples.

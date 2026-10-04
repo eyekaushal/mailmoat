@@ -15,64 +15,65 @@ const COST_ROWS = [
   ['300 emails a day', '≈ $27 / month'],
 ];
 
-/** A drawn stand-in for a screenshot of the Console's API keys page, with where to click. */
-function ConsoleFigure() {
-  return (
-    <figure className="rounded-lg border border-line bg-surface-2 p-3 text-xs">
-      <div className="rounded-md border border-line bg-surface shadow-sm">
-        <div className="flex items-center gap-2 border-b border-line px-3 py-2 text-muted">
-          <span className="size-2 rounded-full bg-line" />
-          <span className="size-2 rounded-full bg-line" />
-          <span className="size-2 rounded-full bg-line" />
-          <span className="ml-2 font-mono">console.anthropic.com/settings/keys</span>
-        </div>
-        <div className="flex">
-          <ul className="w-28 space-y-1 border-r border-line p-2 text-muted">
-            <li>Dashboard</li>
-            <li>Usage</li>
-            <li className="rounded bg-accent-soft px-1 font-medium text-accent">API keys</li>
-            <li>Billing</li>
-          </ul>
-          <div className="flex-1 p-3">
-            <div className="flex items-center justify-between">
-              <span className="font-semibold text-fg">API keys</span>
-              <span className="relative rounded bg-accent px-2 py-1 font-medium text-accent-fg">
-                + Create Key
-                <Callout n={1} />
-              </span>
-            </div>
-            <div className="mt-3 rounded border border-dashed border-line p-2 text-muted">
-              Name it <span className="font-mono text-fg">mailmoat</span>, click Create, then
-              <span className="relative ml-1 rounded bg-surface-2 px-1 font-mono text-fg">
-                Copy
-                <Callout n={2} />
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <figcaption className="mt-2 text-muted">
-        <b className="text-fg">1</b> Create Key · <b className="text-fg">2</b> Copy it once; the
-        Console never shows it again.
-      </figcaption>
-    </figure>
-  );
-}
-
-function Callout({ n }) {
+/** A numbered callout on a figure: the accent, never the risk red. */
+function Callout({ n, className = '' }) {
   return (
     <span
       aria-hidden="true"
-      className="absolute -top-2 -right-2 flex size-4 items-center justify-center rounded-full bg-danger text-[10px] font-bold text-white"
+      className={`absolute flex size-4 items-center justify-center rounded-full bg-accent text-[10px] font-medium text-accent-fg ${className}`}
     >
       {n}
     </span>
   );
 }
 
+/** A drawn stand-in for a screenshot of the Console's API keys page, with where to click. */
+function ConsoleFigure() {
+  return (
+    <figure className="rounded-md bg-surface-2 p-3 text-xs">
+      <div className="rounded-sm bg-panel-solid shadow-[inset_0_0_0_1px_var(--line)]">
+        <div className="flex items-center gap-1.5 border-b border-line px-3 py-2 text-secondary">
+          <span className="size-2 rounded-full bg-line-strong" />
+          <span className="size-2 rounded-full bg-line-strong" />
+          <span className="size-2 rounded-full bg-line-strong" />
+          <span className="ml-2 font-mono">console.anthropic.com/settings/keys</span>
+        </div>
+        <div className="flex">
+          <ul className="w-28 space-y-1 border-r border-line p-2 text-secondary">
+            <li>Dashboard</li>
+            <li>Usage</li>
+            <li className="rounded-sm bg-accent-soft px-1 font-medium text-accent">API keys</li>
+            <li>Billing</li>
+          </ul>
+          <div className="flex-1 p-3">
+            <div className="flex items-center justify-between">
+              <span className="font-medium text-ink">API keys</span>
+              <span className="relative rounded-sm bg-accent px-2 py-1 font-medium text-accent-fg">
+                + Create Key
+                <Callout n={1} className="-top-2 -right-2" />
+              </span>
+            </div>
+            <div className="mt-3 rounded-sm border border-dashed border-line-strong p-2 text-secondary">
+              Name it <span className="font-mono text-ink">mailmoat</span>, click Create, then
+              <span className="relative ml-1 rounded-sm bg-surface-3 px-1 font-mono text-ink">
+                Copy
+                <Callout n={2} className="-top-2 -right-2" />
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <figcaption className="mt-2 text-secondary">
+        <b className="font-medium text-ink">1</b> Create Key ·{' '}
+        <b className="font-medium text-ink">2</b> Copy it once; the Console never shows it again.
+      </figcaption>
+    </figure>
+  );
+}
+
 function NoAccountSteps() {
   return (
-    <ol className="space-y-3">
+    <ol className="space-y-2">
       {[
         ['Sign up', 'Create a free Anthropic Console account.', CONSOLE],
         [
@@ -86,13 +87,13 @@ function NoAccountSteps() {
           KEYS_URL,
         ],
       ].map(([title, text, href], index) => (
-        <li key={title} className="flex items-start gap-3 rounded-lg border border-line p-3">
-          <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-accent-soft text-xs font-bold text-accent">
+        <li key={title} className="flex items-center gap-3 rounded-md bg-surface-2 px-4 py-3">
+          <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-accent-soft text-xs font-medium text-accent">
             {index + 1}
           </span>
-          <div className="flex-1">
-            <p className="text-sm font-medium">{title}</p>
-            <p className="text-sm text-muted">{text}</p>
+          <div className="min-w-0 flex-1">
+            <p className="font-medium">{title}</p>
+            <p className="text-base text-secondary">{text}</p>
           </div>
           <ExternalButton href={href} variant="secondary" className="shrink-0">
             Continue to Anthropic
@@ -105,23 +106,39 @@ function NoAccountSteps() {
 
 function CostEstimate() {
   return (
-    <div className="rounded-lg bg-surface-2 p-3 text-sm">
+    <div className="rounded-md bg-surface-2 px-4 py-3 text-base">
       <p className="font-medium">What it costs</p>
-      <p className="mt-1 text-muted">
+      <p className="mt-1 text-secondary">
         Every email is read once by a small model, about $0.003 each. Drafts and chat add a little
         on top. You pay Anthropic directly; mailmoat takes nothing.
       </p>
       <table className="mt-2 w-full text-left">
-        <tbody>
+        <tbody className="divide-y divide-line">
           {COST_ROWS.map(([volume, cost]) => (
-            <tr key={volume} className="border-t border-line">
-              <td className="py-1 text-muted">{volume}</td>
-              <td className="py-1 text-right font-medium">{cost}</td>
+            <tr key={volume}>
+              <td className="py-1 text-secondary">{volume}</td>
+              <td className="py-1 text-right font-medium tabular-nums">{cost}</td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
+  );
+}
+
+/** A quiet yes/no choice: the picked answer wears the accent tint, the other stays plain. */
+function Choice({ pressed, onClick, children }) {
+  return (
+    <button
+      type="button"
+      aria-pressed={pressed}
+      onClick={onClick}
+      className={`h-8 rounded-md px-3 text-base font-medium transition-colors duration-150 ease-out-soft ${
+        pressed ? 'bg-accent-soft text-accent' : 'bg-surface-2 text-ink hover:bg-surface-3'
+      }`}
+    >
+      {children}
+    </button>
   );
 }
 
@@ -171,10 +188,10 @@ export function AnthropicStep({ anthropic, onSaved, onContinue }) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <header>
-        <h2 className="text-xl font-semibold">Your Anthropic API key</h2>
-        <p className="mt-1 text-sm text-muted">
+        <h2 className="text-lg font-medium tracking-tight">Your Anthropic API key</h2>
+        <p className="mt-1 text-base text-secondary">
           mailmoat reads your email with Claude using your own key, so your mail goes from your Mac
           to Anthropic and nowhere else. The key is stored encrypted on this Mac and never shown
           again.
@@ -182,16 +199,16 @@ export function AnthropicStep({ anthropic, onSaved, onContinue }) {
       </header>
 
       {!showForm && (
-        <div className="flex items-center gap-3 rounded-lg border border-safe/40 bg-safe-soft p-4">
-          <CheckCircle aria-hidden="true" className="size-5 text-safe" />
-          <div className="flex-1 text-sm">
+        <div className="flex flex-wrap items-center gap-3 rounded-md bg-surface-2 px-4 py-3">
+          <CheckCircle aria-hidden="true" size={20} className="text-safe" />
+          <div className="min-w-0 flex-1 text-base">
             <p className="font-medium">Key saved</p>
-            <p className="font-mono text-muted">
+            <p className="font-mono text-sm text-secondary">
               {anthropic.masked}
               {anthropic.source === 'env' && ' (from .env)'}
             </p>
           </div>
-          <Button variant="secondary" onClick={() => setReplacing(true)}>
+          <Button variant="ghost" onClick={() => setReplacing(true)}>
             Replace
           </Button>
           <Button onClick={onContinue}>Continue</Button>
@@ -201,29 +218,23 @@ export function AnthropicStep({ anthropic, onSaved, onContinue }) {
       {showForm && (
         <>
           <fieldset className="space-y-2">
-            <legend className="text-sm font-medium">Do you have an Anthropic account?</legend>
+            <legend className="text-base font-medium">Do you have an Anthropic account?</legend>
             <div className="flex gap-2">
-              <Button
-                variant={hasAccount === true ? 'primary' : 'secondary'}
-                onClick={() => setHasAccount(true)}
-                aria-pressed={hasAccount === true}
-              >
+              <Choice pressed={hasAccount === true} onClick={() => setHasAccount(true)}>
                 Yes, I have one
-              </Button>
-              <Button
-                variant={hasAccount === false ? 'primary' : 'secondary'}
-                onClick={() => setHasAccount(false)}
-                aria-pressed={hasAccount === false}
-              >
+              </Choice>
+              <Choice pressed={hasAccount === false} onClick={() => setHasAccount(false)}>
                 No, not yet
-              </Button>
+              </Choice>
             </div>
           </fieldset>
 
           {hasAccount === true && (
             <div className="space-y-3">
               <ConsoleFigure />
-              <ExternalButton href={KEYS_URL}>Open the Console’s API keys page</ExternalButton>
+              <ExternalButton href={KEYS_URL} variant="secondary">
+                Open the Console’s API keys page
+              </ExternalButton>
             </div>
           )}
           {hasAccount === false && (
@@ -235,7 +246,7 @@ export function AnthropicStep({ anthropic, onSaved, onContinue }) {
 
           {hasAccount !== null && (
             <form
-              className="space-y-3 rounded-lg border border-line p-4"
+              className="space-y-3 border-t border-line pt-5"
               onSubmit={(event) => {
                 event.preventDefault();
                 save();
@@ -250,7 +261,8 @@ export function AnthropicStep({ anthropic, onSaved, onContinue }) {
                   <div className="relative">
                     <Key
                       aria-hidden="true"
-                      className="pointer-events-none absolute top-2.5 left-3 size-4 text-muted"
+                      size={16}
+                      className="pointer-events-none absolute top-2 left-3 text-secondary"
                     />
                     <input
                       id={id}
@@ -271,12 +283,12 @@ export function AnthropicStep({ anthropic, onSaved, onContinue }) {
               {test && (
                 <p
                   role="status"
-                  className={`flex items-center gap-2 text-sm ${test.ok ? 'text-safe' : 'text-danger'}`}
+                  className={`flex items-center gap-1.5 text-sm ${test.ok ? 'text-safe' : 'text-danger'}`}
                 >
                   {test.ok ? (
-                    <CheckCircle aria-hidden="true" className="size-4" />
+                    <CheckCircle aria-hidden="true" size={14} />
                   ) : (
-                    <XCircle aria-hidden="true" className="size-4" />
+                    <XCircle aria-hidden="true" size={14} />
                   )}
                   {test.ok ? 'The key works.' : `The key did not work: ${test.reason}`}
                 </p>

@@ -1,16 +1,29 @@
-import { Broom } from '@phosphor-icons/react';
+import { Broom, CaretDown, MagnifyingGlass, X } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { Button } from '../../components/Button.jsx';
 import { EmptyState } from '../../components/EmptyState.jsx';
-import { INPUT_CLASSES } from '../../components/FormField.jsx';
 import { LoadingState } from '../../components/LoadingState.jsx';
 import { useApi, useApiClient } from '../../lib/useApi.js';
+import { Dialog } from '../../ui/Dialog.jsx';
+import { DropdownMenu, MenuItem } from '../../ui/DropdownMenu.jsx';
+import { IconButton } from '../../ui/IconButton.jsx';
+import { SearchLine } from '../../ui/SearchLine.jsx';
+import { Tabs } from '../../ui/Tabs.jsx';
 import { METHODS, SenderTable } from './SenderTable.jsx';
+
+const PAGE = 50;
+const MAX = 500;
 
 const RANGES = [
   { id: 'all', label: 'All time', days: null },
   { id: '30', label: 'Last 30 days', days: 30 },
   { id: '90', label: 'Last 90 days', days: 90 },
+];
+
+const FILTERS = [
+  { id: 'unhandled', label: 'Unhandled', keep: (s) => s.status === 'NONE' },
+  { id: 'kept', label: 'Kept', keep: (s) => s.status === 'KEPT' },
+  { id: 'all', label: 'All', keep: () => true },
 ];
 
 const ENDPOINT = {
@@ -19,6 +32,13 @@ const ENDPOINT = {
   keep: '/senders/keep',
   undo: '/senders/undo',
   'archive-all': '/senders/archive-all',
+};
+
+const BULK_VERBS = {
+  unsubscribe: 'Unsubscribe from',
+  block: 'Block',
+  keep: 'Keep',
+  'archive-all': 'Archive all mail from',
 };
 
 function describe(action, sender, result) {
@@ -40,51 +60,92 @@ function describe(action, sender, result) {
   }
 }
 
-/** PRD F9: senders by volume, one safe method each, bulk actions with a confirmation. */
+function plural(count, word) {
+  return `${count} ${word}${count === 1 ? '' : 's'}`;
+}
+
+function matches(sender, query) {
+  if (!query) return true;
+  const text = `${sender.name ?? ''} ${sender.address}`.toLowerCase();
+  return text.includes(query.toLowerCase());
+}
+
+/**
+ * PRD F9 on the Inbox Zero table (PLAN §13.8): Unhandled / Kept / All, a time range, search,
+ * one safe method per sender and bulk actions. Blocking and every bulk action confirm in a
+ * dialog first; the Block dialog repeats the Policy Engine's warning.
+ */
 export function BulkUnsubscribePage() {
   const client = useApiClient();
+  const [filter, setFilter] = useState('unhandled');
   const [sort, setSort] = useState('count');
   // `since` is fixed when the range is picked, so the query key does not change on every render.
   const [range, setRange] = useState({ id: 'all', since: null });
+  const [limit, setLimit] = useState(PAGE);
+  const [query, setQuery] = useState('');
+  const [searchOpen, setSearchOpen] = useState(false);
   const [selected, setSelected] = useState(new Set());
   const [busy, setBusy] = useState(null);
   const [log, setLog] = useState([]);
-  const params = new URLSearchParams({ sort, limit: '200' });
+  const [confirm, setConfirm] = useState(null);
+  const params = new URLSearchParams({ sort, limit: String(limit) });
   if (range.since) params.set('since', range.since);
   const { data: senders, error, mutate } = useApi(`/senders?${params}`);
 
+  const active = FILTERS.find((f) => f.id === filter) ?? FILTERS[0];
+  const visible = (senders ?? []).filter((s) => active.keep(s) && matches(s, query));
+  const tabs = FILTERS.map((f) => ({
+    id: f.id,
+    label: f.label,
+    count: (senders ?? []).filter(f.keep).length,
+  }));
+
   function report(ok, text) {
-    setLog((entries) => [{ ok, text }, ...entries].slice(0, 8));
+    setLog((entries) => [{ ok, text }, ...entries].slice(0, 5));
   }
 
-  async function perform(sender, action) {
-    if (action === 'block') {
-      const { warning } = await client.get(
-        `/senders/block-warning?address=${encodeURIComponent(sender.address)}`,
-      );
-      const question = warning
-        ? `${warning}\n\nBlock ${sender.address} anyway?`
-        : `Block ${sender.address}? Future mail from this sender is labelled and archived.`;
-      if (!window.confirm(question)) return false;
-    }
+  async function post(sender, action) {
     const result = await client.post(ENDPOINT[action], { address: sender.address });
     report(true, describe(action, sender.address, result));
-    return true;
   }
 
-  async function onAction(sender, action) {
-    setBusy(sender.address);
+  async function run(work) {
     try {
-      await perform(sender, action);
+      await work();
     } catch (caught) {
-      report(false, `${sender.address}: ${caught.message}`);
+      report(false, caught.message);
     } finally {
       setBusy(null);
       await mutate();
     }
   }
 
-  async function bulk(action) {
+  async function onAction(sender, action) {
+    setBusy(sender.address);
+    if (action !== 'block') return run(() => post(sender, action));
+    let warning;
+    try {
+      ({ warning } = await client.get(
+        `/senders/block-warning?address=${encodeURIComponent(sender.address)}`,
+      ));
+    } catch (caught) {
+      setBusy(null);
+      report(false, caught.message);
+      return;
+    }
+    setConfirm({
+      title: `Block ${sender.address}?`,
+      description: warning
+        ? `${warning} Future mail from this sender is labelled and archived.`
+        : 'Future mail from this sender is labelled and archived.',
+      actionLabel: 'Block',
+      danger: true,
+      onConfirm: () => run(() => post(sender, 'block')),
+      onCancel: () => setBusy(null),
+    });
+  }
+
+  function bulk(action) {
     const chosen = (senders ?? []).filter((s) => selected.has(s.address));
     const targets =
       action === 'unsubscribe'
@@ -94,34 +155,30 @@ export function BulkUnsubscribePage() {
           : chosen;
     const skipped = chosen.length - targets.length;
     if (targets.length === 0) return;
-    const verb = {
-      unsubscribe: 'Unsubscribe from',
-      block: 'Block',
-      keep: 'Keep',
-      'archive-all': 'Archive all mail from',
-    }[action];
-    if (
-      !window.confirm(
-        `${verb} ${targets.length} sender${targets.length === 1 ? '' : 's'}?${skipped ? ` ${skipped} selected sender${skipped === 1 ? ' has' : 's have'} no safe way to do this and will be skipped.` : ''}`,
-      )
-    )
-      return;
-    let done = 0;
-    for (const sender of targets) {
-      setBusy(sender.address);
-      try {
-        if (action === 'block') {
-          await client.post(ENDPOINT.block, { address: sender.address });
-          done += 1;
-        } else if (await perform(sender, action)) done += 1;
-      } catch (caught) {
-        report(false, `${sender.address}: ${caught.message}`);
-      }
-    }
-    setBusy(null);
-    report(true, `${done} of ${targets.length} done.`);
-    setSelected(new Set());
-    await mutate();
+    setConfirm({
+      title: `${BULK_VERBS[action]} ${plural(targets.length, 'sender')}?`,
+      description: skipped
+        ? `${plural(skipped, 'selected sender')} ${skipped === 1 ? 'has' : 'have'} no safe way to do this and will be skipped.`
+        : undefined,
+      actionLabel: BULK_VERBS[action].split(' ')[0],
+      danger: action === 'block',
+      onConfirm: async () => {
+        let done = 0;
+        for (const sender of targets) {
+          setBusy(sender.address);
+          try {
+            await post(sender, action);
+            done += 1;
+          } catch (caught) {
+            report(false, `${sender.address}: ${caught.message}`);
+          }
+        }
+        setBusy(null);
+        report(true, `${done} of ${targets.length} done.`);
+        setSelected(new Set());
+        await mutate();
+      },
+    });
   }
 
   function toggle(address) {
@@ -131,135 +188,173 @@ export function BulkUnsubscribePage() {
     setSelected(next);
   }
 
+  function toggleAll() {
+    const all = visible.every((s) => selected.has(s.address));
+    setSelected(all ? new Set() : new Set(visible.map((s) => s.address)));
+  }
+
+  function closeConfirm() {
+    confirm?.onCancel?.();
+    setConfirm(null);
+  }
+
   return (
-    <div className="mx-auto max-w-6xl space-y-4 px-4 py-6 sm:px-8">
-      <header className="flex flex-wrap items-end gap-3">
-        <div className="flex-1">
-          <h1 className="text-xl font-semibold tracking-tight">Bulk Unsubscribe</h1>
-          <p className="mt-1 text-sm text-muted">
-            One safe way out per sender. Risky senders are never contacted: blocking keeps their
-            mail out of your inbox.
-          </p>
-        </div>
-        <label className="text-sm">
-          <span className="sr-only">Time range</span>
-          <select
-            value={range.id}
-            onChange={(e) => {
-              const days = RANGES.find((r) => r.id === e.target.value)?.days;
-              setRange({
-                id: e.target.value,
-                since: days ? new Date(Date.now() - days * 86_400_000).toISOString() : null,
-              });
+    <div className="flex h-full flex-col">
+      <header className="flex h-14 shrink-0 items-center gap-2 px-5">
+        {searchOpen ? (
+          <SearchLine
+            initial={query}
+            placeholder="Search senders"
+            onSubmit={(text) => {
+              setQuery(text);
+              setSearchOpen(false);
             }}
-            className={`${INPUT_CLASSES} w-auto`}
-            aria-label="Time range"
-          >
-            {RANGES.map((r) => (
-              <option key={r.id} value={r.id}>
-                {r.label}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="text-sm">
-          <select
-            value={sort}
-            onChange={(e) => setSort(e.target.value)}
-            className={`${INPUT_CLASSES} w-auto`}
-            aria-label="Sort by"
-          >
-            <option value="count">Most emails</option>
-            <option value="read">Least read</option>
-          </select>
-        </label>
+            onClose={() => setSearchOpen(false)}
+          />
+        ) : (
+          <>
+            <h1 className="min-w-0 truncate text-xl font-medium tracking-tight">
+              {query || 'Unsubscribe'}
+            </h1>
+            {query && <IconButton label="Clear search" icon={X} onClick={() => setQuery('')} />}
+            <span className="flex-1" />
+            <DropdownMenu
+              align="end"
+              trigger={
+                <Button variant="ghost" aria-label="Time range" className="px-2 font-normal">
+                  {RANGES.find((r) => r.id === range.id)?.label}
+                  <CaretDown aria-hidden="true" size={12} />
+                </Button>
+              }
+            >
+              {RANGES.map((r) => (
+                <MenuItem
+                  key={r.id}
+                  onSelect={() =>
+                    setRange({
+                      id: r.id,
+                      since: r.days
+                        ? new Date(Date.now() - r.days * 86_400_000).toISOString()
+                        : null,
+                    })
+                  }
+                >
+                  {r.label}
+                </MenuItem>
+              ))}
+            </DropdownMenu>
+            <IconButton
+              label="Search"
+              keys={['/']}
+              icon={MagnifyingGlass}
+              onClick={() => setSearchOpen(true)}
+            />
+          </>
+        )}
       </header>
 
-      {selected.size > 0 && (
+      {selected.size > 0 ? (
         <div
-          className="flex flex-wrap items-center gap-2 rounded-lg border border-accent/40 bg-accent-soft/50 px-3 py-2 text-sm"
           role="toolbar"
           aria-label="Bulk actions"
+          className="flex h-9 items-center gap-1 px-3 text-base"
         >
-          <span className="font-medium">{selected.size} selected</span>
-          <Button
-            className="px-2 py-1 text-xs"
-            onClick={() => bulk('unsubscribe')}
-            disabled={busy !== null}
-          >
+          <span className="px-2 font-medium tabular-nums">{selected.size} selected</span>
+          <Button variant="ghost" onClick={() => bulk('unsubscribe')} disabled={busy !== null}>
             Unsubscribe
           </Button>
-          <Button
-            variant="danger"
-            className="px-2 py-1 text-xs"
-            onClick={() => bulk('block')}
-            disabled={busy !== null}
-          >
-            Block
-          </Button>
-          <Button
-            variant="secondary"
-            className="px-2 py-1 text-xs"
-            onClick={() => bulk('keep')}
-            disabled={busy !== null}
-          >
+          <Button variant="ghost" onClick={() => bulk('keep')} disabled={busy !== null}>
             Keep
           </Button>
-          <Button
-            variant="secondary"
-            className="px-2 py-1 text-xs"
-            onClick={() => bulk('archive-all')}
-            disabled={busy !== null}
-          >
+          <Button variant="ghost" onClick={() => bulk('archive-all')} disabled={busy !== null}>
             Archive all
           </Button>
-          <Button
-            variant="ghost"
-            className="ml-auto px-2 py-1 text-xs"
-            onClick={() => setSelected(new Set())}
-          >
+          <Button variant="danger" onClick={() => bulk('block')} disabled={busy !== null}>
+            Block
+          </Button>
+          <span className="flex-1" />
+          <Button variant="ghost" onClick={() => setSelected(new Set())}>
             Clear
           </Button>
         </div>
+      ) : (
+        <Tabs value={filter} onChange={setFilter} label="Sender filter" items={tabs} />
       )}
 
-      {log.length > 0 && (
-        <ul className="space-y-0.5 text-sm" aria-label="Outcomes">
-          {log.map((entry, index) => (
-            <li key={index} role="status" className={entry.ok ? 'text-safe' : 'text-danger'}>
-              {entry.text}
-            </li>
-          ))}
-        </ul>
-      )}
+      <div className="min-h-0 flex-1 overflow-y-auto border-t border-line">
+        {log.length > 0 && (
+          <ul className="space-y-0.5 px-5 py-2 text-sm" aria-label="Outcomes">
+            {log.map((entry, index) => (
+              <li key={index} role="status" className={entry.ok ? 'text-secondary' : 'text-danger'}>
+                {entry.text}
+              </li>
+            ))}
+          </ul>
+        )}
+        {error && (
+          <p role="alert" className="px-5 py-3 text-sm text-danger">
+            {error.message}
+          </p>
+        )}
+        {!senders && !error && <LoadingState label="Loading senders…" />}
+        {senders && senders.length === 0 && (
+          <EmptyState
+            icon={Broom}
+            title="No senders yet"
+            description="Senders appear once mail has been synced."
+          />
+        )}
+        {senders && senders.length > 0 && visible.length === 0 && (
+          <p className="px-5 py-4 text-base text-secondary">
+            {query ? 'No sender matches.' : `Nothing ${active.label.toLowerCase()} here.`}
+          </p>
+        )}
+        {visible.length > 0 && (
+          <SenderTable
+            senders={visible}
+            selected={selected}
+            onToggle={toggle}
+            onToggleAll={toggleAll}
+            sort={sort}
+            onSort={setSort}
+            onAction={onAction}
+            busy={busy}
+          />
+        )}
+        {senders && senders.length >= limit && limit < MAX && (
+          <div className="flex justify-center border-t border-line py-3">
+            <Button variant="ghost" onClick={() => setLimit(Math.min(limit + PAGE, MAX))}>
+              Load more
+            </Button>
+          </div>
+        )}
+      </div>
 
-      {error && (
-        <p role="alert" className="text-sm text-danger">
-          {error.message}
-        </p>
-      )}
-      {!senders && !error && <LoadingState label="Loading senders…" />}
-      {senders && senders.length === 0 && (
-        <EmptyState
-          icon={Broom}
-          title="No senders yet"
-          description="Senders appear once mail has been synced."
-        />
-      )}
-      {senders && senders.length > 0 && (
-        <SenderTable
-          senders={senders}
-          selected={selected}
-          onToggle={toggle}
-          onToggleAll={() =>
-            setSelected(
-              selected.size === senders.length ? new Set() : new Set(senders.map((s) => s.address)),
-            )
-          }
-          onAction={onAction}
-          busy={busy}
-        />
-      )}
+      <Dialog
+        open={confirm !== null}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) closeConfirm();
+        }}
+        title={confirm?.title ?? ''}
+        description={confirm?.description}
+        actions={
+          <>
+            <Button variant="ghost" onClick={closeConfirm}>
+              Cancel
+            </Button>
+            <Button
+              variant={confirm?.danger ? 'danger' : 'primary'}
+              onClick={() => {
+                const { onConfirm } = confirm;
+                setConfirm(null);
+                onConfirm();
+              }}
+            >
+              {confirm?.actionLabel ?? 'Confirm'}
+            </Button>
+          </>
+        }
+      />
     </div>
   );
 }

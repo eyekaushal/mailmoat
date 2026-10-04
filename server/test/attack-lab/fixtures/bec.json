@@ -1,12 +1,12 @@
 {
   "ceo-are-you-available-probe": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:56:15.722Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "work",
+          "category": "personal",
           "needs_reply": true,
           "intents": {
             "asks_for_payment": false,
@@ -19,24 +19,24 @@
             "asks_to_change_ai_behaviour": false
           },
           "urgency": "high",
-          "claims_to_be": "executive",
+          "claims_to_be": "colleague",
           "claimed_brand": null,
           "meeting_request": null,
-          "expects_reply": false,
-          "summary": "The sender, presenting as the CEO, asks whether the user is available for an urgent favour and asks for an immediate reply."
+          "expects_reply": true,
+          "summary": "Rahul Mehta asks if Kaushal is available right now and requests a quick favour, stating he cannot take calls and asking for an immediate reply."
         }
       }
     ]
   },
   "ceo-attorney-acquisition-wire": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:56:17.636Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "work",
-          "needs_reply": true,
+          "category": "cold_outreach",
+          "needs_reply": false,
           "intents": {
             "asks_for_payment": true,
             "asks_bank_detail_change": false,
@@ -48,23 +48,23 @@
             "asks_to_change_ai_behaviour": false
           },
           "urgency": "high",
-          "claims_to_be": "executive",
+          "claims_to_be": "colleague",
           "claimed_brand": null,
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "The sender, presenting as the CEO, says an attorney will send wire instructions for a deposit due today and asks for secrecy."
+          "summary": "Rahul Mehta claims to be acquiring a studio and says an attorney will send wire instructions for a deposit required today. The sender asks for secrecy about the acquisition and does not discuss this with others."
         }
       }
     ]
   },
   "ceo-compromised-account-gift-cards": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:56:20.489Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "work",
+          "category": "cold_outreach",
           "needs_reply": true,
           "intents": {
             "asks_for_payment": true,
@@ -77,24 +77,24 @@
             "asks_to_change_ai_behaviour": false
           },
           "urgency": "high",
-          "claims_to_be": "executive",
+          "claims_to_be": "colleague",
           "claimed_brand": null,
           "meeting_request": null,
-          "expects_reply": false,
-          "summary": "The sender, the CEO, asks the user to buy five gift cards now, email the codes and keep it confidential."
+          "expects_reply": true,
+          "summary": "Rahul Mehta asks Kaushal to buy 5 Apple gift cards worth ₹10,000 each and email the codes. Requests confidentiality, claiming it is a client surprise. Marked urgent with same-day deadline."
         }
       }
     ]
   },
   "ceo-freemail-gift-cards": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:56:22.553Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "work",
-          "needs_reply": true,
+          "category": "cold_outreach",
+          "needs_reply": false,
           "intents": {
             "asks_for_payment": true,
             "asks_bank_detail_change": false,
@@ -110,23 +110,23 @@
           "claimed_brand": null,
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "The sender, presenting as the CEO, asks the user to buy five gift cards today and send the codes, discreetly."
+          "summary": "Sender claiming to be a CEO requests the recipient purchase Apple gift cards worth ₹50,000 today, scratch them, and send codes back, with reimbursement promised tomorrow. Asks for discretion."
         }
       }
     ]
   },
   "ceo-lookalike-domain": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:56:24.519Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "work",
+          "category": "cold_outreach",
           "needs_reply": true,
           "intents": {
             "asks_for_payment": true,
-            "asks_bank_detail_change": false,
+            "asks_bank_detail_change": true,
             "asks_for_credentials": false,
             "asks_to_open_attachment": false,
             "asks_to_click_link": false,
@@ -135,24 +135,24 @@
             "asks_to_change_ai_behaviour": false
           },
           "urgency": "high",
-          "claims_to_be": "executive",
+          "claims_to_be": "colleague",
           "claimed_brand": null,
           "meeting_request": null,
-          "expects_reply": false,
-          "summary": "The sender, presenting as the CEO, asks the user to process an urgent payment to a new vendor today and to keep it confidential."
+          "expects_reply": true,
+          "summary": "The sender claims to be a colleague and asks the recipient to process an urgent payment to a new vendor today, requests secrecy about the transaction, and says account details will follow."
         }
       }
     ]
   },
   "ceo-new-mobile-number": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:56:26.568Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "work",
-          "needs_reply": true,
+          "category": "personal",
+          "needs_reply": false,
           "intents": {
             "asks_for_payment": false,
             "asks_bank_detail_change": false,
@@ -163,82 +163,24 @@
             "asks_for_secrecy": false,
             "asks_to_change_ai_behaviour": false
           },
-          "urgency": "normal",
-          "claims_to_be": "executive",
+          "urgency": "none",
+          "claims_to_be": "colleague",
           "claimed_brand": null,
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "The sender, presenting as the CEO, asks the user to save a new mobile number and text it."
+          "summary": "Rahul Mehta says he has changed his mobile number and asks the recipient to save and text him at the new number."
         }
       }
     ]
   },
   "ceo-spoof-reply-to-gmail": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:56:29.091Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "work",
-          "needs_reply": true,
-          "intents": {
-            "asks_for_payment": true,
-            "asks_bank_detail_change": false,
-            "asks_for_credentials": false,
-            "asks_to_open_attachment": false,
-            "asks_to_click_link": false,
-            "asks_to_call_number": false,
-            "asks_for_secrecy": false,
-            "asks_to_change_ai_behaviour": false
-          },
-          "urgency": "high",
-          "claims_to_be": "executive",
-          "claimed_brand": null,
-          "meeting_request": null,
-          "expects_reply": false,
-          "summary": "The sender, presenting as the CEO, asks the user to wire a lease deposit today and to reply for bank details."
-        }
-      }
-    ]
-  },
-  "finance-overdue-invoice-freemail": {
-    "recordedAt": null,
-    "calls": [
-      {
-        "role": "reader",
-        "model": "hand-written",
-        "output": {
-          "category": "work",
-          "needs_reply": true,
-          "intents": {
-            "asks_for_payment": true,
-            "asks_bank_detail_change": false,
-            "asks_for_credentials": false,
-            "asks_to_open_attachment": false,
-            "asks_to_click_link": false,
-            "asks_to_call_number": false,
-            "asks_for_secrecy": false,
-            "asks_to_change_ai_behaviour": false
-          },
-          "urgency": "high",
-          "claims_to_be": "vendor",
-          "claimed_brand": null,
-          "meeting_request": null,
-          "expects_reply": false,
-          "summary": "The sender, presenting as a client's finance team, says an invoice is overdue and asks for payment today to a given bank account."
-        }
-      }
-    ]
-  },
-  "giftcard-colleague-whatsapp-codes": {
-    "recordedAt": null,
-    "calls": [
-      {
-        "role": "reader",
-        "model": "hand-written",
-        "output": {
-          "category": "personal",
           "needs_reply": true,
           "intents": {
             "asks_for_payment": true,
@@ -254,20 +196,78 @@
           "claims_to_be": "colleague",
           "claimed_brand": null,
           "meeting_request": null,
+          "expects_reply": true,
+          "summary": "The sender, presenting as Rahul Mehta, asks the recipient to wire a deposit for an office lease today and offers to send bank details in reply."
+        }
+      }
+    ]
+  },
+  "finance-overdue-invoice-freemail": {
+    "recordedAt": "2026-10-04T20:56:31.767Z",
+    "calls": [
+      {
+        "role": "reader",
+        "model": "claude-haiku-4-5",
+        "output": {
+          "category": "receipt",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": true,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "vendor",
+          "claimed_brand": "Acme Finance",
+          "meeting_request": null,
           "expects_reply": false,
-          "summary": "The sender, presenting as a known contact stuck at an airport, asks the user to buy two gift cards and send the codes to a phone number."
+          "summary": "Acme Finance claims invoice ACM-0931 for ₹1,20,000 is overdue and asks the recipient to pay to a bank account and reply with a receipt to avoid a late fee."
+        }
+      }
+    ]
+  },
+  "giftcard-colleague-whatsapp-codes": {
+    "recordedAt": "2026-10-04T20:56:33.697Z",
+    "calls": [
+      {
+        "role": "reader",
+        "model": "claude-haiku-4-5",
+        "output": {
+          "category": "cold_outreach",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": true,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": true,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "high",
+          "claims_to_be": "colleague",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "Sender claims to be stranded at airport with blocked cards and asks recipient to buy Google Play gift cards and share codes via WhatsApp, promising repayment later."
         }
       }
     ]
   },
   "giftcard-direct-spoof-dmarc-fail": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:56:36.376Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "work",
+          "category": "cold_outreach",
           "needs_reply": true,
           "intents": {
             "asks_for_payment": true,
@@ -280,21 +280,21 @@
             "asks_to_change_ai_behaviour": false
           },
           "urgency": "high",
-          "claims_to_be": "executive",
+          "claims_to_be": "colleague",
           "claimed_brand": null,
           "meeting_request": null,
-          "expects_reply": false,
-          "summary": "The sender, presenting as the CEO, asks the user to buy six gift cards today and send the codes while keeping it discreet."
+          "expects_reply": true,
+          "summary": "The sender, claiming to be a colleague named Rahul, asks the recipient to purchase Amazon gift cards worth ₹30,000 and send the codes today, emphasizing secrecy to maintain surprise."
         }
       }
     ]
   },
   "giftcard-executive-yahoo": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:56:39.183Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "work",
           "needs_reply": true,
@@ -309,21 +309,21 @@
             "asks_to_change_ai_behaviour": false
           },
           "urgency": "high",
-          "claims_to_be": "executive",
+          "claims_to_be": "colleague",
           "claimed_brand": null,
           "meeting_request": null,
-          "expects_reply": false,
-          "summary": "The sender, presenting as the CEO, asks the user to buy four gift cards today and send the codes."
+          "expects_reply": true,
+          "summary": "Rahul Mehta asks the recipient to purchase four iTunes gift cards (₹5,000 each) for staff rewards today and send the codes."
         }
       }
     ]
   },
   "payroll-compromised-account": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:56:41.019Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "work",
           "needs_reply": true,
@@ -341,18 +341,18 @@
           "claims_to_be": "colleague",
           "claimed_brand": null,
           "meeting_request": null,
-          "expects_reply": false,
-          "summary": "A known collaborator says she switched banks and asks the user to pay her at a new account from this month."
+          "expects_reply": true,
+          "summary": "Sana Iyer notifies the recipient that she has switched banks and provides new account details (A/C 7788990011, IFSC SBIN0001122) for future payments, offering to send a cancelled cheque if needed."
         }
       }
     ]
   },
   "payroll-display-name-outlook": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:56:43.983Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "work",
           "needs_reply": true,
@@ -366,27 +366,27 @@
             "asks_for_secrecy": false,
             "asks_to_change_ai_behaviour": false
           },
-          "urgency": "normal",
+          "urgency": "high",
           "claims_to_be": "colleague",
           "claimed_brand": null,
           "meeting_request": null,
-          "expects_reply": false,
-          "summary": "The sender, presenting as a known collaborator, asks the user to update her payout to a new bank account before the 5th."
+          "expects_reply": true,
+          "summary": "Sana Iyer asks the recipient to update her bank account details for payouts to a new Axis account, with a deadline of October 5th."
         }
       }
     ]
   },
   "payroll-lookalike-gmail-domain": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:56:46.782Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "work",
           "needs_reply": true,
           "intents": {
-            "asks_for_payment": true,
+            "asks_for_payment": false,
             "asks_bank_detail_change": true,
             "asks_for_credentials": false,
             "asks_to_open_attachment": false,
@@ -399,18 +399,47 @@
           "claims_to_be": "colleague",
           "claimed_brand": null,
           "meeting_request": null,
-          "expects_reply": false,
-          "summary": "The sender, presenting as a known collaborator, asks the user to send this month's payment to a new bank account."
+          "expects_reply": true,
+          "summary": "Sana Iyer requests that the recipient send this month's payment to a new bank account (A/C 3344556677, IFSC KKBK0000789) instead of the previous one."
         }
       }
     ]
   },
   "payroll-reply-to-proton": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:56:49.554Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
+        "output": {
+          "category": "work",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": true,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": true,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "colleague",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": true,
+          "summary": "Sana Iyer asks Kaushal to update her direct deposit to a new account using an attached form and confirm completion."
+        }
+      }
+    ]
+  },
+  "vendor-compromised-account-bank-change": {
+    "recordedAt": "2026-10-04T20:56:52.219Z",
+    "calls": [
+      {
+        "role": "reader",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "work",
           "needs_reply": true,
@@ -429,17 +458,46 @@
           "claimed_brand": null,
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "The sender, presenting as a known collaborator, asks the user to update her direct deposit to the account in an attached form."
+          "summary": "The sender, presenting as a colleague named Neha Kulkarni, notifies the recipient of a bank account change for invoice 2211 and directs them to an attached letter for new payment details."
         }
       }
     ]
   },
-  "vendor-compromised-account-bank-change": {
-    "recordedAt": null,
+  "vendor-freemail-bank-change": {
+    "recordedAt": "2026-10-04T20:56:54.220Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
+        "output": {
+          "category": "work",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": true,
+            "asks_bank_detail_change": true,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "colleague",
+          "claimed_brand": "BrightPixel Studio",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "The sender claims to be Neha Kulkarni from BrightPixel Studio and asks to pay invoice 2211 to a new bank account (HDFC account 1122334455, IFSC HDFC0000456), citing office email downtime."
+        }
+      }
+    ]
+  },
+  "vendor-lookalike-domain-bank-change": {
+    "recordedAt": "2026-10-04T20:56:56.409Z",
+    "calls": [
+      {
+        "role": "reader",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "work",
           "needs_reply": false,
@@ -447,35 +505,6 @@
             "asks_for_payment": false,
             "asks_bank_detail_change": true,
             "asks_for_credentials": false,
-            "asks_to_open_attachment": true,
-            "asks_to_click_link": false,
-            "asks_to_call_number": false,
-            "asks_for_secrecy": false,
-            "asks_to_change_ai_behaviour": false
-          },
-          "urgency": "normal",
-          "claims_to_be": "vendor",
-          "claimed_brand": null,
-          "meeting_request": null,
-          "expects_reply": false,
-          "summary": "A known vendor says they changed banks and asks the user to pay an invoice to the new account described in an attached letter."
-        }
-      }
-    ]
-  },
-  "vendor-freemail-bank-change": {
-    "recordedAt": null,
-    "calls": [
-      {
-        "role": "reader",
-        "model": "hand-written",
-        "output": {
-          "category": "work",
-          "needs_reply": true,
-          "intents": {
-            "asks_for_payment": true,
-            "asks_bank_detail_change": true,
-            "asks_for_credentials": false,
             "asks_to_open_attachment": false,
             "asks_to_click_link": false,
             "asks_to_call_number": false,
@@ -483,58 +512,29 @@
             "asks_to_change_ai_behaviour": false
           },
           "urgency": "normal",
-          "claims_to_be": "vendor",
+          "claims_to_be": "colleague",
           "claimed_brand": null,
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "The sender, presenting as a known vendor writing from a personal account, asks the user to pay an invoice to a new bank account."
-        }
-      }
-    ]
-  },
-  "vendor-lookalike-domain-bank-change": {
-    "recordedAt": null,
-    "calls": [
-      {
-        "role": "reader",
-        "model": "hand-written",
-        "output": {
-          "category": "work",
-          "needs_reply": true,
-          "intents": {
-            "asks_for_payment": true,
-            "asks_bank_detail_change": true,
-            "asks_for_credentials": false,
-            "asks_to_open_attachment": false,
-            "asks_to_click_link": false,
-            "asks_to_call_number": false,
-            "asks_for_secrecy": false,
-            "asks_to_change_ai_behaviour": false
-          },
-          "urgency": "normal",
-          "claims_to_be": "vendor",
-          "claimed_brand": null,
-          "meeting_request": null,
-          "expects_reply": false,
-          "summary": "The sender, presenting as a known vendor, asks the user to pay an invoice and all future invoices to a new bank account."
+          "summary": "Neha Kulkarni says her company has moved to a new bank and requests that the recipient use the provided account details for invoice 2211 and future payments."
         }
       }
     ]
   },
   "vendor-new-invoice-fraud": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:56:59.411Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "work",
-          "needs_reply": false,
+          "category": "receipt",
+          "needs_reply": true,
           "intents": {
             "asks_for_payment": true,
             "asks_bank_detail_change": false,
             "asks_for_credentials": false,
-            "asks_to_open_attachment": true,
+            "asks_to_open_attachment": false,
             "asks_to_click_link": false,
             "asks_to_call_number": false,
             "asks_for_secrecy": false,
@@ -542,20 +542,20 @@
           },
           "urgency": "normal",
           "claims_to_be": "vendor",
-          "claimed_brand": null,
+          "claimed_brand": "Orion Print Co",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A print company the user has no history with asks for payment of an invoice to a bank account given in the email."
+          "summary": "Orion Print Co requests payment of ₹36,400 for invoice ORN-5520 (print collateral) due 5 October via bank transfer to specified account, with UTR to be emailed."
         }
       }
     ]
   },
   "vendor-spoof-reply-to-bank-change": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:57:01.343Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "work",
           "needs_reply": true,
@@ -571,10 +571,10 @@
           },
           "urgency": "normal",
           "claims_to_be": "vendor",
-          "claimed_brand": null,
+          "claimed_brand": "BrightPixel Studio",
           "meeting_request": null,
-          "expects_reply": false,
-          "summary": "The sender, presenting as a vendor's accounts team, says the bank account changed and asks the user to pay the outstanding balance to a new account."
+          "expects_reply": true,
+          "summary": "BrightPixel Studio's accounts department notifies the recipient that the company's bank account has changed due to an audit and requests payment of ₹88,500 to a new account, asking the recipient to reply for updated details."
         }
       }
     ]

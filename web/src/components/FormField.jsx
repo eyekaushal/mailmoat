@@ -1,7 +1,8 @@
 import { useId } from 'react';
 
+/* DESIGN.md §8 Inputs: 32 px tall for one line, line-strong border, radius 6, accent ring. */
 export const INPUT_CLASSES =
-  'w-full rounded-md border border-line bg-surface px-3 py-2 text-sm text-fg placeholder:text-muted focus:border-accent focus:outline-none';
+  'w-full rounded-sm border border-line-strong bg-panel-solid px-3 py-1.5 text-base text-ink placeholder:text-tertiary focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/40';
 
 /**
  * Label + control + optional hint, wired together for screen readers.

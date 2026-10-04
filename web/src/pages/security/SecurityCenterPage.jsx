@@ -1,93 +1,75 @@
-import {
-  Hourglass,
-  MagnifyingGlass,
-  ShieldSlash,
-  Warning,
-  WarningOctagon,
-} from '@phosphor-icons/react';
 import { useState } from 'react';
 import { useApi } from '../../lib/useApi.js';
-import { AuditLogTable } from './AuditLogTable.jsx';
 import { ThreatFeed } from './ThreatFeed.jsx';
 
-const CARDS = [
-  { key: 'scanned', label: 'Emails scanned', Icon: MagnifyingGlass, tone: 'text-fg' },
-  { key: 'suspicious', label: 'Suspicious', Icon: Warning, tone: 'text-warn' },
-  { key: 'dangerous', label: 'Dangerous', Icon: WarningOctagon, tone: 'text-danger' },
-  {
-    key: 'injectionAttempts',
-    label: 'Injection attempts blocked',
-    Icon: ShieldSlash,
-    tone: 'text-danger',
-  },
-  { key: 'denied', label: 'Actions denied by policy', Icon: ShieldSlash, tone: 'text-fg' },
-  {
-    key: 'pendingApprovals',
-    label: 'Waiting for your approval',
-    Icon: Hourglass,
-    tone: 'text-accent',
-  },
+const FIGURES = [
+  { key: 'scanned', label: 'Emails scanned' },
+  { key: 'suspicious', label: 'Suspicious' },
+  { key: 'dangerous', label: 'Dangerous' },
+  { key: 'injectionAttempts', label: 'Injection attempts blocked' },
+  { key: 'denied', label: 'Actions denied by policy' },
+  { key: 'pendingApprovals', label: 'Waiting for your approval' },
 ];
 
-/** PRD F11: overview numbers for 7 or 30 days, the threat feed and the audit log. */
+const PERIODS = [7, 30];
+
+/**
+ * PRD F11 on one calm layout (PLAN §13.8): the overview numbers for 7 or 30 days, then the
+ * threat feed. The audit log left the UI (decision 5); its export lives under Settings → Advanced.
+ */
 export function SecurityCenterPage() {
   const [days, setDays] = useState(7);
   const { data: overview } = useApi(`/security/overview?days=${days}`, { refreshInterval: 30_000 });
   return (
-    <div className="mx-auto max-w-6xl space-y-8 px-4 py-6 sm:px-8">
-      <header className="flex flex-wrap items-center gap-3">
-        <h1 className="flex-1 text-xl font-semibold tracking-tight">Security Center</h1>
-        <div
-          role="radiogroup"
-          aria-label="Period"
-          className="flex rounded-md border border-line text-sm"
-        >
-          {[7, 30].map((n) => (
-            <button
-              key={n}
-              type="button"
-              role="radio"
-              aria-checked={days === n}
-              onClick={() => setDays(n)}
-              className={`px-3 py-1.5 ${days === n ? 'bg-accent-soft font-medium text-accent' : 'text-muted hover:text-fg'}`}
-            >
-              {n} days
-            </button>
-          ))}
+    <div className="flex h-full flex-col">
+      <header className="flex h-14 shrink-0 items-center gap-2 px-5">
+        <h1 className="flex-1 text-xl font-medium tracking-tight">Security Center</h1>
+        <div role="radiogroup" aria-label="Period" className="flex items-center gap-0.5 text-base">
+          {PERIODS.map((n) => {
+            const on = days === n;
+            return (
+              <button
+                key={n}
+                type="button"
+                role="radio"
+                aria-checked={on}
+                onClick={() => setDays(n)}
+                className={`h-7 rounded-md px-2 transition-colors duration-150 ease-out-soft ${
+                  on ? 'bg-surface-3 font-medium text-ink' : 'text-secondary hover:text-ink'
+                }`}
+              >
+                {n} days
+              </button>
+            );
+          })}
         </div>
       </header>
 
-      <section
-        aria-label="Overview"
-        className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6"
-      >
-        {CARDS.map(({ key, label, Icon, tone }) => (
-          <div key={key} className="rounded-lg border border-line bg-surface p-4">
-            <Icon aria-hidden="true" className={`size-5 ${tone}`} />
-            <p
-              className="mt-2 text-2xl font-semibold tabular-nums"
-              aria-label={`${label}: ${overview?.[key] ?? 0}`}
-            >
-              {overview ? (overview[key] ?? 0) : '…'}
-            </p>
-            <p className="text-xs text-muted">{label}</p>
-          </div>
-        ))}
-      </section>
+      <div className="min-h-0 flex-1 overflow-y-auto border-t border-line">
+        <dl
+          aria-label="Overview"
+          className="grid grid-cols-3 gap-x-6 gap-y-4 px-5 py-5 lg:grid-cols-6"
+        >
+          {FIGURES.map(({ key, label }) => (
+            <div key={key} className="min-w-0">
+              <dd
+                className="text-2xl font-medium tabular-nums"
+                aria-label={`${label}: ${overview?.[key] ?? 0}`}
+              >
+                {overview ? (overview[key] ?? 0) : '…'}
+              </dd>
+              <dt className="mt-0.5 truncate text-sm text-secondary">{label}</dt>
+            </div>
+          ))}
+        </dl>
 
-      <section className="space-y-3">
-        <h2 className="text-base font-semibold">Threat feed</h2>
-        <ThreatFeed />
-      </section>
-
-      <section className="space-y-3">
-        <h2 className="text-base font-semibold">Audit log</h2>
-        <p className="text-sm text-muted">
-          Every plan, policy decision, approval and action, in order. The dashboard’s record of what
-          mailmoat did and refused to do.
-        </p>
-        <AuditLogTable />
-      </section>
+        <section aria-label="Threat feed" className="border-t border-line">
+          <h2 className="flex h-9 items-center px-5 text-sm text-secondary">
+            Flagged mail, newest first
+          </h2>
+          <ThreatFeed />
+        </section>
+      </div>
     </div>
   );
 }

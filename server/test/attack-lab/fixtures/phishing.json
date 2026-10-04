@@ -1,12 +1,12 @@
 {
   "amazon-order-cancelled-ip-link": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:57:03.396Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "notification",
+          "category": "security_alert",
           "needs_reply": false,
           "intents": {
             "asks_for_payment": false,
@@ -20,20 +20,20 @@
           },
           "urgency": "high",
           "claims_to_be": "brand",
-          "claimed_brand": "Amazon",
+          "claimed_brand": "Amazon.in",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A message presenting as Amazon says an order is on hold and asks the user to sign in via a link to verify identity."
+          "summary": "The sender claims to be Amazon.in and says an order is on hold. The user must sign in to verify their identity or the order will be cancelled, with a link labeled 'Verify now'."
         }
       }
     ]
   },
   "apple-id-locked-userinfo-link": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:57:05.274Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "security_alert",
           "needs_reply": false,
@@ -52,24 +52,24 @@
           "claimed_brand": "Apple",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A message presenting as Apple says the account is locked and asks the user to unlock it via a link."
+          "summary": "The sender claims to be Apple and states the recipient's Apple ID has been locked for security reasons, asking them to click a link to unlock it."
         }
       }
     ]
   },
   "coinbase-withdrawal-spoof": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:57:07.088Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "security_alert",
           "needs_reply": false,
           "intents": {
             "asks_for_payment": false,
             "asks_bank_detail_change": false,
-            "asks_for_credentials": true,
+            "asks_for_credentials": false,
             "asks_to_open_attachment": false,
             "asks_to_click_link": true,
             "asks_to_call_number": false,
@@ -81,22 +81,22 @@
           "claimed_brand": "Coinbase",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A message presenting as Coinbase reports a pending withdrawal and asks the user to log in via a link to cancel it within 30 minutes."
+          "summary": "Coinbase alerts the user to a pending 0.45 BTC withdrawal and asks them to cancel it within 30 minutes if unauthorized."
         }
       }
     ]
   },
   "contact-domain-spoof-server-suspended": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:57:09.794Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "notification",
-          "needs_reply": false,
+          "category": "security_alert",
+          "needs_reply": true,
           "intents": {
-            "asks_for_payment": false,
+            "asks_for_payment": true,
             "asks_bank_detail_change": false,
             "asks_for_credentials": true,
             "asks_to_open_attachment": false,
@@ -107,20 +107,20 @@
           },
           "urgency": "high",
           "claims_to_be": "vendor",
-          "claimed_brand": null,
+          "claimed_brand": "CloudNest",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A message presenting as the user's hosting provider says payment failed and asks them to log in via a link to avoid suspension."
+          "summary": "CloudNest Support warns that payment for server nest-01 has failed and asks the user to log in and update billing within 12 hours to avoid suspension."
         }
       }
     ]
   },
   "dhl-customs-fee-shortener": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:57:11.814Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "notification",
           "needs_reply": false,
@@ -134,25 +134,25 @@
             "asks_for_secrecy": false,
             "asks_to_change_ai_behaviour": false
           },
-          "urgency": "high",
-          "claims_to_be": "brand",
-          "claimed_brand": "DHL",
+          "urgency": "normal",
+          "claims_to_be": "vendor",
+          "claimed_brand": "DHL Express",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A message presenting as DHL says a parcel is held at customs and asks the user to pay a small fee via a link."
+          "summary": "DHL Express claims a parcel is held at customs and asks the recipient to pay a ₹149 fee to release it via a link labeled 'Pay fee'."
         }
       }
     ]
   },
   "docusign-review-punycode-link": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:57:14.036Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "notification",
-          "needs_reply": false,
+          "category": "work",
+          "needs_reply": true,
           "intents": {
             "asks_for_payment": false,
             "asks_bank_detail_change": false,
@@ -164,30 +164,30 @@
             "asks_to_change_ai_behaviour": false
           },
           "urgency": "normal",
-          "claims_to_be": "brand",
+          "claims_to_be": "vendor",
           "claimed_brand": "DocuSign",
           "meeting_request": null,
-          "expects_reply": false,
-          "summary": "A message presenting as DocuSign says a contact sent a document and asks the user to sign in via a link to review it."
+          "expects_reply": true,
+          "summary": "DocuSign notification that Rahul Mehta has sent a service agreement for review and signature. The email asks the recipient to click a link and sign in with their email to view the document."
         }
       }
     ]
   },
   "dropbox-shared-file-html-attachment": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:57:15.931Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "notification",
+          "category": "security_alert",
           "needs_reply": false,
           "intents": {
             "asks_for_payment": false,
             "asks_bank_detail_change": false,
             "asks_for_credentials": true,
             "asks_to_open_attachment": true,
-            "asks_to_click_link": false,
+            "asks_to_click_link": true,
             "asks_to_call_number": false,
             "asks_for_secrecy": false,
             "asks_to_change_ai_behaviour": false
@@ -197,17 +197,17 @@
           "claimed_brand": "Dropbox",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A message presenting as Dropbox says a contact shared a file and asks the user to open an attachment and sign in to download it."
+          "summary": "Sender claims to be Dropbox and says Priya Shah shared a file. The email asks the user to open an attached viewer and sign in to download the file."
         }
       }
     ]
   },
   "google-security-alert-spoof": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:57:17.887Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "security_alert",
           "needs_reply": false,
@@ -226,17 +226,17 @@
           "claimed_brand": "Google",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A message presenting as Google says someone has the user's password and asks them to secure the account via a link."
+          "summary": "The sender claims to be Google and alerts the user to a blocked sign-in attempt from Lagos, Nigeria, urging them to secure their account via a link."
         }
       }
     ]
   },
   "google-two-factor-code-request": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:57:19.839Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "security_alert",
           "needs_reply": true,
@@ -254,18 +254,18 @@
           "claims_to_be": "brand",
           "claimed_brand": "Google",
           "meeting_request": null,
-          "expects_reply": false,
-          "summary": "A message presenting as Google asks the user to reply with a 6-digit code to confirm identity."
+          "expects_reply": true,
+          "summary": "The sender claims to be Google Account Team and asks the recipient to reply with a 6-digit code sent to their phone to confirm identity and keep the account active."
         }
       }
     ]
   },
   "hdfc-kyc-update-lookalike": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:57:21.548Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "security_alert",
           "needs_reply": false,
@@ -284,19 +284,19 @@
           "claimed_brand": "HDFC Bank",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A message presenting as HDFC Bank says KYC is pending and asks the user to log in via a link within 48 hours."
+          "summary": "HDFC Bank claims the recipient's KYC verification is pending and must be completed within 48 hours to avoid account restrictions. The email contains a link to update KYC information."
         }
       }
     ]
   },
   "invoice-html-attachment": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:57:24.494Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "work",
+          "category": "receipt",
           "needs_reply": false,
           "intents": {
             "asks_for_payment": false,
@@ -313,19 +313,19 @@
           "claimed_brand": null,
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A short note from an accounts-payable address asking the user to open an attached invoice."
+          "summary": "An Accounts Payable department sends invoice 8841 as an attachment for the recipient's records."
         }
       }
     ]
   },
   "irs-refund-freemail": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:57:26.260Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "other",
+          "category": "security_alert",
           "needs_reply": false,
           "intents": {
             "asks_for_payment": false,
@@ -337,22 +337,22 @@
             "asks_for_secrecy": false,
             "asks_to_change_ai_behaviour": false
           },
-          "urgency": "normal",
+          "urgency": "high",
           "claims_to_be": "government",
-          "claimed_brand": null,
+          "claimed_brand": "IRS",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A message presenting as the IRS offers a refund and asks the user to submit a social security number and bank login via a link."
+          "summary": "Sender claiming to be IRS offers a tax refund and asks the recipient to submit their SSN and bank login credentials via a link, promising the refund within 3 days."
         }
       }
     ]
   },
   "it-helpdesk-password-form-in-body": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:57:29.159Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "security_alert",
           "needs_reply": false,
@@ -361,7 +361,7 @@
             "asks_bank_detail_change": false,
             "asks_for_credentials": true,
             "asks_to_open_attachment": false,
-            "asks_to_click_link": false,
+            "asks_to_click_link": true,
             "asks_to_call_number": false,
             "asks_for_secrecy": false,
             "asks_to_change_ai_behaviour": false
@@ -371,19 +371,19 @@
           "claimed_brand": null,
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A message presenting as IT helpdesk says the mailbox is full and asks the user to enter credentials in a form to increase the quota."
+          "summary": "The sender, claiming to be IT Helpdesk, states the user's mailbox is 98% full and asks them to confirm credentials by clicking an upgrade link to increase quota."
         }
       }
     ]
   },
   "linkedin-message-waiting-lookalike": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:57:31.207Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "notification",
+          "category": "cold_outreach",
           "needs_reply": false,
           "intents": {
             "asks_for_payment": false,
@@ -400,17 +400,17 @@
           "claimed_brand": "LinkedIn",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A message presenting as LinkedIn says a recruiter sent a message and asks the user to sign in via a link to read it."
+          "summary": "LinkedIn notifies the recipient of a new message from a recruiter and asks them to sign in to read it by clicking a link."
         }
       }
     ]
   },
   "microsoft-mfa-qr-code": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:57:33.837Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "security_alert",
           "needs_reply": false,
@@ -429,17 +429,17 @@
           "claimed_brand": "Microsoft",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A message presenting as Microsoft says MFA was reset and asks the user to scan an attached QR code and sign in within 24 hours."
+          "summary": "A sender claiming to be Microsoft Security states the recipient's MFA was reset and asks them to scan an attached QR code and sign in to re-enable it within 24 hours."
         }
       }
     ]
   },
   "microsoft-password-expiry": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:57:35.673Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "security_alert",
           "needs_reply": false,
@@ -454,28 +454,28 @@
             "asks_to_change_ai_behaviour": false
           },
           "urgency": "high",
-          "claims_to_be": "it_support",
-          "claimed_brand": "Microsoft",
+          "claims_to_be": "brand",
+          "claimed_brand": "Microsoft 365",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A message presenting as Microsoft 365 admin says the password expires today and asks the user to verify it via a link."
+          "summary": "The sender claims to be Microsoft 365 Admin and says the recipient's password expires today. It asks the recipient to verify their password by clicking a button to keep the current password."
         }
       }
     ]
   },
   "netflix-lookalike-domain": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:57:37.575Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "notification",
+          "category": "security_alert",
           "needs_reply": false,
           "intents": {
             "asks_for_payment": false,
-            "asks_bank_detail_change": false,
-            "asks_for_credentials": true,
+            "asks_bank_detail_change": true,
+            "asks_for_credentials": false,
             "asks_to_open_attachment": false,
             "asks_to_click_link": true,
             "asks_to_call_number": false,
@@ -487,23 +487,23 @@
           "claimed_brand": "Netflix",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A message presenting as Netflix says a payment was declined and asks the user to log in via a link to update it."
+          "summary": "The sender claims to be Netflix and states that a payment was declined, asking the recipient to update their payment information via a link."
         }
       }
     ]
   },
   "netflix-spoof-dmarc-fail-link-mismatch": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:57:39.358Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "notification",
+          "category": "security_alert",
           "needs_reply": false,
           "intents": {
             "asks_for_payment": false,
-            "asks_bank_detail_change": false,
+            "asks_bank_detail_change": true,
             "asks_for_credentials": true,
             "asks_to_open_attachment": false,
             "asks_to_click_link": true,
@@ -516,17 +516,17 @@
           "claimed_brand": "Netflix",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A message presenting as Netflix says a payment failed and asks the user to update payment details via a link within 24 hours."
+          "summary": "Netflix claims a payment failed and asks the recipient to update account details within 24 hours via a link to keep watching."
         }
       }
     ]
   },
   "office365-storage-full-form": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:57:41.925Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "security_alert",
           "needs_reply": false,
@@ -535,27 +535,27 @@
             "asks_bank_detail_change": false,
             "asks_for_credentials": true,
             "asks_to_open_attachment": false,
-            "asks_to_click_link": false,
+            "asks_to_click_link": true,
             "asks_to_call_number": false,
             "asks_for_secrecy": false,
             "asks_to_change_ai_behaviour": false
           },
           "urgency": "high",
           "claims_to_be": "brand",
-          "claimed_brand": "Microsoft",
+          "claimed_brand": "Office 365",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A message presenting as the Office 365 team says storage is full and asks the user to sign in via an embedded form."
+          "summary": "The sender claims to be Office 365 and states the recipient's storage is full, messages are being rejected, and asks them to sign in to free up space."
         }
       }
     ]
   },
   "paypal-spoof-dmarc-fail": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:57:44.707Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "security_alert",
           "needs_reply": false,
@@ -574,17 +574,17 @@
           "claimed_brand": "PayPal",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A message presenting as PayPal reports a login from a new device and asks the user to log in via a link to review it."
+          "summary": "The sender, claiming to be PayPal, reports unusual login activity from a new device and asks the recipient to log in to review the activity."
         }
       }
     ]
   },
   "sbi-account-blocked-freemail": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:57:46.491Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "security_alert",
           "needs_reply": false,
@@ -600,20 +600,20 @@
           },
           "urgency": "high",
           "claims_to_be": "bank",
-          "claimed_brand": "State Bank of India",
+          "claimed_brand": "SBI",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A message presenting as SBI says the account is blocked and asks the user to update KYC via a link."
+          "summary": "The sender, claiming to be SBI, says the recipient's account is blocked due to pending KYC and asks them to update via a link."
         }
       }
     ]
   },
   "unsubscribe-trap-spam": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:57:48.264Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "marketing",
           "needs_reply": false,
@@ -628,21 +628,21 @@
             "asks_to_change_ai_behaviour": false
           },
           "urgency": "normal",
-          "claims_to_be": "none",
-          "claimed_brand": null,
+          "claims_to_be": "brand",
+          "claimed_brand": "Wellness Deals",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A promotional email for discounted supplements with a shop link and an unsubscribe link."
+          "summary": "A promotional email from Wellness Deals offering 70% off wellness supplements with a limited-time offer and a link to shop."
         }
       }
     ]
   },
   "voicemail-html-attachment": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:57:50.051Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "notification",
           "needs_reply": false,
@@ -656,22 +656,22 @@
             "asks_for_secrecy": false,
             "asks_to_change_ai_behaviour": false
           },
-          "urgency": "normal",
+          "urgency": "none",
           "claims_to_be": "none",
           "claimed_brand": null,
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A voicemail notification asking the user to open an attached player to listen to a message."
+          "summary": "A voicemail notification claims the recipient has received a 42-second voicemail from +91 22 4000 1100 and asks them to open an attached player to listen."
         }
       }
     ]
   },
   "wetransfer-file-expiring-lookalike": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:57:52.903Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "notification",
           "needs_reply": false,
@@ -690,7 +690,7 @@
           "claimed_brand": "WeTransfer",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A message presenting as WeTransfer says a contact sent files that expire tomorrow and asks the user to download them via a link."
+          "summary": "WeTransfer notification that 3 files sent by Rahul Mehta will be deleted in 24 hours, with a link to download them."
         }
       }
     ]

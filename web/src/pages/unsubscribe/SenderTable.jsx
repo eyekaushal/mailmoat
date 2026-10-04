@@ -1,137 +1,255 @@
-import { RiskBadge } from '../../components/RiskBadge.jsx';
+import {
+  Archive,
+  ArrowCounterClockwise,
+  CaretDown,
+  DotsThree,
+  ThumbsUp,
+} from '@phosphor-icons/react';
+import { useState } from 'react';
 import { Button } from '../../components/Button.jsx';
+import { useApi } from '../../lib/useApi.js';
+import { Avatar } from '../../ui/Avatar.jsx';
+import { Checkbox } from '../../ui/Checkbox.jsx';
+import { DropdownMenu, MenuItem } from '../../ui/DropdownMenu.jsx';
+import { IconButton } from '../../ui/IconButton.jsx';
+import { Tooltip } from '../../ui/Tooltip.jsx';
 
-/** The one safe method per sender (PRD F9.2), as a button label and its action. */
+/**
+ * The one safe method per sender (PRD F9.2): the button says Unsubscribe or Block, the tooltip
+ * says why. Risk is never a badge here; a risky sender simply gets Block (PLAN §13.8).
+ */
 export const METHODS = Object.freeze({
   unsubscribe: {
     label: 'Unsubscribe',
     action: 'unsubscribe',
-    hint: 'One-click, HTTPS, SSRF-checked',
+    hint: 'One-click link over HTTPS, checked before it is followed',
   },
   unsubscribe_mail: {
-    label: 'Unsubscribe by email',
+    label: 'Unsubscribe',
     action: 'unsubscribe',
-    hint: 'Sends an email after your approval',
+    hint: 'Sends an unsubscribe email after your approval',
   },
   block: {
     label: 'Block',
     action: 'block',
-    hint: 'No safe unsubscribe link; future mail is archived',
+    hint: 'No safe unsubscribe link; future mail is archived under mailmoat/Blocked',
   },
   report_spam: {
-    label: 'Block (report in Gmail)',
+    label: 'Block',
     action: 'block',
-    hint: 'Risky sender: never contacted; report as spam in Gmail too',
+    hint: 'Flagged sender: never contacted. Report it as spam in Gmail too',
   },
 });
 
-const STATUS_LABELS = { NONE: '', KEPT: 'kept', UNSUBSCRIBED: 'unsubscribed', BLOCKED: 'blocked' };
+export const STATUS_WORDS = Object.freeze({
+  NONE: '',
+  KEPT: 'kept',
+  UNSUBSCRIBED: 'unsubscribed',
+  BLOCKED: 'blocked',
+});
 
 export function percent(rate) {
   return `${Math.round((rate ?? 0) * 100)}%`;
 }
 
+/** The read bar and its number: how much of this sender's mail was ever opened. */
+function ReadBar({ rate }) {
+  const value = Math.round((rate ?? 0) * 100);
+  return (
+    <span className="inline-flex items-center gap-2">
+      <span
+        role="progressbar"
+        aria-label="Read"
+        aria-valuenow={value}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        className="block h-1 w-16 overflow-hidden rounded-full bg-surface-3"
+      >
+        <span className="block h-full rounded-full bg-accent" style={{ width: `${value}%` }} />
+      </span>
+      <span className="w-9 text-right text-sm text-secondary tabular-nums">{value}%</span>
+    </span>
+  );
+}
+
 /**
+ * The one button a sender gets. Block asks the Policy Engine why (`/senders/block-warning`) the
+ * first time the pointer or focus reaches it, so the tooltip can say it; SWR keeps the answer.
+ */
+function MethodButton({ sender, method, disabled, onClick }) {
+  const [wanted, setWanted] = useState(false);
+  const isBlock = method.action === 'block';
+  const { data } = useApi(
+    isBlock && wanted
+      ? `/senders/block-warning?address=${encodeURIComponent(sender.address)}`
+      : null,
+  );
+  const why = isBlock && data?.warning ? data.warning : method.hint;
+  return (
+    <Tooltip label={why}>
+      <Button
+        variant={isBlock ? 'danger' : 'secondary'}
+        className="h-7 px-2.5 text-sm"
+        disabled={disabled}
+        onPointerEnter={() => setWanted(true)}
+        onFocus={() => setWanted(true)}
+        onClick={onClick}
+      >
+        {method.label}
+      </Button>
+    </Tooltip>
+  );
+}
+
+function SortHeader({ id, label, sort, onSort, className = '' }) {
+  const active = sort === id;
+  return (
+    <th
+      scope="col"
+      aria-sort={active ? 'descending' : 'none'}
+      className={`font-normal whitespace-nowrap ${className}`}
+    >
+      <button
+        type="button"
+        onClick={() => onSort(id)}
+        className={`inline-flex items-center gap-1 rounded-sm hover:text-ink ${active ? 'text-ink' : ''}`}
+      >
+        {label}
+        {active && <CaretDown aria-hidden="true" size={12} />}
+      </button>
+    </th>
+  );
+}
+
+/**
+ * The Inbox Zero table (PLAN §13.8): checkbox · avatar · name and address · Emails · read bar
+ * and % · thumbs-up = Keep · one button, Unsubscribe or Block · overflow menu with Archive all
+ * and Undo. A decided sender shows its status as a quiet word instead of the buttons.
  * @param {{
- *   senders: object[], selected: Set<string>, onToggle: (address: string) => void, onToggleAll: () => void,
- *   onAction: (sender: object, action: 'unsubscribe'|'block'|'keep'|'undo'|'archive-all') => void, busy: string | null,
+ *   senders: object[], selected: Set<string>, onToggle: (address: string) => void,
+ *   onToggleAll: () => void, sort: 'count' | 'read', onSort: (sort: 'count' | 'read') => void,
+ *   onAction: (sender: object, action: 'unsubscribe'|'block'|'keep'|'undo'|'archive-all') => void,
+ *   busy: string | null,
  * }} props
  */
-export function SenderTable({ senders, selected, onToggle, onToggleAll, onAction, busy }) {
-  const allSelected = senders.length > 0 && senders.every((s) => selected.has(s.address));
+export function SenderTable({
+  senders,
+  selected,
+  onToggle,
+  onToggleAll,
+  sort,
+  onSort,
+  onAction,
+  busy,
+}) {
+  const chosen = senders.filter((s) => selected.has(s.address)).length;
+  const allSelected = senders.length > 0 && chosen === senders.length;
   return (
-    <table className="w-full text-sm">
-      <thead className="text-left text-xs uppercase tracking-wide text-muted">
-        <tr>
-          <th className="py-2 pr-2">
-            <input
-              type="checkbox"
+    <table className="w-full">
+      <thead>
+        <tr className="h-9 text-left text-sm text-secondary">
+          <th scope="col" className="w-10 pr-3 pl-5">
+            <Checkbox
               aria-label="Select all"
-              checked={allSelected}
-              onChange={onToggleAll}
-              className="size-4 accent-accent"
+              checked={allSelected ? true : chosen > 0 ? 'indeterminate' : false}
+              onCheckedChange={onToggleAll}
             />
           </th>
-          <th className="py-2 pr-3 font-medium">Sender</th>
-          <th className="py-2 pr-3 font-medium text-right">Emails</th>
-          <th className="py-2 pr-3 font-medium text-right">Read</th>
-          <th className="py-2 pr-3 font-medium">Last</th>
-          <th className="py-2 pr-3 font-medium">Risk</th>
-          <th className="py-2 font-medium">Actions</th>
+          <th scope="col" className="w-full pr-4 font-normal">
+            Sender
+          </th>
+          <SortHeader id="count" label="Emails" sort={sort} onSort={onSort} className="pr-6" />
+          <SortHeader id="read" label="Read" sort={sort} onSort={onSort} className="pr-4" />
+          <th scope="col" className="pr-5">
+            <span className="sr-only">Actions</span>
+          </th>
         </tr>
       </thead>
-      <tbody className="divide-y divide-line">
+      <tbody className="divide-y divide-line border-t border-line">
         {senders.map((sender) => {
           const method = METHODS[sender.method] ?? METHODS.block;
           const decided = sender.status !== 'NONE';
           const isBusy = busy === sender.address;
+          const name = sender.name || sender.address;
           return (
-            <tr key={sender.address} className={decided ? 'text-muted' : ''}>
-              <td className="py-2 pr-2">
-                <input
-                  type="checkbox"
+            <tr
+              key={sender.address}
+              className={`h-12 align-middle ${selected.has(sender.address) ? 'bg-accent-soft' : 'hover:bg-surface-2'}`}
+            >
+              <td className="pr-3 pl-5">
+                <Checkbox
                   aria-label={`Select ${sender.address}`}
                   checked={selected.has(sender.address)}
-                  onChange={() => onToggle(sender.address)}
-                  className="size-4 accent-accent"
+                  onCheckedChange={() => onToggle(sender.address)}
                 />
               </td>
-              <td className="max-w-64 py-2 pr-3">
-                <span className="block truncate font-mono text-xs">{sender.address}</span>
-                {decided && (
-                  <span className="text-xs uppercase">{STATUS_LABELS[sender.status]}</span>
-                )}
+              <td className="max-w-0 pr-4">
+                <span className="flex items-center gap-3">
+                  <Avatar
+                    name={name}
+                    hueKey={sender.address}
+                    initials={sender.avatar?.initials}
+                    hue={sender.avatar?.hue}
+                  />
+                  <span className="min-w-0">
+                    <span
+                      className={`block truncate ${decided ? 'text-secondary' : 'font-medium'}`}
+                    >
+                      {name}
+                    </span>
+                    {sender.name && (
+                      <span className="block truncate text-sm text-secondary">
+                        {sender.address}
+                      </span>
+                    )}
+                  </span>
+                </span>
               </td>
-              <td className="py-2 pr-3 text-right">{sender.emailCount}</td>
-              <td className="py-2 pr-3 text-right">{percent(sender.readRate)}</td>
-              <td className="py-2 pr-3 whitespace-nowrap text-muted">
-                {sender.lastReceived ? new Date(sender.lastReceived).toLocaleDateString() : '—'}
+              <td className="pr-6 text-right tabular-nums">{sender.emailCount}</td>
+              <td className="pr-4 whitespace-nowrap">
+                <ReadBar rate={sender.readRate} />
               </td>
-              <td className="py-2 pr-3">
-                <RiskBadge level={sender.level} size="sm" />
-              </td>
-              <td className="py-2">
-                <div className="flex flex-wrap gap-1">
-                  {!decided && (
+              <td className="pr-3">
+                <span className="flex items-center justify-end gap-1">
+                  {decided ? (
+                    <span className="mr-2 text-sm text-secondary">
+                      {STATUS_WORDS[sender.status] ?? sender.status.toLowerCase()}
+                    </span>
+                  ) : (
                     <>
-                      <Button
-                        variant={method.action === 'block' ? 'danger' : 'primary'}
-                        className="px-2 py-1 text-xs"
-                        title={method.hint}
-                        disabled={isBusy}
-                        onClick={() => onAction(sender, method.action)}
-                      >
-                        {method.label}
-                      </Button>
-                      <Button
-                        variant="secondary"
-                        className="px-2 py-1 text-xs"
+                      <IconButton
+                        label="Keep"
+                        icon={ThumbsUp}
                         disabled={isBusy}
                         onClick={() => onAction(sender, 'keep')}
-                      >
-                        Keep
-                      </Button>
+                      />
+                      <MethodButton
+                        sender={sender}
+                        method={method}
+                        disabled={isBusy}
+                        onClick={() => onAction(sender, method.action)}
+                      />
                     </>
                   )}
-                  <Button
-                    variant="secondary"
-                    className="px-2 py-1 text-xs"
-                    disabled={isBusy}
-                    onClick={() => onAction(sender, 'archive-all')}
+                  <DropdownMenu
+                    align="end"
+                    trigger={
+                      <IconButton label="More" icon={DotsThree} size={18} disabled={isBusy} />
+                    }
                   >
-                    Archive all
-                  </Button>
-                  {decided && (
-                    <Button
-                      variant="ghost"
-                      className="px-2 py-1 text-xs"
-                      disabled={isBusy}
-                      onClick={() => onAction(sender, 'undo')}
-                    >
-                      Undo
-                    </Button>
-                  )}
-                </div>
+                    <MenuItem icon={Archive} onSelect={() => onAction(sender, 'archive-all')}>
+                      Archive all
+                    </MenuItem>
+                    {decided && (
+                      <MenuItem
+                        icon={ArrowCounterClockwise}
+                        onSelect={() => onAction(sender, 'undo')}
+                      >
+                        Undo
+                      </MenuItem>
+                    )}
+                  </DropdownMenu>
+                </span>
               </td>
             </tr>
           );

@@ -1,5 +1,5 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 import { SettingsPage } from '../../../src/pages/settings/SettingsPage.jsx';
 import { fakeServer, renderPage } from '../../helpers.jsx';
 
@@ -39,7 +39,7 @@ describe('SettingsPage', () => {
     await waitFor(() => expect(screen.getByLabelText('Planner')).toBeTruthy());
     expect(screen.getByRole('button', { name: 'Save changes' }).disabled).toBe(true);
     fireEvent.change(screen.getByLabelText('Planner'), { target: { value: 'claude-sonnet-5-5' } });
-    fireEvent.click(screen.getByLabelText(/Auto-archive dangerous mail/));
+    fireEvent.click(screen.getByRole('switch', { name: 'Auto-archive dangerous mail' }));
     fireEvent.change(screen.getByLabelText('Add trusted sender'), {
       target: { value: 'Ally@Example.com' },
     });
@@ -69,43 +69,77 @@ describe('SettingsPage', () => {
     await waitFor(() => expect(screen.getByText(/No key saved/)).toBeTruthy());
   });
 
-  it('disconnects Google only after confirmation', async () => {
+  it('disconnects Google only after the dialog confirms', async () => {
     const server = fakeServer({
       'GET /settings': view,
       'POST /google/disconnect': { connected: false, revoked: true },
     });
-    vi.spyOn(window, 'confirm').mockReturnValueOnce(false).mockReturnValueOnce(true);
     renderPage(<SettingsPage />, { server });
     await waitFor(() => expect(screen.getByRole('button', { name: 'Disconnect' })).toBeTruthy());
     fireEvent.click(screen.getByRole('button', { name: 'Disconnect' }));
+    const dialog = await screen.findByRole('dialog');
+    expect(dialog.textContent).toContain('Disconnect Google?');
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Cancel' }));
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
     expect(server.calls.some((call) => call.path === '/google/disconnect')).toBe(false);
     fireEvent.click(screen.getByRole('button', { name: 'Disconnect' }));
+    fireEvent.click(
+      within(await screen.findByRole('dialog')).getByRole('button', { name: 'Disconnect' }),
+    );
     await waitFor(() =>
       expect(server.calls.some((call) => call.path === '/google/disconnect')).toBe(true),
     );
   });
 
-  it('deletes all data only when DELETE is typed', async () => {
+  it('keeps the audit export and the delete zone under Advanced, and deletes only when DELETE is typed', async () => {
     const server = fakeServer({
       'GET /settings': view,
       'POST /data/delete-all': { deleted: true, restart: true },
     });
     renderPage(<SettingsPage />, { server });
-    await waitFor(() => expect(screen.getByLabelText('Type DELETE to confirm')).toBeTruthy());
-    const button = screen.getByRole('button', { name: /Delete everything/ });
-    expect(button.disabled).toBe(true);
-    fireEvent.change(screen.getByLabelText('Type DELETE to confirm'), {
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Advanced' })).toBeTruthy());
+    expect(screen.queryByRole('link', { name: /Export JSON/ })).toBeNull();
+    expect(screen.queryByRole('button', { name: /Delete everything/ })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Advanced' }));
+    expect(screen.getByRole('link', { name: /Export JSON/ }).getAttribute('href')).toBe(
+      '/api/audit/export',
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Delete everything…' }));
+    const dialog = await screen.findByRole('dialog');
+    const confirm = within(dialog).getByRole('button', { name: 'Delete everything' });
+    expect(confirm.disabled).toBe(true);
+    fireEvent.change(within(dialog).getByLabelText('Type DELETE to confirm'), {
       target: { value: 'delete' },
     });
-    expect(button.disabled).toBe(true);
-    fireEvent.change(screen.getByLabelText('Type DELETE to confirm'), {
+    expect(confirm.disabled).toBe(true);
+    fireEvent.change(within(dialog).getByLabelText('Type DELETE to confirm'), {
       target: { value: 'DELETE' },
     });
-    fireEvent.click(button);
+    fireEvent.click(confirm);
     await waitFor(() => expect(screen.getByText(/Everything was deleted/)).toBeTruthy());
     expect(server.calls.find((call) => call.path === '/data/delete-all').body).toEqual({
       confirm: 'DELETE',
     });
+  });
+
+  it('groups the preferences into named sections and keeps the key write-only', async () => {
+    renderPage(<SettingsPage />, { server: fakeServer({ 'GET /settings': view }) });
+    await waitFor(() => expect(screen.getByRole('heading', { name: 'Models' })).toBeTruthy());
+    for (const name of [
+      'Sync',
+      'Security',
+      'Working hours',
+      'Trusted senders',
+      'Connections',
+      'Wallpaper',
+    ])
+      expect(screen.getByRole('heading', { name })).toBeTruthy();
+    expect(screen.getByLabelText('Replace key').type).toBe('password');
+    expect(screen.getByRole('button', { name: 'Save changes' }).className).toContain('bg-accent');
+    expect(screen.getByRole('button', { name: 'Save key' }).className).not.toContain('bg-accent');
+    expect(screen.getByRole('button', { name: 'Disconnect' }).className).not.toContain(
+      'text-danger',
+    );
   });
 });
 

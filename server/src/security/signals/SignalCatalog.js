@@ -2,6 +2,8 @@ import { BrandList } from './BrandList.js';
 import { Confusables } from './Confusables.js';
 import { DomainSimilarity } from './DomainSimilarity.js';
 import { AuthFormInHtmlSignal } from './content/AuthFormInHtmlSignal.js';
+import { BrandClaimUnownedSignal } from './sender/BrandClaimUnownedSignal.js';
+import { BankDetailsInBodySignal } from './content/BankDetailsInBodySignal.js';
 import { HiddenTextInstructionsSignal } from './content/HiddenTextInstructionsSignal.js';
 import { HiddenTextPresentSignal } from './content/HiddenTextPresentSignal.js';
 import { LinkFirstSeenDomainSignal } from './content/LinkFirstSeenDomainSignal.js';
@@ -23,7 +25,7 @@ import { PunycodeDomainSignal } from './sender/PunycodeDomainSignal.js';
 import { ReplyToMismatchSignal } from './sender/ReplyToMismatchSignal.js';
 
 /**
- * The complete set of signals S1–S20, built once. The app, dev scripts and the attack lab all use
+ * The complete set of signals S1–S22, built once. The app, dev scripts and the attack lab all use
  * this, so none of them can silently run with a signal missing.
  */
 export class SignalCatalog {
@@ -41,8 +43,8 @@ export class SignalCatalog {
       new LookalikeBrandDomainSignal(similarity, brands),
       new DisplayNameImpersonationSignal(brands, confusables),
       new PunycodeDomainSignal(),
-      new FirstTimeSenderSignal(),
-      new FirstTimeDomainSignal(),
+      new FirstTimeSenderSignal(brands),
+      new FirstTimeDomainSignal(brands),
       new FreemailClaimsOrgSignal(),
       new HiddenTextPresentSignal(),
       new HiddenTextInstructionsSignal(),
@@ -53,6 +55,8 @@ export class SignalCatalog {
       new LinkFirstSeenDomainSignal(brands),
       new RiskyAttachmentSignal(),
       new AuthFormInHtmlSignal(),
+      new BankDetailsInBodySignal(),
+      new BrandClaimUnownedSignal(brands),
     ];
   }
 }

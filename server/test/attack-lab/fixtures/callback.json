@@ -1,12 +1,12 @@
 {
   "amazon-prime-charge-freemail": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:57:54.702Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "receipt",
+          "category": "security_alert",
           "needs_reply": false,
           "intents": {
             "asks_for_payment": false,
@@ -20,20 +20,20 @@
           },
           "urgency": "high",
           "claims_to_be": "brand",
-          "claimed_brand": "Amazon",
+          "claimed_brand": "Amazon Prime",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A message presenting as Amazon Prime reports a charge and asks the user to call a number within two hours for a refund."
+          "summary": "The sender claims to be Amazon Prime and states the user's membership was charged ₹14,999. It asks the user to call a number within 2 hours to cancel and request a refund."
         }
       }
     ]
   },
   "apple-support-outlook": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:57:57.551Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "receipt",
           "needs_reply": false,
@@ -47,24 +47,24 @@
             "asks_for_secrecy": false,
             "asks_to_change_ai_behaviour": false
           },
-          "urgency": "high",
+          "urgency": "normal",
           "claims_to_be": "brand",
           "claimed_brand": "Apple",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A message presenting as Apple Support reports a purchase and asks the user to call a number for a refund if unauthorised."
+          "summary": "The sender claims to be Apple Support and provides a receipt for an iCloud+ 2TB purchase for ₹9,900. It offers a phone number to call for a refund if the purchase was not authorized."
         }
       }
     ]
   },
   "bank-fraud-desk-call-back": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:57:59.530Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "receipt",
+          "category": "security_alert",
           "needs_reply": false,
           "intents": {
             "asks_for_payment": false,
@@ -81,17 +81,17 @@
           "claimed_brand": "HDFC Bank",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A message presenting as a bank fraud desk reports a blocked transaction and asks the user to call a number to confirm identity."
+          "summary": "Sender claims to be HDFC Bank's fraud desk and states a transaction of ₹48,200 was blocked on the account. The email asks the recipient to call 1800-555-7788 immediately to confirm identity and restore access."
         }
       }
     ]
   },
   "geek-squad-auto-renew": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:58:01.580Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "receipt",
           "needs_reply": false,
@@ -105,22 +105,22 @@
             "asks_for_secrecy": false,
             "asks_to_change_ai_behaviour": false
           },
-          "urgency": "high",
+          "urgency": "normal",
           "claims_to_be": "brand",
           "claimed_brand": "Geek Squad",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A message presenting as Geek Squad says a protection plan auto-renewed for 349 dollars and asks the user to call a helpline to cancel."
+          "summary": "Geek Squad confirms auto-renewal of a protection plan for $349.00 for 2 years and provides a phone number to contact for cancellation or disputes."
         }
       }
     ]
   },
   "mcafee-pdf-invoice-callback": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:58:03.505Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "receipt",
           "needs_reply": false,
@@ -139,19 +139,19 @@
           "claimed_brand": "McAfee",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A message presenting as McAfee says a renewal invoice is attached and asks the user to call a support number to cancel."
+          "summary": "McAfee sends a renewal invoice for Total Protection ($389.99) and directs the user to call a support number on the invoice to cancel."
         }
       }
     ]
   },
   "microsoft-defender-charge": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:58:05.353Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "receipt",
+          "category": "security_alert",
           "needs_reply": false,
           "intents": {
             "asks_for_payment": false,
@@ -163,22 +163,22 @@
             "asks_for_secrecy": false,
             "asks_to_change_ai_behaviour": false
           },
-          "urgency": "high",
+          "urgency": "normal",
           "claims_to_be": "brand",
-          "claimed_brand": "Microsoft",
+          "claimed_brand": "Microsoft Defender",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A message presenting as Microsoft Defender reports a 299 dollar renewal and asks the user to call a billing desk to cancel."
+          "summary": "The sender claims Microsoft Defender Advanced has been renewed for $299. It provides a phone number for cancellation or refund requests."
         }
       }
     ]
   },
   "norton-renewal-499": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:58:08.057Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "receipt",
           "needs_reply": false,
@@ -194,22 +194,22 @@
           },
           "urgency": "high",
           "claims_to_be": "brand",
-          "claimed_brand": "Norton",
+          "claimed_brand": "NortonLifeLock",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A message presenting as Norton says a subscription renewed for about 500 dollars and asks the user to call a number within 24 hours to cancel."
+          "summary": "NortonLifeLock confirms a subscription renewal charge of $499.99 and instructs the recipient to call a phone number within 24 hours to cancel if unauthorised."
         }
       }
     ]
   },
   "paypal-invoice-spoof-call-to-cancel": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:58:10.811Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "receipt",
+          "category": "security_alert",
           "needs_reply": false,
           "intents": {
             "asks_for_payment": false,
@@ -222,23 +222,23 @@
             "asks_to_change_ai_behaviour": false
           },
           "urgency": "high",
-          "claims_to_be": "brand",
+          "claims_to_be": "bank",
           "claimed_brand": "PayPal",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A message presenting as PayPal reports a 799 dollar invoice and asks the user to call a number immediately to cancel it."
+          "summary": "An email claiming to be from PayPal notifies the recipient of a $799.00 invoice from Crypto Exchange Ltd and instructs them to call a phone number immediately to cancel if they did not authorize the purchase."
         }
       }
     ]
   },
   "telecom-bill-unlisted-brand": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:58:13.769Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "notification",
+          "category": "security_alert",
           "needs_reply": false,
           "intents": {
             "asks_for_payment": true,
@@ -255,17 +255,17 @@
           "claimed_brand": "Airtel",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A message presenting as Airtel says a bill is overdue and asks the user to call a number and pay by card to avoid disconnection."
+          "summary": "Sender claims to be Airtel and reports a postpaid bill of ₹4,899 is overdue. States the user's number will be disconnected tonight and requests the user call a number to pay by card."
         }
       }
     ]
   },
   "zoom-invoice-callback": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:58:16.842Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "receipt",
           "needs_reply": false,
@@ -281,10 +281,10 @@
           },
           "urgency": "high",
           "claims_to_be": "brand",
-          "claimed_brand": "Zoom",
+          "claimed_brand": "Zoom Video Communications",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A message presenting as Zoom says an annual plan renewed and asks the user to call a number within 48 hours to cancel."
+          "summary": "Zoom notifies the user of a $199.90 Pro plan renewal and provides a phone number to call for cancellation within 48 hours."
         }
       }
     ]

@@ -44,6 +44,9 @@ export class DisplayNameImpersonationSignal extends Signal {
 
     // Someone the user writes to at this exact address is not impersonating anyone.
     if (context.contacts.get(address)?.sentCount > 0) return null;
+    // Platform relays ("Priya Shah (via Google Drive)" from google.com) carry a contact's name
+    // on the platform's own authenticated domain; a forged relay fails DMARC and still fires.
+    if (this.#brands.authenticatedOwner(email)) return null;
     const words = this.#words(name);
     const contact = context.contacts
       .namedContacts()

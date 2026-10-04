@@ -1,8 +1,8 @@
-import { EyeSlash, Flask } from '@phosphor-icons/react';
+import { EyeSlash } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { Button } from '../../components/Button.jsx';
 import { DisarmedLink } from '../../components/DisarmedLink.jsx';
-import { INPUT_CLASSES } from '../../components/FormField.jsx';
+import { FormField, INPUT_CLASSES } from '../../components/FormField.jsx';
 import { PipelineTrace } from '../../components/PipelineTrace.jsx';
 import { useApi, useApiClient } from '../../lib/useApi.js';
 
@@ -34,41 +34,43 @@ export function TestTab() {
   }
 
   return (
-    <div className="space-y-6">
-      <form onSubmit={test} className="space-y-3">
-        <label className="block text-sm font-medium">
-          Pick a recent email
-          <select
-            value={gmailId}
-            onChange={(e) => setGmailId(e.target.value)}
-            className={`${INPUT_CLASSES} mt-1`}
-          >
-            <option value="">— or paste one below —</option>
-            {(recent?.items ?? []).map((email) => (
-              <option key={email.gmailId} value={email.gmailId}>
-                {email.fromName || email.fromAddr} · {new Date(email.date).toLocaleDateString()} ·{' '}
-                {(email.summary ?? '').slice(0, 60)}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="block text-sm font-medium">
-          Paste an email (raw .eml with headers, or just the text)
-          <textarea
-            rows={8}
-            value={raw}
-            disabled={gmailId !== ''}
-            onChange={(e) => setRaw(e.target.value)}
-            placeholder={'From: someone@example.com\nSubject: …\n\nBody…'}
-            className={`${INPUT_CLASSES} mt-1 font-mono text-xs disabled:opacity-50`}
-          />
-        </label>
+    <div className="space-y-5 px-5 py-4">
+      <form onSubmit={test} className="max-w-2xl space-y-3">
+        <FormField label="Pick a recent email">
+          {(id) => (
+            <select
+              id={id}
+              value={gmailId}
+              onChange={(e) => setGmailId(e.target.value)}
+              className={INPUT_CLASSES}
+            >
+              <option value="">Or paste one below</option>
+              {(recent?.items ?? []).map((email) => (
+                <option key={email.gmailId} value={email.gmailId}>
+                  {email.fromName || email.fromAddr} · {email.subject || '(no subject)'}
+                </option>
+              ))}
+            </select>
+          )}
+        </FormField>
+        <FormField label="Paste an email (raw .eml with headers, or just the text)">
+          {(id) => (
+            <textarea
+              id={id}
+              rows={8}
+              value={raw}
+              disabled={gmailId !== ''}
+              onChange={(e) => setRaw(e.target.value)}
+              placeholder={'From: someone@example.com\nSubject: …\n\nBody…'}
+              className={`${INPUT_CLASSES} font-mono text-sm disabled:opacity-45`}
+            />
+          )}
+        </FormField>
         <div className="flex items-center gap-3">
           <Button type="submit" disabled={busy || (!gmailId && !raw.trim())}>
-            <Flask aria-hidden="true" className="size-4" />{' '}
             {busy ? 'Analysing…' : 'Run the pipeline'}
           </Button>
-          <span className="text-xs text-muted">
+          <span className="text-sm text-secondary">
             Side-effect free: nothing is labelled, drafted or sent.
           </span>
         </div>
@@ -96,27 +98,27 @@ function TestResult({ result }) {
     events: [],
   };
   return (
-    <section aria-label="Test result" className="space-y-4">
+    <section aria-label="Test result" className="max-w-3xl space-y-4">
       {result.hidden.length > 0 && (
-        <div className="rounded-lg border border-warn/40 bg-warn-soft/40 p-3 text-sm">
+        <div className="rounded-md bg-surface-2 px-4 py-3 text-base">
           <p className="flex items-center gap-2 font-medium">
-            <EyeSlash aria-hidden="true" className="size-4 text-warn" /> Hidden content found (
-            {result.hidden.length})
+            <EyeSlash aria-hidden="true" size={16} className="text-secondary" /> Hidden content
+            found ({result.hidden.length})
           </p>
           <ul className="mt-2 space-y-1">
             {result.hidden.map((item, index) => (
               <li key={index} className="flex gap-2">
-                <span className="shrink-0 rounded bg-surface-2 px-1.5 font-mono text-[11px]">
+                <span className="shrink-0 rounded-[4px] bg-surface-3 px-1.5 text-xs text-secondary">
                   {item.technique}
                 </span>
-                <span className="break-words whitespace-pre-wrap text-muted">{item.text}</span>
+                <span className="break-words whitespace-pre-wrap text-secondary">{item.text}</span>
               </li>
             ))}
           </ul>
         </div>
       )}
       {result.links.length > 0 && (
-        <div className="rounded-lg border border-line p-3 text-sm">
+        <div className="rounded-md bg-surface-2 px-4 py-3 text-base">
           <p className="font-medium">Links ({result.links.length})</p>
           <ul className="mt-2 space-y-1">
             {result.links.map((link, index) => (

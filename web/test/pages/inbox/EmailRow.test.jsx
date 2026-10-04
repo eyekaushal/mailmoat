@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { EmailRow, riskNote } from '../../../src/pages/inbox/EmailRow.jsx';
+import { EmailRow } from '../../../src/pages/inbox/EmailRow.jsx';
+import { riskNote } from '../../../src/ui/RiskDot.jsx';
 import { TooltipProvider } from '../../../src/ui/Tooltip.jsx';
 
 const now = new Date(2026, 9, 5, 12, 0, 0);
@@ -37,6 +38,21 @@ function renderRow(props) {
     </TooltipProvider>,
   );
 }
+
+describe('EmailRow keys', () => {
+  it('archives with e and replies with r while the row has focus', () => {
+    const onArchive = vi.fn();
+    const onReply = vi.fn();
+    renderRow({ email: email(), onArchive, onReply });
+    const button = document.querySelector('[data-row]');
+    fireEvent.keyDown(button, { key: 'e' });
+    expect(onArchive).toHaveBeenCalledTimes(1);
+    fireEvent.keyDown(button, { key: 'r' });
+    expect(onReply).toHaveBeenCalledTimes(1);
+    fireEvent.keyDown(button, { key: 'e', metaKey: true });
+    expect(onArchive).toHaveBeenCalledTimes(1);
+  });
+});
 
 describe('riskNote', () => {
   it('names the level for non-safe mail, flags unjudged mail and says nothing for SAFE', () => {

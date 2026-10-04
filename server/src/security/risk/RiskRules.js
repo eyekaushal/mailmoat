@@ -12,10 +12,29 @@
  * @property {boolean} [verifyByPhone] show the "verify by phone" banner
  */
 
-const IDENTITY_CLAIMS = new Set(['executive', 'bank', 'brand', 'it_support', 'government']);
+/**
+ * Identities a stranger has no business claiming. "brand" is not here: the Reader calls any
+ * organisation a brand, so a brand claim only counts when code finds a listed brand behind it
+ * (S6 look-alike domain, S7 display name, S22 claimed brand on a domain it does not own).
+ */
+const IDENTITY_CLAIMS = new Set(['executive', 'bank', 'it_support', 'government']);
+/** Senders that callback phishing pretends to be: a company, a bank, IT or the government. */
+const CALLBACK_CLAIMS = new Set(['brand', 'bank', 'it_support', 'government']);
 const intent = (input, name) => input.form?.intents[name] === true;
 const asksForMoney = (input) =>
   intent(input, 'asks_for_payment') || intent(input, 'asks_bank_detail_change');
+const firstTime = (input) => input.has('S9') || input.has('S10');
+/**
+ * What turns a first-time payment request into fraud rather than a first bill: bank details
+ * written into the email (S21), a claimed identity, pressure, secrecy or a bank change. A plain
+ * "pay via our site" from an authenticated newcomer gets no rule and relies on the signals.
+ */
+const paymentPressure = (input) =>
+  input.has('S21') ||
+  (input.form?.claims_to_be ?? 'none') !== 'none' ||
+  input.form?.urgency === 'high' ||
+  intent(input, 'asks_for_secrecy') ||
+  intent(input, 'asks_bank_detail_change');
 
 /**
  * The Risk Engine's tables (SECURITY_APPROACH §7.4), as data. Floors come from facts an attacker
@@ -80,21 +99,27 @@ export class RiskRules {
     {
       level: 'DANGEROUS',
       reason: 'Asks for a payment or bank change from an unverified or unfamiliar sender.',
-      when: (i) => asksForMoney(i) && ['S4', 'S9', 'S10', 'S11'].some((id) => i.has(id)),
+      when: (i) =>
+        asksForMoney(i) && (i.has('S4') || i.has('S11') || (firstTime(i) && paymentPressure(i))),
       verifyByPhone: true,
     },
     {
       level: 'DANGEROUS',
       reason: 'Asks you to log in or share a code, from a new sender or through a suspicious link.',
+      // S10, not S9: a new no-reply@ address at a domain the user already deals with is routine.
       when: (i) =>
-        intent(i, 'asks_for_credentials') && ['S9', 'S14', 'S18'].some((id) => i.has(id)),
+        intent(i, 'asks_for_credentials') && ['S10', 'S14', 'S18'].some((id) => i.has(id)),
     },
     {
       level: 'SUSPICIOUS',
-      reason:
-        'Claims to be an executive, bank, brand, IT or government sender you have no history with.',
+      reason: 'Claims to be an executive, bank, IT or government sender you have no history with.',
       when: (i) =>
         IDENTITY_CLAIMS.has(i.form?.claims_to_be) && ['S7', 'S9', 'S10'].some((id) => i.has(id)),
+    },
+    {
+      level: 'SUSPICIOUS',
+      reason: 'Presents itself as a well-known brand that does not send mail from this domain.',
+      when: (i) => i.form?.claims_to_be === 'brand' && ['S6', 'S7', 'S22'].some((id) => i.has(id)),
     },
     {
       level: 'DANGEROUS',
@@ -109,7 +134,9 @@ export class RiskRules {
       reason:
         'Asks you to call a number, claiming to be a company; first message from this sender.',
       when: (i) =>
-        intent(i, 'asks_to_call_number') && i.form?.claims_to_be === 'brand' && i.has('S9'),
+        intent(i, 'asks_to_call_number') &&
+        CALLBACK_CLAIMS.has(i.form?.claims_to_be) &&
+        firstTime(i),
     },
     {
       level: 'SUSPICIOUS',

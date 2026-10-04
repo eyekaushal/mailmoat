@@ -62,4 +62,19 @@ export class BrandList {
     const org = OrgDomain.of(domain);
     return brand.domains.some((owned) => owned === domain || OrgDomain.of(owned) === org);
   }
+
+  /**
+   * The brand this email verifiably comes from: Google's own stamp says the From domain passed
+   * DMARC, and that domain is one the brand sends from. An attacker cannot forge this without
+   * controlling the brand's mail, so genuine receipts, alerts and platform relays (Drive shares)
+   * are not "unfamiliar senders". Any other case, including DMARC failures, returns undefined.
+   * @param {import('../ingest/EmailIngestor.js').IngestedEmail} email
+   * @returns {Brand | undefined}
+   */
+  authenticatedOwner(email) {
+    if (!email.from || !email.auth?.trusted || email.auth.dmarc?.result !== 'pass')
+      return undefined;
+    const domain = OrgDomain.ofAddress(email.from.address);
+    return this.#brands.find((brand) => this.owns(brand, domain));
+  }
 }

@@ -105,6 +105,9 @@ radius 4, no border, no icon inside the tag in the list (the icon belongs to the
 
 Archive `#e8ecf1`/`#4a5568` · Label `#e3eefb`/`#1f4f7a` · Draft `#fff1cc`/`#8a5a00` ·
 Mark read `#edf1d8`/`#55681c` · Trust `#dff3e9`/`#1f6b4a` · Block `#fbe3ec`/`#9a2f5a`.
+The rule actions wear them as: `label` → Label, `archive` → Archive, `draft_reply` → Draft,
+`alert` → Block (the security tint), `log` → neutral (`surface-3`, `secondary` text). A chip the
+user may toggle is a button with `aria-pressed`; unselected it is quiet (`surface-2`, `secondary`).
 
 ### Avatars
 
@@ -195,6 +198,10 @@ tab), 600 nowhere. Letter-spacing −0.01 em at 17 px and above. Numbers in list
   Assistant, Approvals, Unsubscribe, Security, Settings), the approvals count as a small
   bubble, the account footer at the bottom (avatar; menu shows avatar · name · email · chevron,
   connection status, Settings, keyboard hints).
+- **Ask AI panel** (`AskPanel`, R07): a 380 px panel between the rail and the main column, opened
+  from the rail's Ask AI item, from "Ask AI about this email", or with `?ask=1`; it stays open
+  across screens until closed. A centred prompt and suggestion chips until the first question,
+  then plain-text answers with numbered sources and preview cards.
 - **Main column**: one panel, min 640 px, title row 56 px, then the screen.
 - **Right panel**: 300 px, Today when nothing is open, the sender card when an email is open
   (R03/R04). Hidden under 1100 px.

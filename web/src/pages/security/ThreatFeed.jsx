@@ -1,59 +1,65 @@
 import { Link } from 'react-router';
 import { LoadingState } from '../../components/LoadingState.jsx';
-import { RiskBadge } from '../../components/RiskBadge.jsx';
+import { shortDate } from '../../lib/dates.js';
 import { useApi } from '../../lib/useApi.js';
+import { RiskDot } from '../../ui/RiskDot.jsx';
 
-/** PRD F11.2: every non-SAFE email with its reasons and what happened to it. */
+/** How many stored reasons one feed line shows; the trace has them all. */
+const REASONS_SHOWN = 3;
+
+/**
+ * PRD F11.2: every non-SAFE email, each line a link that opens the email with its trace
+ * (`?trace=1`). Risk is the red dot with its tooltip; the words are plain text.
+ */
 export function ThreatFeed() {
   const { data: feed, error } = useApi('/security/feed?limit=100', { refreshInterval: 30_000 });
   if (error)
     return (
-      <p role="alert" className="text-sm text-danger">
+      <p role="alert" className="px-5 py-3 text-sm text-danger">
         {error.message}
       </p>
     );
   if (!feed) return <LoadingState label="Loading threats…" />;
   if (feed.length === 0)
-    return <p className="text-sm text-muted">No suspicious or dangerous email so far.</p>;
+    return (
+      <p className="px-5 py-4 text-base text-secondary">No suspicious or dangerous email so far.</p>
+    );
   return (
-    <ul className="divide-y divide-line rounded-lg border border-line" aria-label="Threat feed">
+    <ul className="divide-y divide-line border-t border-line">
       {feed.map((item) => (
-        <li key={item.gmailId} className="flex flex-wrap items-start gap-3 px-4 py-3">
-          <RiskBadge level={item.level} size="sm" />
-          <div className="min-w-0 flex-1">
-            <p className="flex flex-wrap items-center gap-2 text-sm">
-              <span className="truncate font-medium">{item.fromName || item.fromAddr}</span>
+        <li key={item.gmailId}>
+          <Link
+            to={`/inbox/${item.gmailId}?trace=1`}
+            aria-label={`Open ${item.fromName || item.fromAddr} and its trace`}
+            className="block px-5 py-2.5 transition-colors duration-150 ease-out-soft hover:bg-surface-2"
+          >
+            <span className="flex items-center gap-2">
+              <RiskDot verdict={{ level: item.level }} />
+              <span className="min-w-0 truncate font-medium">{item.fromName || item.fromAddr}</span>
               {item.fromName && (
-                <span className="truncate font-mono text-xs text-muted">{item.fromAddr}</span>
+                <span className="min-w-0 truncate text-sm text-secondary">{item.fromAddr}</span>
               )}
               {item.injectionAttempt && (
-                <span className="rounded bg-danger-soft px-1.5 py-0.5 text-xs font-medium text-danger">
-                  Injection attempt blocked
+                <span className="shrink-0 rounded-[4px] bg-surface-3 px-1.5 text-xs text-secondary">
+                  injection attempt blocked
                 </span>
               )}
               {item.userFeedback === 'not_phishing' && (
-                <span className="rounded bg-surface-2 px-1.5 py-0.5 text-xs text-muted">
+                <span className="shrink-0 rounded-[4px] bg-surface-3 px-1.5 text-xs text-secondary">
                   you: not phishing
                 </span>
               )}
-            </p>
-            <ul className="mt-1 list-disc space-y-0.5 pl-5 text-sm text-muted">
-              {item.reasons.slice(0, 3).map((reason, index) => (
-                <li key={index} className="break-words whitespace-pre-wrap">
-                  {reason}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="text-right text-xs text-muted">
-            <time dateTime={item.date}>
-              {new Date(item.date).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}
-            </time>
-            <br />
-            <Link to={`/inbox/${item.gmailId}`} className="text-accent hover:underline">
-              open · trace
-            </Link>
-          </div>
+              <time
+                dateTime={item.date}
+                className="ml-auto shrink-0 pl-3 text-sm text-tertiary tabular-nums"
+              >
+                {shortDate(item.date)}
+              </time>
+            </span>
+            <span className="mt-0.5 block truncate pl-[14px] text-sm text-secondary">
+              {item.reasons.slice(0, REASONS_SHOWN).join(' · ')}
+            </span>
+          </Link>
         </li>
       ))}
     </ul>
