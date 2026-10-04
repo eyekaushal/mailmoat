@@ -257,6 +257,18 @@ describe('RuleEngine.process', () => {
     });
   });
 
+  it('stores the ingested snippet for the inbox list once the pipeline has parsed the email', async () => {
+    const record = store('m1');
+    await engine({
+      pipelineResult: { ...analysis(), email: { snippet: 'Your receipt for October' } },
+    }).process(record);
+    expect(emails.page().items[0]).toMatchObject({
+      gmailId: 'm1',
+      snippet: 'Your receipt for October',
+    });
+    expect(emails.get('m1')).not.toHaveProperty('snippet');
+  });
+
   it('applies every chosen action: Marketing labels and archives by default', async () => {
     await engine({ pipelineResult: analysis({ form: form({ category: 'marketing' }) }) }).process(
       store('m1'),

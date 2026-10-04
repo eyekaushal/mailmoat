@@ -6,6 +6,7 @@ import { ContactRepository } from '../../../src/db/repositories/ContactRepositor
 import { EmailRepository } from '../../../src/db/repositories/EmailRepository.js';
 import { SenderRepository } from '../../../src/db/repositories/SenderRepository.js';
 import { SyncStateRepository } from '../../../src/db/repositories/SyncStateRepository.js';
+import { TextNormalizer } from '../../../src/security/ingest/TextNormalizer.js';
 import { Backfill } from '../../../src/sync/Backfill.js';
 import { ContactHistoryBuilder } from '../../../src/sync/ContactHistoryBuilder.js';
 import { EmailMetadataMapper } from '../../../src/sync/EmailMetadataMapper.js';
@@ -32,7 +33,7 @@ function buildSync(database = db) {
       new SenderRepository(database),
       () => 'me@gmail.com',
     ),
-    mapper: new EmailMetadataMapper(),
+    mapper: new EmailMetadataMapper({ textNormalizer: new TextNormalizer() }),
     logger,
   });
   const sync = new GmailSync({
@@ -52,7 +53,7 @@ function buildSync(database = db) {
     logger,
     now: () => new Date('2026-10-01T12:00:00Z'),
   });
-  return { sync, backfill: new Backfill({ gmail, importer, logger }) };
+  return { sync, importer, backfill: new Backfill({ gmail, importer, logger }) };
 }
 
 beforeEach(() => {
@@ -117,6 +118,46 @@ describe('GmailSync', () => {
     gmail.historyExpired = true;
     await expect(sync.poll()).resolves.toMatchObject({ newMessages: 1, processed: 1 });
     expect(processed).toEqual(['missed']);
+  });
+});
+
+describe('Subject and snippet', () => {
+  it("stores the subject and Gmail's snippet on import", async () => {
+    const { sync } = buildSync();
+    await sync.initialize();
+    gmail.addMessage({ id: 'a', subject: 'Lunch?', snippet: 'Friday &amp; Saturday work' });
+    await sync.poll();
+    expect(emails.page().items[0]).toMatchObject({
+      gmailId: 'a',
+      subject: 'Lunch?',
+      snippet: 'Friday & Saturday work',
+    });
+  });
+
+  it('fills rows stored before the columns existed on the next poll, newest first, bounded', async () => {
+    const { sync, importer } = buildSync();
+    await sync.initialize();
+    for (const id of ['old1', 'old2', 'old3']) {
+      gmail.addMessage({ id, subject: `Subject ${id}`, snippet: `Snippet ${id}` });
+      // Rows as migration 006 leaves them: text never fetched.
+      await importer.import([id], { pending: false });
+      db.run('UPDATE emails SET subject = NULL, snippet = NULL WHERE gmail_id = ?', [id]);
+    }
+    db.run("UPDATE emails SET snippet = 'ingested' WHERE gmail_id = 'old2'");
+    gmail.deletedIds.add('old3');
+    gmail.metadataCalls = 0;
+
+    expect(await importer.fillText(2)).toBe(2);
+    expect(gmail.metadataCalls).toBe(2);
+    expect(emails.listMissingText()).toEqual(['old1']);
+    await sync.poll();
+    expect(emails.listMissingText()).toEqual([]);
+    const byId = Object.fromEntries(emails.page().items.map((i) => [i.gmailId, i]));
+    expect(byId.old1).toMatchObject({ subject: 'Subject old1', snippet: 'Snippet old1' });
+    // An ingested snippet is never replaced by Gmail's.
+    expect(byId.old2).toMatchObject({ subject: 'Subject old2', snippet: 'ingested' });
+    // Deleted in Gmail: stop asking, keep the row.
+    expect(byId.old3).toMatchObject({ subject: '', snippet: '' });
   });
 });
 

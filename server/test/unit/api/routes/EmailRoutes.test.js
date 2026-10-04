@@ -177,11 +177,31 @@ describe('GET /api/emails', () => {
       verdict: { level: 'SAFE', score: 0, injectionAttempt: false, userFeedback: null },
     });
     expect(first.json.items[0]).not.toHaveProperty('body');
+    expect(first.json.items[0]).toMatchObject({
+      subject: '',
+      snippet: '',
+      avatar: { initials: 'R', hue: expect.any(Number) },
+    });
     expect(first.json.nextCursor).toEqual(expect.any(String));
 
     const second = await api.get(`/api/emails?limit=2&cursor=${first.json.nextCursor}`);
     expect(second.json.items.map((e) => e.gmailId)).toEqual(['a']);
     expect(second.json.nextCursor).toBeNull();
+  });
+
+  it('carries the stored subject, snippet and initials from the display name', async () => {
+    const record = storeEmail(repos, 'a', { fromName: 'Rahul Mehta' });
+    repos.emails.insertIfAbsent(
+      { ...record, gmailId: 'b', subject: 'Deck for Friday', snippet: 'Attached is the deck…' },
+      { pending: false },
+    );
+    const { items } = (await api.get('/api/emails')).json;
+    expect(items.find((i) => i.gmailId === 'b')).toMatchObject({
+      subject: 'Deck for Friday',
+      snippet: 'Attached is the deck…',
+      avatar: { initials: 'RM' },
+    });
+    expect(items[0].avatar.hue).toBe(items[1].avatar.hue);
   });
 
   it('filters by tab (rule) and by risk, and validates the query', async () => {

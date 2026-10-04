@@ -322,6 +322,66 @@ describe('VerdictRepository feedback, auth, counts and feed', () => {
   });
 });
 
+describe('EmailRepository subject and snippet', () => {
+  it('returns them on list rows only; get/search records never carry them (invariant 2)', () => {
+    const repos = { emails: new EmailRepository(db), verdicts: new VerdictRepository(db) };
+    const record = storeEmail(repos, 'a');
+    repos.emails.insertIfAbsent(
+      { ...record, gmailId: 'b', subject: 'Invoice 42', snippet: 'Please pay by Friday' },
+      { pending: false },
+    );
+    expect(repos.emails.page().items.find((i) => i.gmailId === 'b')).toMatchObject({
+      subject: 'Invoice 42',
+      snippet: 'Please pay by Friday',
+    });
+    expect(repos.emails.page().items.find((i) => i.gmailId === 'a')).toMatchObject({
+      subject: '',
+      snippet: '',
+    });
+    for (const found of [
+      repos.emails.get('b'),
+      ...repos.emails.search({ from: record.fromAddr }),
+    ]) {
+      expect(found).not.toHaveProperty('subject');
+      expect(found).not.toHaveProperty('snippet');
+    }
+    expect(JSON.stringify(repos.emails.listPending())).not.toContain('Invoice 42');
+  });
+
+  it('setSnippet overwrites, setText fills a missing snippet only, listMissingText finds NULLs', () => {
+    const repos = { emails: new EmailRepository(db), verdicts: new VerdictRepository(db) };
+    storeEmail(repos, 'a', { date: '2026-10-01T00:00:00.000Z' });
+    storeEmail(repos, 'b', { date: '2026-10-02T00:00:00.000Z' });
+    expect(repos.emails.listMissingText()).toEqual(['b', 'a']);
+    expect(repos.emails.listMissingText(1)).toEqual(['b']);
+    repos.emails.setSnippet('a', 'from ingest');
+    repos.emails.setText('a', { subject: 'S', snippet: 'from gmail' });
+    repos.emails.setText('b', { subject: '', snippet: 'from gmail' });
+    expect(repos.emails.listMissingText()).toEqual([]);
+    const byId = Object.fromEntries(repos.emails.page().items.map((i) => [i.gmailId, i]));
+    expect(byId.a).toMatchObject({ subject: 'S', snippet: 'from ingest' });
+    expect(byId.b).toMatchObject({ subject: '', snippet: 'from gmail' });
+    repos.emails.setSnippet('b', 'later ingest');
+    expect(repos.emails.page().items.find((i) => i.gmailId === 'b').snippet).toBe('later ingest');
+  });
+
+  it('listByIds returns inbox rows for stored ids and skips unknown ones', () => {
+    const rules = new RuleRepository(db);
+    rules.seed([{ id: 'fyi', name: 'FYI', actions: ['label'], isSecurity: false }]);
+    const repos = { emails: new EmailRepository(db), verdicts: new VerdictRepository(db), rules };
+    storeEmail(repos, 'a', { ruleIds: ['fyi'] });
+    storeEmail(repos, 'sent', { direction: 'outbound' });
+    const items = repos.emails.listByIds(['sent', 'nope', 'a']);
+    expect(items.map((i) => i.gmailId).sort()).toEqual(['a', 'sent']);
+    expect(items.find((i) => i.gmailId === 'a')).toMatchObject({
+      rules: ['fyi'],
+      verdict: { level: 'SAFE' },
+      subject: '',
+    });
+    expect(repos.emails.listByIds([])).toEqual([]);
+  });
+});
+
 describe('EmailRepository.page and unreadCounts', () => {
   it('pages newest first by tab and risk, with a keyset cursor that survives equal dates', () => {
     const rules = new RuleRepository(db);

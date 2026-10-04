@@ -67,6 +67,7 @@ export class GmailSync {
       newMessages = await this.#recoverFromExpiredHistory();
     }
     const result = { newMessages, ...(await this.#processPending()) };
+    await this.#importer.fillText();
     this.#syncState.markPolled(this.#now());
     if (newMessages > 0 || result.failed > 0) this.#logger.info('sync poll', result);
     return result;

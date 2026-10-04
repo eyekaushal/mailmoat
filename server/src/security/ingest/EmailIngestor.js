@@ -18,6 +18,7 @@ const MAX_HIDDEN_ITEM_CHARS = 1_000;
  * @property {string} html raw HTML part, for structural checks only; never shown to an AI
  * @property {import('./HiddenContentDetector.js').HiddenItem[]} hidden normalised and capped
  * @property {string} readerText visible text only, normalised and capped
+ * @property {string} snippet first line of the visible text (≤ 160 chars), the only body-derived text stored
  * @property {boolean} readerTextTruncated
  * @property {string} bodyHash SHA-256 of the raw message
  */
@@ -86,6 +87,7 @@ export class EmailIngestor {
       })),
       readerText: reader.text,
       readerTextTruncated: reader.truncated,
+      snippet: this.#textNormalizer.snippet(reader.text),
       bodyHash: createHash('sha256').update(raw).digest('hex'),
     };
   }

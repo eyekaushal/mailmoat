@@ -30,11 +30,13 @@ import { ChatRoutes } from './api/routes/ChatRoutes.js';
 import { EmailRoutes } from './api/routes/EmailRoutes.js';
 import { GoogleRoutes } from './api/routes/GoogleRoutes.js';
 import { RuleRoutes } from './api/routes/RuleRoutes.js';
+import { SearchRoutes } from './api/routes/SearchRoutes.js';
 import { SecurityRoutes } from './api/routes/SecurityRoutes.js';
 import { SenderRoutes } from './api/routes/SenderRoutes.js';
 import { SettingsRoutes } from './api/routes/SettingsRoutes.js';
 import { SummaryRoutes } from './api/routes/SummaryRoutes.js';
 import { SystemRoutes } from './api/routes/SystemRoutes.js';
+import { ThreadRoutes } from './api/routes/ThreadRoutes.js';
 import { AuditLog } from './audit/AuditLog.js';
 import { Config } from './config/Config.js';
 import { KeyProvider } from './config/KeyProvider.js';
@@ -142,12 +144,13 @@ const models = new ModelConfig({
 const llm = new LlmClient({ anthropic, models, auditLog, logger });
 
 // --- Security pipeline ------------------------------------------------------------------------
+const textNormalizer = new TextNormalizer();
 const ingestor = new EmailIngestor({
   mimeParser: new MimeParser(),
   authResultsParser: new AuthResultsParser(),
   linkExtractor: new LinkExtractor(),
   hiddenContentDetector: new HiddenContentDetector(),
-  textNormalizer: new TextNormalizer(),
+  textNormalizer,
 });
 const pipeline = new SecurityPipeline({
   gmail,
@@ -298,7 +301,7 @@ const importer = new MessageImporter({
   gmail,
   emails,
   history: new ContactHistoryBuilder(contacts, senders, userEmail),
-  mapper: new EmailMetadataMapper(),
+  mapper: new EmailMetadataMapper({ textNormalizer }),
   logger,
 });
 const sync = new GmailSync({ gmail, importer, emails, syncState, processor: ruleEngine, logger });
@@ -383,6 +386,8 @@ const app = new App({
       auditLog,
       timeZone,
     }),
+    new ThreadRoutes({ gmail, ingestor, emails, verdicts }),
+    new SearchRoutes({ gmail, importer, emails }),
     new RuleRoutes({ ruleEngine, pipeline, emails, gmail, logger }),
     new ChatRoutes({ chats }),
     new ApprovalRoutes({ approvals, timeZone }),

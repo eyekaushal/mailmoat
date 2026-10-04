@@ -46,6 +46,29 @@ export class MessageImporter {
     return stored;
   }
 
+  /**
+   * Fills subject and snippet on rows stored before they were kept (one metadata read each; a
+   * bounded slice per sync pass so one poll never spends the whole Gmail quota).
+   * @returns {Promise<number>} rows filled
+   */
+  async fillText(limit = 200) {
+    const ids = this.#emails.listMissingText(limit);
+    for (let i = 0; i < ids.length; i += this.#concurrency) {
+      await Promise.all(ids.slice(i, i + this.#concurrency).map((id) => this.#fillOne(id)));
+    }
+    return ids.length;
+  }
+
+  async #fillOne(id) {
+    try {
+      this.#emails.setText(id, this.#mapper.toText(await this.#gmail.getMessageMetadata(id)));
+    } catch (error) {
+      // Deleted from Gmail since: leave the row readable and stop asking for it.
+      if (error?.code !== 404 && error?.status !== 404) throw error;
+      this.#emails.setText(id, { subject: '', snippet: '' });
+    }
+  }
+
   async #importOne(id, pending, before) {
     let metadata;
     try {

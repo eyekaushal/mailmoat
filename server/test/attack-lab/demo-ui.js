@@ -33,11 +33,13 @@ import { ChatRoutes } from '../../src/api/routes/ChatRoutes.js';
 import { EmailRoutes } from '../../src/api/routes/EmailRoutes.js';
 import { GoogleRoutes } from '../../src/api/routes/GoogleRoutes.js';
 import { RuleRoutes } from '../../src/api/routes/RuleRoutes.js';
+import { SearchRoutes } from '../../src/api/routes/SearchRoutes.js';
 import { SecurityRoutes } from '../../src/api/routes/SecurityRoutes.js';
 import { SenderRoutes } from '../../src/api/routes/SenderRoutes.js';
 import { SettingsRoutes } from '../../src/api/routes/SettingsRoutes.js';
 import { SummaryRoutes } from '../../src/api/routes/SummaryRoutes.js';
 import { SystemRoutes } from '../../src/api/routes/SystemRoutes.js';
+import { ThreadRoutes } from '../../src/api/routes/ThreadRoutes.js';
 import { AuditLog } from '../../src/audit/AuditLog.js';
 import { Logger } from '../../src/core/Logger.js';
 import { Database } from '../../src/db/Database.js';
@@ -72,6 +74,7 @@ import { BlockedSenderFilter } from '../../src/rules/BlockedSenderFilter.js';
 import { PredefinedRules } from '../../src/rules/PredefinedRules.js';
 import { RuleEngine } from '../../src/rules/RuleEngine.js';
 import { SecurityPipeline } from '../../src/security/SecurityPipeline.js';
+import { TextNormalizer } from '../../src/security/ingest/TextNormalizer.js';
 import { Drafter } from '../../src/security/reader/Drafter.js';
 import { Extractor } from '../../src/security/reader/Extractor.js';
 import { Reader } from '../../src/security/reader/Reader.js';
@@ -81,6 +84,7 @@ import { SignalCatalog } from '../../src/security/signals/SignalCatalog.js';
 import { SignalEngine } from '../../src/security/signals/SignalEngine.js';
 import { ContactHistoryBuilder } from '../../src/sync/ContactHistoryBuilder.js';
 import { EmailMetadataMapper } from '../../src/sync/EmailMetadataMapper.js';
+import { MessageImporter } from '../../src/sync/MessageImporter.js';
 import { realIngestor } from '../helpers/securityFixtures.js';
 import { AttackLab } from './AttackLab.js';
 import { FakeGmail } from './FakeGmail.js';
@@ -293,7 +297,8 @@ for (const contact of persona.contacts) {
   contacts.recordSent(contact.address, new Date('2026-06-01T09:00:00Z'), contact.name);
 }
 const history = new ContactHistoryBuilder(contacts, senders, userEmail);
-const mapper = new EmailMetadataMapper();
+const mapper = new EmailMetadataMapper({ textNormalizer: new TextNormalizer() });
+const importer = new MessageImporter({ gmail, emails, history, mapper, logger });
 // Drafting needs a live model, so To Reply only labels while seeding.
 ruleRepository.update('to_reply', { actions: ['label'] });
 
@@ -319,6 +324,7 @@ for (const [index, entry] of cases.entries()) {
     labelIds: message.labelIds,
     internalDate: message.internalDate,
     headers: entry.headers,
+    snippet: '',
   });
   emails.insertIfAbsent(record, { pending: true });
   history.record(record);
@@ -473,6 +479,8 @@ const app = new App({
       auditLog,
       timeZone,
     }),
+    new ThreadRoutes({ gmail, ingestor, emails, verdicts }),
+    new SearchRoutes({ gmail, importer, emails }),
     new RuleRoutes({ ruleEngine, pipeline, emails, gmail, logger }),
     new ChatRoutes({ chats }),
     new ApprovalRoutes({ approvals, timeZone }),

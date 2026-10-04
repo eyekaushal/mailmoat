@@ -156,7 +156,7 @@ Each requirement has an ID for traceability in `PLAN.md` and tests. "AC" = accep
 | F2.4 | Outbound messages (sent by the user) update contact history and "Awaiting Reply" tracking. |
 | F2.5 | Processing is idempotent: a message is processed once (unique on Gmail message ID). |
 | F2.6 | Gmail API rate limits and errors are retried with backoff; failures are logged and surfaced in the Security Center. |
-| F2.7 | Only metadata, verdicts and a body hash are stored by default; bodies are fetched from Gmail on demand. |
+| F2.7 | Only metadata, verdicts, a body hash, the subject and a ≤ 160-character snippet of the visible text are stored; bodies are fetched from Gmail on demand and never stored. |
 
 **AC:** An email sent to the account appears in the dashboard with category label and risk verdict within 90 s; restarting the app does not reprocess old mail.
 
@@ -372,7 +372,7 @@ UI is built with React; design and implementation of screens is done in the UI p
 | Area | Requirement |
 |---|---|
 | **Security** | Everything in `SECURITY_APPROACH.md`, including §9 (loopback bind, Host/Origin checks, CSRF, encrypted secrets, minimal scopes, redacted logs, dependency audit). |
-| **Privacy** | No telemetry. No data sent anywhere except Google APIs and the Anthropic API. Bodies not stored by default. "Delete all local data" button. |
+| **Privacy** | No telemetry. No data sent anywhere except Google APIs and the Anthropic API. Bodies are never stored; the subject and a ≤ 160-character snippet of the visible text are (for the inbox list, shown as plain text, never given to the Planner; decided 4 Oct 2026, PLAN §13.1). "Delete all local data" button. |
 | **Performance** | Pipeline per email ≤ 10 s p95 (dominated by the Reader call). Dashboard lists render ≤ 200 ms for 5,000 emails. Backfill of 30 days runs in the background without blocking the UI. |
 | **Cost** | Reader on the small model: ~1.5k input + ~0.3k output tokens per email ≈ **$0.003/email** at current Haiku 4.5 pricing (≈ $0.30 per 100 emails). Planner runs only on user requests and To-Reply drafts. Prompt caching on system prompts. Settings shows an estimated monthly cost. |
 | **Reliability** | Idempotent processing; crash-safe (SQLite WAL); resume from last `historyId` after restart; exponential backoff on Google/Anthropic errors; Reader/Planner failures fail closed. |
@@ -467,7 +467,7 @@ SQLite, one file under the user's app-data folder (not the repo). Main tables:
 |---|---|
 | `settings` | `key`, `value` (non-secret) |
 | `secrets` | `name`, `ciphertext`, `iv`, `tag`, `updated_at` |
-| `emails` | `gmail_id` (PK), `thread_id`, `direction`, `from_addr`, `from_domain`, `from_name`, `to_addrs`, `date`, `subject_hash`, `body_hash`, `has_list_unsubscribe`, `unsubscribe_url`, `one_click`, `labels`, `processed_at` |
+| `emails` | `gmail_id` (PK), `thread_id`, `direction`, `from_addr`, `from_domain`, `from_name`, `to_addrs`, `date`, `subject_hash`, `subject`, `snippet` (≤ 160 chars of visible text; Gmail's own snippet until the first ingest), `body_hash`, `has_list_unsubscribe`, `unsubscribe_url`, `one_click`, `labels`, `processed_at` |
 | `auth_results` | `gmail_id`, `spf`, `dkim`, `dkim_domain`, `dmarc` |
 | `signals` | `gmail_id`, `signal_id`, `severity`, `reason` |
 | `reader_forms` | `gmail_id`, `json`, `model`, `created_at` |
@@ -494,7 +494,7 @@ All routes are under `/api`, JSON only, bound to `127.0.0.1`, protected by Host/
 | Area | Routes |
 |---|---|
 | Setup/settings | `GET /settings`, `PUT /settings`, `PUT /secrets/anthropic`, `DELETE /secrets/anthropic`, `POST /secrets/anthropic/test`, `GET /google/auth-url`, `GET /google/callback`, `POST /google/disconnect` |
-| Inbox | `GET /emails?label=&risk=&cursor=&limit=` (label = rule id), `GET /emails/counts`, `GET /emails/:id`, `GET /emails/:id/trace`, `POST /emails/:id/archive`, `POST /emails/:id/draft-reply`, `POST /emails/:id/propose-meeting`, `POST /emails/:id/save-meeting`, `POST /emails/:id/trust-sender`, `POST /emails/:id/not-phishing` |
+| Inbox | `GET /emails?label=&risk=&cursor=&limit=` (label = rule id; rows carry `subject`, `snippet`, `avatar { initials, hue }`), `GET /emails/counts`, `GET /threads/:id` (every message fetched and ingested on open), `GET /search?q=&cursor=` (live Gmail search merged with local verdicts), `GET /emails/:id`, `GET /emails/:id/trace`, `POST /emails/:id/archive`, `POST /emails/:id/draft-reply`, `POST /emails/:id/propose-meeting`, `POST /emails/:id/save-meeting`, `POST /emails/:id/trust-sender`, `POST /emails/:id/not-phishing` |
 | Rules | `GET /rules`, `PATCH /rules/:id`, `POST /rules/test`, `GET /rules/history`, `POST /rules/process-past`, `GET /rules/process-past` (progress) |
 | Chat | `POST /chat` (streams steps via Server-Sent Events), `GET /chats`, `POST /chats`, `GET /chats/:id`, `DELETE /chats/:id`, `POST /chats/:id/decide` |
 | Approvals | `GET /approvals`, `GET /approvals/:id`, `POST /approvals/:id/approve`, `POST /approvals/:id/reject`, `PATCH /approvals/:id` (edit) |

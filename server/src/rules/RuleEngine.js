@@ -111,6 +111,8 @@ export class RuleEngine {
       };
     }
     const analysis = await this.#deps.pipeline.process(record);
+    // The first ingest: the inbox list's snippet is now mailmoat's own visible text (PLAN §13.4).
+    if (analysis.email) this.#deps.emails.setSnippet(record.gmailId, analysis.email.snippet);
     return { ...analysis, rules: await this.apply(record, analysis), blocked: false };
   }
 

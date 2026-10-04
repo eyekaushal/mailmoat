@@ -30,4 +30,15 @@ describe('TextNormalizer', () => {
     expect(long.truncated).toBe(true);
     expect(normalizer.forReader('short')).toEqual({ text: 'short', truncated: false });
   });
+
+  it('builds a one-line snippet of at most 160 characters, cut at a word', () => {
+    expect(normalizer.snippet('Hi Kaushal,\n\nCan we meet\u200B Friday?')).toBe(
+      'Hi Kaushal, Can we meet Friday?',
+    );
+    const long = normalizer.snippet(`${'word '.repeat(40)}end`);
+    expect(long.length).toBeLessThanOrEqual(160);
+    expect(long).toMatch(/word…$/);
+    expect(normalizer.snippet('x'.repeat(200))).toBe(`${'x'.repeat(159)}…`);
+    expect(normalizer.snippet('')).toBe('');
+  });
 });

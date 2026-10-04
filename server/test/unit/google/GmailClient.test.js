@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { HistoryExpiredError } from '../../../src/core/errors.js';
+import { HistoryExpiredError, NotFoundError } from '../../../src/core/errors.js';
 import { GmailClient } from '../../../src/google/GmailClient.js';
 
 function makeClient(users) {
@@ -125,5 +125,63 @@ describe('GmailClient', () => {
       raw: raw.toString('base64url'),
       threadId: 't1',
     });
+  });
+
+  it("returns Gmail's snippet with the metadata", async () => {
+    const users = {
+      messages: {
+        get: async () => ({
+          data: {
+            id: 'm1',
+            threadId: 't1',
+            labelIds: ['INBOX'],
+            internalDate: '1759300000000',
+            snippet: 'Hi there &amp; welcome',
+            payload: { headers: [{ name: 'Subject', value: 'Hi' }] },
+          },
+        }),
+      },
+    };
+    await expect(makeClient(users).client.getMessageMetadata('m1')).resolves.toMatchObject({
+      headers: { subject: 'Hi' },
+      snippet: 'Hi there &amp; welcome',
+    });
+  });
+
+  it('lists a thread’s messages oldest first with Gmail facts only, and 404s as NotFoundError', async () => {
+    const users = {
+      threads: {
+        get: async ({ id, format }) => {
+          if (id === 'gone') throw Object.assign(new Error('Not Found'), { code: 404 });
+          expect(format).toBe('minimal');
+          return {
+            data: {
+              id,
+              messages: [
+                { id: 'b', threadId: id, labelIds: ['SENT'], internalDate: '1759300002000' },
+                {
+                  id: 'a',
+                  threadId: id,
+                  labelIds: ['INBOX', 'UNREAD'],
+                  internalDate: '1759300001000',
+                },
+              ],
+            },
+          };
+        },
+      },
+    };
+    const { client } = makeClient(users);
+    const thread = await client.getThread('t1');
+    expect(thread.threadId).toBe('t1');
+    expect(thread.messages.map((m) => m.id)).toEqual(['a', 'b']);
+    expect(thread.messages[0]).toEqual({
+      id: 'a',
+      threadId: 't1',
+      labelIds: ['INBOX', 'UNREAD'],
+      internalDate: new Date(1759300001000),
+    });
+    expect(JSON.stringify(thread)).not.toContain('snippet');
+    await expect(client.getThread('gone')).rejects.toThrow(NotFoundError);
   });
 });

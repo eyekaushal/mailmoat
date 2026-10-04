@@ -9,7 +9,7 @@ let calls;
 beforeEach(async () => {
   calls = [];
   const unsubscribes = {
-    listSenders: (filter) => [{ filter }],
+    listSenders: (filter) => [{ address: 'news@x.com', name: 'Daily News', filter }],
     blockWarning: (address) =>
       address === 'boss@acme.com' ? 'Warning: you reply to this sender' : null,
     requestUnsubscribe: async (address, options) => {
@@ -37,7 +37,12 @@ afterEach(() => api.close());
 describe('SenderRoutes', () => {
   it('lists senders with validated filters and shows the block warning', async () => {
     expect((await api.get('/api/senders?sort=read&limit=10')).json).toEqual([
-      { filter: { sort: 'read', limit: 10 } },
+      {
+        address: 'news@x.com',
+        name: 'Daily News',
+        filter: { sort: 'read', limit: 10 },
+        avatar: { initials: 'DN', hue: expect.any(Number) },
+      },
     ]);
     expect((await api.get('/api/senders?sort=random')).status).toBe(400);
     expect((await api.get('/api/senders/block-warning?address=Boss@Acme.com')).json).toEqual({

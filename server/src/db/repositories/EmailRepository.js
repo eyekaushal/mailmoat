@@ -6,11 +6,16 @@ const MAX_ATTEMPTS = 5;
  * @typedef {import('../../sync/EmailMetadataMapper.js').EmailRecord & {
  *   rules: string[], category: string | null, summary: string | null, needsReply: boolean,
  *   verdict: { level: string, score: number, injectionAttempt: boolean, userFeedback: string | null } | null,
- * }} InboxItem one Inbox row: metadata, matched rules, the Reader's typed fields and the verdict
+ * }} InboxItem one Inbox row: metadata, subject, snippet, matched rules, the Reader's typed
+ *   fields and the verdict. Only the UI list routes receive this shape.
  */
 
 /**
  * Stored email metadata (never bodies) and the queue of new mail awaiting the security pipeline.
+ *
+ * The subject and snippet are untrusted text kept for the inbox list. They are returned only by
+ * the list methods (`page`, `listByIds`); `get`, `search` and the other record methods feed the
+ * agent and the rules and never include them, so the Planner cannot receive them (invariant 2).
  */
 export class EmailRepository {
   #db;
@@ -29,9 +34,9 @@ export class EmailRepository {
   insertIfAbsent(record, { pending }) {
     const result = this.#db.run(
       `INSERT OR IGNORE INTO emails (gmail_id, thread_id, direction, from_addr, from_domain,
-         from_name, to_addrs, date, subject_hash, has_list_unsubscribe, unsubscribe_url,
-         one_click, labels, is_read, pending)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+         from_name, to_addrs, date, subject_hash, subject, snippet, has_list_unsubscribe,
+         unsubscribe_url, one_click, labels, is_read, pending)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         record.gmailId,
         record.threadId,
@@ -42,6 +47,8 @@ export class EmailRepository {
         JSON.stringify(record.toAddrs),
         record.date,
         record.subjectHash,
+        record.subject ?? null,
+        record.snippet ?? null,
         Number(record.hasListUnsubscribe),
         record.unsubscribeUrl,
         Number(record.oneClick),
@@ -51,6 +58,37 @@ export class EmailRepository {
       ],
     );
     return Number(result.changes) === 1;
+  }
+
+  /**
+   * Mailmoat's own visible-text snippet, written whenever the message is ingested; it replaces
+   * Gmail's snippet from the metadata fetch.
+   * @param {string} gmailId @param {string} snippet
+   */
+  setSnippet(gmailId, snippet) {
+    this.#db.run('UPDATE emails SET snippet = ? WHERE gmail_id = ?', [snippet, gmailId]);
+  }
+
+  /**
+   * Fills a row stored before subjects were kept. An ingested snippet is never overwritten.
+   * @param {string} gmailId @param {{ subject: string, snippet: string }} text
+   */
+  setText(gmailId, { subject, snippet }) {
+    this.#db.run(
+      'UPDATE emails SET subject = ?, snippet = COALESCE(snippet, ?) WHERE gmail_id = ?',
+      [subject, snippet, gmailId],
+    );
+  }
+
+  /**
+   * Rows whose subject was never fetched (NULL; an email without a subject stores ''), newest
+   * first, so the next sync pass can fill them.
+   * @returns {string[]} Gmail ids
+   */
+  listMissingText(limit = 200) {
+    return this.#db
+      .all('SELECT gmail_id FROM emails WHERE subject IS NULL ORDER BY date DESC LIMIT ?', [limit])
+      .map((row) => row.gmail_id);
   }
 
   /** @param {string} gmailId */
@@ -174,37 +212,8 @@ export class EmailRepository {
       where.push('(e.date < ? OR (e.date = ? AND e.gmail_id < ?))');
       params.push(date, date, gmailId);
     }
-    const rows = this.#db.all(
-      `SELECT e.*, v.level, v.score, v.injection_attempt, v.user_feedback,
-              json_extract(rf.json, '$.category') AS category,
-              json_extract(rf.json, '$.summary') AS summary,
-              json_extract(rf.json, '$.needs_reply') AS needs_reply,
-              (SELECT json_group_array(r.rule_id) FROM rule_runs r
-                WHERE r.gmail_id = e.gmail_id AND r.status = 'done') AS rule_ids
-       FROM emails e
-       LEFT JOIN verdicts v ON v.gmail_id = e.gmail_id
-       LEFT JOIN reader_forms rf ON rf.gmail_id = e.gmail_id
-       WHERE ${where.join(' AND ')}
-       ORDER BY e.date DESC, e.gmail_id DESC
-       LIMIT ?`,
-      [...params, limit + 1],
-    );
-    const items = rows.slice(0, limit).map((row) => ({
-      ...this.#toRecord(row),
-      rules: JSON.parse(row.rule_ids),
-      category: row.category,
-      summary: row.summary,
-      needsReply: row.needs_reply === 1,
-      verdict:
-        row.level === null
-          ? null
-          : {
-              level: row.level,
-              score: row.score,
-              injectionAttempt: row.injection_attempt === 1,
-              userFeedback: row.user_feedback,
-            },
-    }));
+    const rows = this.#listRows(where, params, limit + 1);
+    const items = rows.slice(0, limit).map((row) => this.#toItem(row));
     const last = items.at(-1);
     const nextCursor =
       rows.length > limit ? EmailRepository.#encodeCursor(last.date, last.gmailId) : null;
@@ -238,6 +247,59 @@ export class EmailRepository {
     return { all, byRule, byLevel };
   }
 
+  /**
+   * Inbox rows for the given Gmail ids (live search results), in no particular order; ids that
+   * are not stored are left out.
+   * @param {string[]} gmailIds
+   * @returns {InboxItem[]}
+   */
+  listByIds(gmailIds) {
+    if (gmailIds.length === 0) return [];
+    const marks = gmailIds.map(() => '?').join(', ');
+    return this.#listRows([`e.gmail_id IN (${marks})`], gmailIds, gmailIds.length).map((row) =>
+      this.#toItem(row),
+    );
+  }
+
+  #listRows(where, params, limit) {
+    return this.#db.all(
+      `SELECT e.*, v.level, v.score, v.injection_attempt, v.user_feedback,
+              json_extract(rf.json, '$.category') AS category,
+              json_extract(rf.json, '$.summary') AS summary,
+              json_extract(rf.json, '$.needs_reply') AS needs_reply,
+              (SELECT json_group_array(r.rule_id) FROM rule_runs r
+                WHERE r.gmail_id = e.gmail_id AND r.status = 'done') AS rule_ids
+       FROM emails e
+       LEFT JOIN verdicts v ON v.gmail_id = e.gmail_id
+       LEFT JOIN reader_forms rf ON rf.gmail_id = e.gmail_id
+       WHERE ${where.join(' AND ')}
+       ORDER BY e.date DESC, e.gmail_id DESC
+       LIMIT ?`,
+      [...params, limit],
+    );
+  }
+
+  #toItem(row) {
+    return {
+      ...this.#toRecord(row),
+      subject: row.subject ?? '',
+      snippet: row.snippet ?? '',
+      rules: JSON.parse(row.rule_ids),
+      category: row.category,
+      summary: row.summary,
+      needsReply: row.needs_reply === 1,
+      verdict:
+        row.level === null
+          ? null
+          : {
+              level: row.level,
+              score: row.score,
+              injectionAttempt: row.injection_attempt === 1,
+              userFeedback: row.user_feedback,
+            },
+    };
+  }
+
   static #encodeCursor(date, gmailId) {
     return Buffer.from(JSON.stringify({ date, gmailId })).toString('base64url');
   }
@@ -252,6 +314,7 @@ export class EmailRepository {
     }
   }
 
+  // Deliberately without subject and snippet: records flow into the agent (see the class note).
   #toRecord(row) {
     return {
       gmailId: row.gmail_id,

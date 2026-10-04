@@ -51,6 +51,11 @@ export const EmailListQuerySchema = z.object({
   cursor: z.string().max(400).optional(),
   limit: LIMIT,
 });
+/** Live Gmail search; `cursor` is Gmail's opaque page token. */
+export const SearchQuerySchema = z.object({
+  q: z.string().trim().min(1).max(500),
+  cursor: z.string().max(2000).optional(),
+});
 export const DraftReplySchema = z.strictObject({
   instructions: z.string().trim().max(2000).nullable().default(null),
   allowSuspicious: z.boolean().default(false),

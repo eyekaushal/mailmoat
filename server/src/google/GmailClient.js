@@ -1,5 +1,5 @@
 import { gmail } from '@googleapis/gmail';
-import { HistoryExpiredError } from '../core/errors.js';
+import { HistoryExpiredError, NotFoundError } from '../core/errors.js';
 
 const METADATA_HEADERS = [
   'From',
@@ -105,8 +105,39 @@ export class GmailClient {
   }
 
   /**
-   * Headers only — cheap enough for backfilling thousands of messages.
-   * @returns {Promise<{ id: string, threadId: string, labelIds: string[], internalDate: Date, headers: Record<string, string> }>}
+   * The messages of one conversation, oldest first, as ids and Gmail facts only; the caller
+   * fetches each raw message itself so the security pipeline parses the content.
+   * @returns {Promise<{ threadId: string, messages: { id: string, threadId: string, labelIds: string[], internalDate: Date }[] }>}
+   * @throws {NotFoundError} when Gmail has no such thread
+   */
+  async getThread(threadId) {
+    let data;
+    try {
+      ({ data } = await this.#users().threads.get({
+        userId: 'me',
+        id: threadId,
+        format: 'minimal',
+      }));
+    } catch (error) {
+      if (error?.code === 404 || error?.status === 404) {
+        throw new NotFoundError('Unknown thread', { cause: error });
+      }
+      throw error;
+    }
+    const messages = (data.messages ?? [])
+      .map((message) => ({
+        id: message.id,
+        threadId: message.threadId ?? data.id,
+        labelIds: message.labelIds ?? [],
+        internalDate: new Date(Number(message.internalDate)),
+      }))
+      .sort((a, b) => a.internalDate - b.internalDate);
+    return { threadId: data.id, messages };
+  }
+
+  /**
+   * Headers and Gmail's own snippet — cheap enough for backfilling thousands of messages.
+   * @returns {Promise<{ id: string, threadId: string, labelIds: string[], internalDate: Date, headers: Record<string, string>, snippet: string }>}
    *   header names are lower-cased
    */
   async getMessageMetadata(id) {
@@ -127,6 +158,7 @@ export class GmailClient {
       labelIds: data.labelIds ?? [],
       internalDate: new Date(Number(data.internalDate)),
       headers,
+      snippet: data.snippet ?? '',
     };
   }
 

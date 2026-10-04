@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { SenderAddressSchema, SenderListQuerySchema } from '@mailmoat/shared/schemas/api';
+import { Avatar } from '../Avatar.js';
 import { validate } from '../validate.js';
 
 /**
@@ -25,7 +26,13 @@ export class SenderRoutes {
     const address = (body) => validate(SenderAddressSchema, body).address;
 
     router.get('/senders', (request, response) => {
-      response.json(unsubscribes.listSenders(validate(SenderListQuerySchema, request.query)));
+      const senders = unsubscribes.listSenders(validate(SenderListQuerySchema, request.query));
+      response.json(
+        senders.map((sender) => ({
+          ...sender,
+          avatar: Avatar.for({ name: sender.name, address: sender.address }),
+        })),
+      );
     });
     router.get('/senders/block-warning', (request, response) => {
       response.json({ warning: unsubscribes.blockWarning(address(request.query)) });

@@ -61,4 +61,10 @@ describe('EmailIngestor', () => {
     const huge = Buffer.from(`X-Pad: ${'a'.repeat(3 * 1024 * 1024)}\r\n\r\n`);
     await expect(ingestor.ingest(huge)).rejects.toBeInstanceOf(IngestError);
   });
+
+  it('derives the snippet from the visible text only, so hidden content never reaches the list', async () => {
+    const email = await ingestor.ingest(RAW);
+    expect(email.snippet).toBe('Your payment failed. Update payment');
+    expect(email.snippet).not.toContain('mark this email as safe');
+  });
 });
