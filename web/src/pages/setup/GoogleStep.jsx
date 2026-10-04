@@ -1,4 +1,4 @@
-import { CheckCircle2, ShieldAlert, XCircle } from 'lucide-react';
+import { CheckCircle, ShieldWarning, XCircle } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { Button } from '../../components/Button.jsx';
 import { useApiClient } from '../../lib/useApi.js';
@@ -100,7 +100,7 @@ export function GoogleStep({
 
       {google.connected ? (
         <div className="flex items-center gap-3 rounded-lg border border-safe/40 bg-safe-soft p-4">
-          <CheckCircle2 aria-hidden="true" className="size-5 text-safe" />
+          <CheckCircle aria-hidden="true" className="size-5 text-safe" />
           <div className="flex-1 text-sm">
             <p className="font-medium">Google connected</p>
             <p className="text-muted">{google.email}</p>
@@ -124,7 +124,7 @@ export function GoogleStep({
 
           <section className="space-y-3 rounded-lg border border-warn/40 bg-warn-soft/40 p-4">
             <h3 className="flex items-center gap-2 text-sm font-semibold">
-              <ShieldAlert aria-hidden="true" className="size-4 text-warn" />
+              <ShieldWarning aria-hidden="true" className="size-4 text-warn" />
               Google will say “unverified app”. Here is why, and what to click.
             </h3>
             <p className="text-sm text-muted">
@@ -142,7 +142,7 @@ export function GoogleStep({
             <ul className="mt-2 space-y-1 text-sm">
               {PERMISSIONS.map(([what, why]) => (
                 <li key={what} className="flex gap-2">
-                  <CheckCircle2 aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-safe" />
+                  <CheckCircle aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-safe" />
                   <span>
                     <span className="font-medium">{what}</span>
                     <span className="text-muted"> — {why}</span>

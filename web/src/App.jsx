@@ -1,8 +1,9 @@
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router';
 import { Layout } from './components/Layout.jsx';
-import { NAV_ITEMS } from './components/Sidebar.jsx';
+import { NAV_ITEMS } from './components/Rail.jsx';
 import { ApiClient } from './lib/ApiClient.js';
 import { ApiProvider } from './lib/useApi.js';
+import { TooltipProvider } from './ui/Tooltip.jsx';
 import { ApprovalsPage } from './pages/approvals/ApprovalsPage.jsx';
 import { AssistantPage } from './pages/assistant/AssistantPage.jsx';
 import { ChatPage } from './pages/chat/ChatPage.jsx';
@@ -34,21 +35,23 @@ function Landing() {
 export function App() {
   return (
     <ApiProvider client={client}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/setup" element={<SetupWizard />} />
-          <Route element={<Layout />}>
-            <Route index element={<Landing />} />
-            {NAV_ITEMS.map(({ path }) => {
-              const Page = PAGES[path];
-              return <Route key={path} path={path} element={<Page />} />;
-            })}
-            <Route path="/inbox/:gmailId" element={<InboxPage />} />
-            <Route path="/chat/:chatId" element={<ChatPage />} />
-            <Route path="*" element={<Navigate to="/inbox" replace />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+      <TooltipProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/setup" element={<SetupWizard />} />
+            <Route element={<Layout />}>
+              <Route index element={<Landing />} />
+              {NAV_ITEMS.map(({ path }) => {
+                const Page = PAGES[path];
+                return <Route key={path} path={path} element={<Page />} />;
+              })}
+              <Route path="/inbox/:gmailId" element={<InboxPage />} />
+              <Route path="/chat/:chatId" element={<ChatPage />} />
+              <Route path="*" element={<Navigate to="/inbox" replace />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
     </ApiProvider>
   );
 }

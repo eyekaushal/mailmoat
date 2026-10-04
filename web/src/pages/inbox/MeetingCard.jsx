@@ -1,4 +1,4 @@
-import { CalendarPlus, XCircle } from 'lucide-react';
+import { CalendarPlus, XCircle } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { Button } from '../../components/Button.jsx';
 import { FormField, INPUT_CLASSES } from '../../components/FormField.jsx';

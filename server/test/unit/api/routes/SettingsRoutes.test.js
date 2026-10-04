@@ -78,6 +78,7 @@ describe('GET/PUT /api/settings', () => {
         draftFooter: '',
         meetingDurationMinutes: 30,
         draftRetentionDays: 7,
+        wallpaper: 'tide',
       },
       anthropic: { configured: false, masked: null, source: null },
       google: { clientConfigured: true, connected: false, email: null },

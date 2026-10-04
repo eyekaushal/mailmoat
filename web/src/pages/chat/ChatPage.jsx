@@ -1,4 +1,4 @@
-import { MessageSquarePlus, SendHorizontal, Trash2 } from 'lucide-react';
+import { ChatCircleDots, PaperPlaneRight, Trash } from '@phosphor-icons/react';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router';
 import { Button } from '../../components/Button.jsx';
@@ -136,7 +136,7 @@ export function ChatPage() {
       <aside className="hidden w-64 shrink-0 flex-col border-r border-line md:flex">
         <div className="p-3">
           <Button variant="secondary" className="w-full" onClick={() => navigate('/chat')}>
-            <MessageSquarePlus aria-hidden="true" className="size-4" /> New chat
+            <ChatCircleDots aria-hidden="true" className="size-4" /> New chat
           </Button>
         </div>
         <ul className="flex-1 overflow-y-auto px-2" aria-label="Chats">
@@ -156,7 +156,7 @@ export function ChatPage() {
                 onClick={() => remove(entry.id)}
                 className="p-1 text-muted opacity-0 group-hover:opacity-100 hover:text-danger focus:opacity-100"
               >
-                <Trash2 aria-hidden="true" className="size-3.5" />
+                <Trash aria-hidden="true" className="size-3.5" />
               </button>
             </li>
           ))}
@@ -229,7 +229,7 @@ export function ChatPage() {
               disabled={live !== null}
             />
             <Button type="submit" disabled={!draft.trim() || live !== null} aria-label="Send">
-              <SendHorizontal aria-hidden="true" className="size-4" />
+              <PaperPlaneRight aria-hidden="true" className="size-4" />
             </Button>
           </div>
         </form>

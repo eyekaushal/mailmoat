@@ -2,6 +2,7 @@ import { render } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { ApiClient } from '../src/lib/ApiClient.js';
 import { ApiProvider } from '../src/lib/useApi.js';
+import { TooltipProvider } from '../src/ui/Tooltip.jsx';
 
 /**
  * A fake server for page tests: `routes` maps `METHOD /path` to a response body or a function of
@@ -36,12 +37,14 @@ export function renderPage(element, { server, path = '/', route = '*' }) {
   const client = new ApiClient({ fetch: server.fetch });
   return render(
     <ApiProvider client={client}>
-      <MemoryRouter initialEntries={[path]}>
-        <Routes>
-          <Route path={route} element={element} />
-          <Route path="/inbox" element={<h1>Inbox screen</h1>} />
-        </Routes>
-      </MemoryRouter>
+      <TooltipProvider>
+        <MemoryRouter initialEntries={[path]}>
+          <Routes>
+            <Route path={route} element={element} />
+            <Route path="/inbox" element={<h1>Inbox screen</h1>} />
+          </Routes>
+        </MemoryRouter>
+      </TooltipProvider>
     </ApiProvider>,
   );
 }

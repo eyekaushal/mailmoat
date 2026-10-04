@@ -1,4 +1,4 @@
-import { Check, CheckCircle2 } from 'lucide-react';
+import { Check, CheckCircle } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 import { Button } from '../../components/Button.jsx';
@@ -47,9 +47,9 @@ export function SetupWizard() {
   return (
     <div className="mx-auto flex min-h-full max-w-4xl flex-col px-4 py-8 sm:px-8">
       <header className="mb-8 flex items-center gap-3">
-        <img src="/favicon.svg" alt="" className="size-9" />
+        <img src="/brand/wordmark.svg" alt="mailmoat" className="h-9" />
         <div>
-          <h1 className="text-lg font-semibold tracking-tight">Set up mailmoat</h1>
+          <h1 className="text-lg font-medium tracking-tight">Set up mailmoat</h1>
           <p className="text-sm text-muted">Three steps. Nothing to install or edit by hand.</p>
         </div>
       </header>
@@ -116,7 +116,7 @@ function Finished() {
   const emails = health?.sync?.emails ?? 0;
   return (
     <section className="mx-auto max-w-md rounded-xl border border-safe/40 bg-safe-soft p-8 text-center">
-      <CheckCircle2 aria-hidden="true" className="mx-auto size-10 text-safe" />
+      <CheckCircle aria-hidden="true" className="mx-auto size-10 text-safe" />
       <h2 className="mt-3 text-xl font-semibold">Connected ✓</h2>
       <p className="mt-1 text-sm text-muted">
         First sync running. mailmoat is fetching the last 30 days of mail and analysing new messages

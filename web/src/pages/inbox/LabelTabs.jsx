@@ -1,4 +1,4 @@
-import { OctagonAlert, TriangleAlert } from 'lucide-react';
+import { Warning, WarningOctagon } from '@phosphor-icons/react';
 import { useApi } from '../../lib/useApi.js';
 
 const PAGE_SIZE = 50;
@@ -19,14 +19,14 @@ export const TABS = Object.freeze([
     id: 'suspicious',
     label: 'Suspicious',
     risk: 'SUSPICIOUS',
-    Icon: TriangleAlert,
+    Icon: Warning,
     tone: 'text-warn',
   },
   {
     id: 'dangerous',
     label: 'Dangerous',
     risk: 'DANGEROUS',
-    Icon: OctagonAlert,
+    Icon: WarningOctagon,
     tone: 'text-danger',
   },
 ]);

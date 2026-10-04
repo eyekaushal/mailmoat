@@ -1,4 +1,4 @@
-import { Phone } from 'lucide-react';
+import { Phone } from '@phosphor-icons/react';
 import { riskMeta, toneClasses } from './RiskBadge.jsx';
 
 const TOP_REASONS = 3;

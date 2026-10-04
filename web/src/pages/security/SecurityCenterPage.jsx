@@ -1,27 +1,26 @@
 import {
-  OctagonAlert,
-  ScanSearch,
-  ShieldBan,
-  ShieldOff,
-  TriangleAlert,
   Hourglass,
-} from 'lucide-react';
+  MagnifyingGlass,
+  ShieldSlash,
+  Warning,
+  WarningOctagon,
+} from '@phosphor-icons/react';
 import { useState } from 'react';
 import { useApi } from '../../lib/useApi.js';
 import { AuditLogTable } from './AuditLogTable.jsx';
 import { ThreatFeed } from './ThreatFeed.jsx';
 
 const CARDS = [
-  { key: 'scanned', label: 'Emails scanned', Icon: ScanSearch, tone: 'text-fg' },
-  { key: 'suspicious', label: 'Suspicious', Icon: TriangleAlert, tone: 'text-warn' },
-  { key: 'dangerous', label: 'Dangerous', Icon: OctagonAlert, tone: 'text-danger' },
+  { key: 'scanned', label: 'Emails scanned', Icon: MagnifyingGlass, tone: 'text-fg' },
+  { key: 'suspicious', label: 'Suspicious', Icon: Warning, tone: 'text-warn' },
+  { key: 'dangerous', label: 'Dangerous', Icon: WarningOctagon, tone: 'text-danger' },
   {
     key: 'injectionAttempts',
     label: 'Injection attempts blocked',
-    Icon: ShieldBan,
+    Icon: ShieldSlash,
     tone: 'text-danger',
   },
-  { key: 'denied', label: 'Actions denied by policy', Icon: ShieldOff, tone: 'text-fg' },
+  { key: 'denied', label: 'Actions denied by policy', Icon: ShieldSlash, tone: 'text-fg' },
   {
     key: 'pendingApprovals',
     label: 'Waiting for your approval',

@@ -1,4 +1,4 @@
-import { CalendarClock, Reply, ShieldAlert, Sparkles, Sun } from 'lucide-react';
+import { ArrowBendUpLeft, CalendarDots, ShieldWarning, Sparkle, Sun } from '@phosphor-icons/react';
 import { Link } from 'react-router';
 import { LoadingState } from '../../components/LoadingState.jsx';
 import { useApi } from '../../lib/useApi.js';
@@ -24,10 +24,10 @@ export function TodayCard() {
       </header>
       <dl className="grid grid-cols-3 gap-3 text-center">
         {[
-          [Reply, today.needsReply, 'need a reply', 'text-accent'],
-          [CalendarClock, today.meetingsProposed, 'meetings proposed', 'text-fg'],
+          [ArrowBendUpLeft, today.needsReply, 'need a reply', 'text-accent'],
+          [CalendarDots, today.meetingsProposed, 'meetings proposed', 'text-fg'],
           [
-            ShieldAlert,
+            ShieldWarning,
             threats,
             threats === 1 ? 'threat flagged' : 'threats flagged',
             threats ? 'text-danger' : 'text-muted',
@@ -59,7 +59,7 @@ export function TodayCard() {
       {today.highlights.length > 0 && (
         <div>
           <p className="mb-1 flex items-center gap-1 text-xs font-medium text-muted">
-            <Sparkles aria-hidden="true" className="size-3.5" /> Waiting for your reply · AI
+            <Sparkle aria-hidden="true" className="size-3.5" /> Waiting for your reply · AI
             summaries of untrusted emails
           </p>
           <ul className="divide-y divide-line rounded-lg border border-line">

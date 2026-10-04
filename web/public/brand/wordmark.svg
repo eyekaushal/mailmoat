@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 164 40" width="164" height="40">
+  <defs>
+    <linearGradient id="w-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1c2f57"/>
+      <stop offset="1" stop-color="#0b1430"/>
+    </linearGradient>
+    <linearGradient id="w-beam" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffcf6b" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#ffcf6b" stop-opacity="0"/>
+    </linearGradient>
+    <clipPath id="w-clip"><rect width="40" height="40" rx="10"/></clipPath>
+  </defs>
+  <g clip-path="url(#w-clip)">
+    <rect width="40" height="40" fill="url(#w-sky)"/>
+    <rect y="30" width="40" height="10" fill="#1f4f7a"/>
+    <path d="M24 11l16-5v13z" fill="url(#w-beam)"/>
+    <path d="M16.5 15h7l2.5 15H14z" fill="#f4ead3"/>
+    <path d="M16 18.6h8l.5 3h-9zM15.3 23.6h9.4l.5 3H14.8z" fill="#c8463a"/>
+    <rect x="17" y="9" width="6" height="6" rx="1.2" fill="#ffcf6b"/>
+    <path d="M15.5 9h9l-4.5-3z" fill="#243655"/>
+  </g>
+  <text x="50" y="26" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', 'Inter Variable', Inter, sans-serif" font-size="21" font-weight="500" letter-spacing="-0.2" fill="#1d1d1f">mailmoat</text>
+</svg>

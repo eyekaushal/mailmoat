@@ -18,6 +18,7 @@ const DEFAULTS = Object.freeze({
   draftFooter: '',
   meetingDurationMinutes: 30,
   draftRetentionDays: 7,
+  wallpaper: 'tide',
 });
 
 /**

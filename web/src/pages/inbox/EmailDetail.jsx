@@ -1,17 +1,17 @@
 import {
   Archive,
   ArrowLeft,
-  Code2,
-  FileText,
-  MessageSquare,
-  Paperclip,
-  PenLine,
-  ShieldCheck,
-  Sparkles,
-  UserCheck,
   CalendarPlus,
-  EyeOff,
-} from 'lucide-react';
+  ChatCircle,
+  Code,
+  EyeSlash,
+  FileText,
+  Paperclip,
+  PencilSimpleLine,
+  ShieldCheck,
+  Sparkle,
+  UserCheck,
+} from '@phosphor-icons/react';
 import { useState } from 'react';
 import { Link } from 'react-router';
 import { useSWRConfig } from 'swr';
@@ -216,7 +216,7 @@ export function EmailDetail({ gmailId, onClose }) {
         {readerForm?.summary && (
           <section className="rounded-lg bg-surface-2 p-3 text-sm">
             <p className="mb-1 flex items-center gap-1 text-xs font-medium text-muted">
-              <Sparkles aria-hidden="true" className="size-3.5" /> AI summary of an untrusted email
+              <Sparkle aria-hidden="true" className="size-3.5" /> AI summary of an untrusted email
             </p>
             <p className="whitespace-pre-wrap">{readerForm.summary}</p>
           </section>
@@ -243,7 +243,7 @@ export function EmailDetail({ gmailId, onClose }) {
         >
           {[
             ['text', 'Text', FileText],
-            ['original', 'View original', Code2],
+            ['original', 'View original', Code],
             ['trace', 'Pipeline trace', ShieldCheck],
           ].map(([id, label, Icon]) => (
             <button
@@ -277,7 +277,7 @@ export function EmailDetail({ gmailId, onClose }) {
                 )}
                 {content.hidden.length > 0 && (
                   <p className="flex items-center gap-2 rounded-md bg-warn-soft px-3 py-2 text-sm text-warn">
-                    <EyeOff aria-hidden="true" className="size-4" />
+                    <EyeSlash aria-hidden="true" className="size-4" />
                     {content.hidden.length} hidden {content.hidden.length === 1 ? 'item' : 'items'}{' '}
                     removed from this view (see the pipeline trace).
                   </p>
@@ -353,7 +353,7 @@ export function EmailDetail({ gmailId, onClose }) {
             disabled={busy !== null || dangerous || email.direction !== 'inbound'}
             title={dangerous ? 'Replies are never drafted for dangerous mail' : undefined}
           >
-            <PenLine aria-hidden="true" className="size-4" /> Draft reply
+            <PencilSimpleLine aria-hidden="true" className="size-4" /> Draft reply
           </Button>
           {readerForm?.meeting_request && (
             <Button
@@ -375,7 +375,7 @@ export function EmailDetail({ gmailId, onClose }) {
             to={`/chat?emailId=${gmailId}`}
             className="inline-flex items-center gap-2 rounded-md border border-line px-3 py-2 text-sm font-medium hover:bg-surface-2"
           >
-            <MessageSquare aria-hidden="true" className="size-4" /> Ask about this email
+            <ChatCircle aria-hidden="true" className="size-4" /> Ask about this email
           </Link>
           {verdict && risky && (
             <Button variant="ghost" onClick={feedback} disabled={busy !== null}>

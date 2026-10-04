@@ -1,4 +1,4 @@
-import { MailX } from 'lucide-react';
+import { Broom } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { Button } from '../../components/Button.jsx';
 import { EmptyState } from '../../components/EmptyState.jsx';
@@ -241,7 +241,7 @@ export function BulkUnsubscribePage() {
       {!senders && !error && <LoadingState label="Loading senders…" />}
       {senders && senders.length === 0 && (
         <EmptyState
-          icon={MailX}
+          icon={Broom}
           title="No senders yet"
           description="Senders appear once mail has been synced."
         />

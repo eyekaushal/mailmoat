@@ -29,6 +29,7 @@ export const SettingsSchema = z.strictObject({
   draftFooter: z.string().trim().max(500),
   meetingDurationMinutes: z.number().int().min(15).max(240),
   draftRetentionDays: z.number().int().min(1).max(90),
+  wallpaper: z.enum(['tide', 'valley', 'gradient', 'none']),
 });
 export const SettingsPatchSchema = SettingsSchema.partial();
 

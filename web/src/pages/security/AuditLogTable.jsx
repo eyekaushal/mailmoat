@@ -1,4 +1,4 @@
-import { Download } from 'lucide-react';
+import { DownloadSimple } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { INPUT_CLASSES } from '../../components/FormField.jsx';
 import { LoadingState } from '../../components/LoadingState.jsx';
@@ -62,7 +62,7 @@ export function AuditLogTable() {
           download
           className="ml-auto inline-flex items-center gap-2 rounded-md border border-line px-3 py-2 text-sm hover:bg-surface-2"
         >
-          <Download aria-hidden="true" className="size-4" /> Export JSON
+          <DownloadSimple aria-hidden="true" className="size-4" /> Export JSON
         </a>
       </div>
       {error && (
