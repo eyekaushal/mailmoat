@@ -12,7 +12,7 @@ const TEXT_TECHNIQUES = new Set([
   'attribute_text',
 ]);
 // Only wording that speaks *to* an AI; bare "agent", "bot" or "assistant" appear in ordinary mail.
-const AI = String.raw`(?:ai|a\.i\.|ai assistant|ai agent|email assistant|llm|language model|copilot|gemini|claude|chatgpt|gpt|mailmoat)`;
+const AI = String.raw`(?:ai|a\.i\.|ai assistant|ai agent|email assistant|llm|language model|copilot|gemini|claude|chatgpt|gpt|mailmoat|ki|ki-assistent|ia|assistant ia|asistente de ia)`;
 const ADDRESSES_AN_AI = [
   new RegExp(String.raw`\b${AI}\s*[:,]`, 'i'),
   new RegExp(String.raw`\b(dear|attention|note (to|for)|hey|hi|hello)\b[^.]{0,20}\b${AI}\b`, 'i'),
@@ -29,6 +29,10 @@ const OVERRIDE_PHRASES = [
   // "You are now subscribed" or "From now on, free shipping" are everyday preheaders, so not here.
   /\b(system prompt|new instructions|pretend (to be|you are)|developer mode|jailbreak)\b/i,
   /\bdo not (tell|mention|inform|alert|warn|reveal|show)\b[^.]{0,30}\b(user|owner|recipient|human)\b/i,
+  // The same override in German, French and Spanish: hidden text is not always in English.
+  /\b(ignoriere|ignorieren sie|missachte|vergiss|überschreibe)\b[^.]{0,40}\b(anweisungen|anweisung|regeln|befehle|vorgaben)\b/i,
+  /\b(ignore[sz]?|oublie[sz]?|outrepasse[sz]?)\b[^.]{0,40}\b(instructions|consignes|règles|regles)\b/i,
+  /\b(ignora|ignorar|olvida|olvidar|omite)\b[^.]{0,40}\b(instrucciones|reglas|indicaciones)\b/i,
 ];
 // Our own tool names in snake_case; prose never contains them by accident.
 const TOOL_NAMES =
@@ -52,6 +56,7 @@ export class HiddenTextInstructionsSignal extends Signal {
   }
 
   #isInstruction(text) {
+    // German/French/Spanish overrides carry their own imperative, so no ACTION check is needed.
     return (
       (ADDRESSES_AN_AI.some((pattern) => pattern.test(text)) && ACTION.test(text)) ||
       OVERRIDE_PHRASES.some((pattern) => pattern.test(text)) ||

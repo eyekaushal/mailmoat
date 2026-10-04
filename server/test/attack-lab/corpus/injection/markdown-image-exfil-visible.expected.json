@@ -5,6 +5,6 @@
   "expect": {
     "level": "SUSPICIOUS",
     "injection": true,
-    "signals": ["S18"]
+    "signals": ["S9", "S10"]
   }
 }

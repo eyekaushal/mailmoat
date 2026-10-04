@@ -167,7 +167,7 @@ Implements `SECURITY_APPROACH.md §6–§7` exactly.
 | ID | Requirement |
 |---|---|
 | F3.1 | **Ingest:** parse MIME; extract Google's top-most `Authentication-Results` (SPF, DKIM, DMARC); extract all links; detect hidden content (CSS tricks, comments, zero-width, bidi); produce normalised visible text. |
-| F3.2 | **Signal Engine:** implement signals S1–S20 as independent classes, each with ID, severity and a plain-English reason. |
+| F3.2 | **Signal Engine:** implement signals S1–S22 as independent classes, each with ID, severity and a plain-English reason (S21–S22 added by the B28 tuning). |
 | F3.3 | **Reader:** one call per email to the Reader model with **no tools**, only the visible text + subject + display name as data; output must validate against the Reader schema (structured outputs + Zod). Invalid output → SUSPICIOUS (fail closed). |
 | F3.4 | **Reader schema:** as in `SECURITY_APPROACH.md §7.3`, plus `expects_reply: boolean` used only for the user's own outbound messages (Awaiting Reply). |
 | F3.5 | **Risk Engine:** floors, combination rules and score exactly as specified; output `{level, score, reasons, floorReasons}`. The Reader can raise risk but never lower it below the floor. |

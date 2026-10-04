@@ -64,4 +64,19 @@ describe('DisplayNameImpersonationSignal (S7)', () => {
     });
     expect(signal.evaluate(from('Rahul Mehta', 'rahul.mehta@gmail.com'), both)).toBeNull();
   });
+
+  it("lets a platform relay carry a contact's name when DMARC proves the platform", () => {
+    const relay = (dmarc) =>
+      ingestedEmail({
+        from: {
+          name: 'Rahul Mehta (via Google Drive)',
+          address: 'drive-shares-noreply@google.com',
+        },
+        auth: { ...ingestedEmail().auth, dmarc: { result: dmarc, headerFrom: 'google.com' } },
+      });
+    expect(signal.evaluate(relay('pass'), context)).toBeNull();
+    expect(signal.evaluate(relay('fail'), context)?.reason).toMatch(
+      /matches your contact Rahul Mehta/,
+    );
+  });
 });

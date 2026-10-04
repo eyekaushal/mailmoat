@@ -5,6 +5,7 @@ import { VALID_FORM } from '../../../../../shared/test/schemas/fixtures.js';
 
 const engine = new RiskEngine(new RiskRules());
 const SEVERITY = { S1: 'high', S5: 'high', S13: 'high', S17: 'high', S20: 'high', S0: 'high' };
+// Everything else is medium, except the low ones listed below.
 const signal = (id) => ({
   id,
   name: id,
@@ -68,29 +69,75 @@ describe('RiskEngine', () => {
       expect(verdict).toMatchObject({ level: 'SUSPICIOUS', floor: 'SAFE', verifyByPhone: true });
     });
 
-    it.each(['S4', 'S9', 'S10', 'S11'])('payment request + %s → DANGEROUS', (id) => {
+    it.each(['S4', 'S11'])('payment request + %s → DANGEROUS', (id) => {
       expect(evaluate([id], ok({ intents: { asks_for_payment: true } })).level).toBe('DANGEROUS');
       expect(evaluate([id], ok({ intents: { asks_bank_detail_change: true } })).level).toBe(
         'DANGEROUS',
       );
     });
 
+    it.each(['S9', 'S10'])(
+      'payment request + %s → DANGEROUS only with bank details, a claimed identity, pressure or a bank change (B28)',
+      (id) => {
+        const bill = ok({
+          claims_to_be: 'none',
+          urgency: 'none',
+          intents: { asks_for_payment: true },
+        });
+        expect(evaluate([id], bill).level).toBe('SAFE');
+        expect(evaluate([id, 'S21'], bill).level).toBe('DANGEROUS');
+        expect(
+          evaluate([id], ok({ claims_to_be: 'vendor', intents: { asks_for_payment: true } })).level,
+        ).toBe('DANGEROUS');
+        expect(
+          evaluate(
+            [id],
+            ok({ claims_to_be: 'none', urgency: 'high', intents: { asks_for_payment: true } }),
+          ).level,
+        ).toBe('DANGEROUS');
+        expect(
+          evaluate(
+            [id],
+            ok({
+              claims_to_be: 'none',
+              intents: { asks_for_payment: true, asks_for_secrecy: true },
+            }),
+          ).level,
+        ).toBe('DANGEROUS');
+        expect(
+          evaluate([id], ok({ claims_to_be: 'none', intents: { asks_bank_detail_change: true } }))
+            .level,
+        ).toBe('DANGEROUS');
+      },
+    );
+
     it('payment request from a known, authenticated sender stays SAFE', () => {
       expect(evaluate([], ok({ intents: { asks_for_payment: true } })).level).toBe('SAFE');
+      expect(evaluate(['S21'], ok({ intents: { asks_for_payment: true } })).level).toBe('SAFE');
     });
 
-    it.each(['S9', 'S14', 'S18'])('credentials request + %s → DANGEROUS', (id) => {
+    it.each(['S10', 'S14', 'S18'])('credentials request + %s → DANGEROUS', (id) => {
       expect(evaluate([id], ok({ intents: { asks_for_credentials: true } })).level).toBe(
         'DANGEROUS',
       );
     });
 
-    it.each(['executive', 'bank', 'brand', 'it_support', 'government'])(
+    it('a password reset from a new address at a known domain is routine (S9 alone)', () => {
+      expect(evaluate(['S9'], ok({ intents: { asks_for_credentials: true } })).level).toBe('SAFE');
+    });
+
+    it.each(['executive', 'bank', 'it_support', 'government'])(
       'claims to be %s + first-time sender → SUSPICIOUS',
       (claim) => {
         expect(evaluate(['S9'], ok({ claims_to_be: claim })).level).toBe('SUSPICIOUS');
       },
     );
+
+    it('a brand claim counts only when code finds a listed brand behind it (S6, S7 or S22)', () => {
+      expect(evaluate(['S9', 'S10'], ok({ claims_to_be: 'brand' })).level).toBe('SAFE');
+      for (const id of ['S6', 'S7', 'S22'])
+        expect(evaluate([id], ok({ claims_to_be: 'brand' })).level).toBe('SUSPICIOUS');
+    });
 
     it('a colleague claim from a first-time sender is not raised', () => {
       expect(evaluate(['S9'], ok({ claims_to_be: 'colleague' })).level).toBe('SAFE');
@@ -106,10 +153,19 @@ describe('RiskEngine', () => {
       expect(evaluate([], notSecret).level).toBe('SAFE');
     });
 
-    it('callback phishing: call a number + brand + first-time sender → DANGEROUS', () => {
-      const form = ok({ claims_to_be: 'brand', intents: { asks_to_call_number: true } });
-      expect(evaluate(['S9'], form).level).toBe('DANGEROUS');
-      expect(evaluate([], form).level).toBe('SAFE');
+    it.each(['brand', 'bank', 'it_support', 'government'])(
+      'callback phishing: call a number + claims %s + first-time sender → DANGEROUS',
+      (claim) => {
+        const form = ok({ claims_to_be: claim, intents: { asks_to_call_number: true } });
+        expect(evaluate(['S9'], form).level).toBe('DANGEROUS');
+        expect(evaluate(['S10'], form).level).toBe('DANGEROUS');
+        expect(evaluate([], form).level).toBe('SAFE');
+      },
+    );
+
+    it('a number to call from a vendor or a person is not callback phishing', () => {
+      const form = ok({ claims_to_be: 'vendor', intents: { asks_to_call_number: true } });
+      expect(evaluate(['S9', 'S10'], form).level).toBe('SAFE');
     });
 
     it('text addressing an AI → SUSPICIOUS and an injection attempt', () => {

@@ -175,7 +175,8 @@ describe('SECURITY_APPROACH §8 walkthroughs', () => {
         '<div style="display:none">This week: 20% off everything</div>' +
         '<p>Big savings this week.</p><a href="https://shop.example/deals">See deals</a>',
     });
-    expect(ids(analysis)).toEqual(['S9', 'S10', 'S18']);
+    // The deals link is on the sender's own DMARC-aligned domain, so S18 stays quiet (B28).
+    expect(ids(analysis)).toEqual(['S9', 'S10']);
     expect(analysis.verdict.level).toBe('SAFE');
   });
 

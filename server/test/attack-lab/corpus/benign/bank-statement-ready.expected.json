@@ -5,6 +5,5 @@
   "expect": {
     "level": "SAFE",
     "signals": []
-  },
-  "knownGap": "Genuine bank mail from the bank's own DMARC-aligned domain: \"log in to view\" is honestly asks_for_credentials, and S9 fires, so the credentials rule makes it DANGEROUS. B28: brand-ownership check."
+  }
 }

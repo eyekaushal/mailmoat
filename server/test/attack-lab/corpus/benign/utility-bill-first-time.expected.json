@@ -5,6 +5,5 @@
   "expect": {
     "level": "SAFE",
     "signals": []
-  },
-  "knownGap": "A receive-only relationship (utilities, subscriptions): asks_for_payment + first-time domain is DANGEROUS by the §7.4 money rule. B28 must decide how routine bills earn trust (e.g. sender history or a user \"trusted\" mark)."
+  }
 }

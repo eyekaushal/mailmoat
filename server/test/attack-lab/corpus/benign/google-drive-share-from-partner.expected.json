@@ -5,6 +5,5 @@
   "expect": {
     "level": "SAFE",
     "signals": []
-  },
-  "knownGap": "Platform relays carry the contact's name on a google.com address, so S7 (display-name impersonation) fires and floors the email at SUSPICIOUS. B28: exempt DMARC-aligned brand-owned relay domains."
+  }
 }

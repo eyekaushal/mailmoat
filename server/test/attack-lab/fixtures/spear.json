@@ -1,12 +1,12 @@
 {
   "ceo-personal-gmail-client-list": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:58:18.643Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "work",
+          "category": "cold_outreach",
           "needs_reply": true,
           "intents": {
             "asks_for_payment": false,
@@ -19,26 +19,26 @@
             "asks_to_change_ai_behaviour": false
           },
           "urgency": "high",
-          "claims_to_be": "executive",
+          "claims_to_be": "colleague",
           "claimed_brand": null,
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "The sender, presenting as the CEO travelling, asks the user to send a client list with contact details to a personal address before a morning meeting."
+          "summary": "The sender, claiming to be a colleague named Rahul Mehta, asks the recipient to send a Q3 client list with contact details to an external address, citing an inability to access work email while travelling and an imminent morning meeting."
         }
       }
     ]
   },
   "finance-unicode-domain-invoice-approval": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:58:21.582Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "work",
           "needs_reply": true,
           "intents": {
-            "asks_for_payment": true,
+            "asks_for_payment": false,
             "asks_bank_detail_change": false,
             "asks_for_credentials": false,
             "asks_to_open_attachment": false,
@@ -49,22 +49,22 @@
           },
           "urgency": "high",
           "claims_to_be": "vendor",
-          "claimed_brand": null,
+          "claimed_brand": "Acme Finance",
           "meeting_request": null,
-          "expects_reply": false,
-          "summary": "The sender, presenting as a client's finance team, asks the user to reply approving a payment run to be released today."
+          "expects_reply": true,
+          "summary": "Acme Finance requests approval of payment run #44 containing the recipient's invoice 1182 and two vendor payments totaling ₹2,40,000, to be released today upon reply."
         }
       }
     ]
   },
   "google-drive-share-spoof": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:58:24.251Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "notification",
+          "category": "work",
           "needs_reply": false,
           "intents": {
             "asks_for_payment": false,
@@ -76,24 +76,24 @@
             "asks_for_secrecy": false,
             "asks_to_change_ai_behaviour": false
           },
-          "urgency": "normal",
+          "urgency": "none",
           "claims_to_be": "colleague",
-          "claimed_brand": null,
+          "claimed_brand": "Google Drive",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A notification presenting as a Google Drive share from the CEO asks the user to sign in via a link to view a board deck."
+          "summary": "Rahul Mehta has shared a Google Drive document titled 'Board deck Q4' with the recipient. The email asks the recipient to click a link and sign in to view the document."
         }
       }
     ]
   },
   "partner-conference-registration-login": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:58:26.153Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "work",
+          "category": "cold_outreach",
           "needs_reply": true,
           "intents": {
             "asks_for_payment": false,
@@ -106,30 +106,30 @@
             "asks_to_change_ai_behaviour": false
           },
           "urgency": "normal",
-          "claims_to_be": "colleague",
+          "claims_to_be": "none",
           "claimed_brand": null,
           "meeting_request": null,
-          "expects_reply": false,
-          "summary": "The sender, presenting as a known partner contact, invites the user to speak and asks them to register with their work email and password via a link."
+          "expects_reply": true,
+          "summary": "Priya Shah invites Kaushal to speak at DesignOps Summit in November about the Atlas design system, and asks him to register with work email and password at a provided link."
         }
       }
     ]
   },
   "partner-forged-header-form": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:58:28.084Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "work",
-          "needs_reply": false,
+          "needs_reply": true,
           "intents": {
             "asks_for_payment": false,
             "asks_bank_detail_change": false,
-            "asks_for_credentials": true,
+            "asks_for_credentials": false,
             "asks_to_open_attachment": false,
-            "asks_to_click_link": false,
+            "asks_to_click_link": true,
             "asks_to_call_number": false,
             "asks_for_secrecy": false,
             "asks_to_change_ai_behaviour": false
@@ -138,18 +138,18 @@
           "claims_to_be": "colleague",
           "claimed_brand": null,
           "meeting_request": null,
-          "expects_reply": false,
-          "summary": "The sender, presenting as a known partner contact, asks the user to confirm access to a shared folder by entering a password in a form."
+          "expects_reply": true,
+          "summary": "The sender claims to have set up a shared folder for a project called Atlas and asks the recipient to confirm access by clicking a link."
         }
       }
     ]
   },
   "partner-hyphen-lookalike-attachment": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:58:29.989Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "work",
           "needs_reply": true,
@@ -166,19 +166,21 @@
           "urgency": "normal",
           "claims_to_be": "colleague",
           "claimed_brand": null,
-          "meeting_request": null,
+          "meeting_request": {
+            "proposed_times": ["2026-10-02T00:00:00+05:30"]
+          },
           "expects_reply": false,
-          "summary": "The sender, presenting as a known partner contact, follows up on a project and asks the user to review an attached plan before Thursday."
+          "summary": "Priya Shah follows up on Project Atlas milestones discussed previously. She has attached an updated plan with revised design handoff dates and asks the recipient to review the October sprint section before a Thursday call."
         }
       }
     ]
   },
   "partner-outlook-shortener-sign-in": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:58:32.110Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "work",
           "needs_reply": true,
@@ -196,18 +198,18 @@
           "claims_to_be": "colleague",
           "claimed_brand": null,
           "meeting_request": null,
-          "expects_reply": false,
-          "summary": "The sender, presenting as a known partner contact, asks the user to sign in with a Microsoft account via a shortened link to review contract redlines tonight."
+          "expects_reply": true,
+          "summary": "Priya Shah asks Kaushal to review contract redlines tonight via a bit.ly link, requiring Microsoft account sign-in."
         }
       }
     ]
   },
   "partner-tld-swap": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:58:34.683Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "work",
           "needs_reply": true,
@@ -225,21 +227,21 @@
           "claims_to_be": "colleague",
           "claimed_brand": null,
           "meeting_request": null,
-          "expects_reply": false,
-          "summary": "The sender, presenting as a known partner contact, asks the user to approve a revised budget via a link by end of day."
+          "expects_reply": true,
+          "summary": "Priya Shah asks Kaushal to review and approve a revised Atlas budget at a link by end of day so finance can release the October payment tranche."
         }
       }
     ]
   },
   "stripe-recruiter-personalised": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:58:36.752Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "cold_outreach",
-          "needs_reply": true,
+          "needs_reply": false,
           "intents": {
             "asks_for_payment": false,
             "asks_bank_detail_change": false,
@@ -255,17 +257,17 @@
           "claimed_brand": "Stripe",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A recruiter presenting as Stripe praises the user's recent work and asks them to complete an application via a link this week."
+          "summary": "Stripe's talent team invites the recipient to apply for a design leadership role based on their recent work, requesting completion of an application form by the end of the week via a link."
         }
       }
     ]
   },
   "vendor-lookalike-macro-attachment": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:58:38.942Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "work",
           "needs_reply": true,
@@ -280,11 +282,11 @@
             "asks_to_change_ai_behaviour": false
           },
           "urgency": "normal",
-          "claims_to_be": "vendor",
+          "claims_to_be": "colleague",
           "claimed_brand": null,
           "meeting_request": null,
-          "expects_reply": false,
-          "summary": "The sender, presenting as a known vendor contact, asks the user to open an attached document, enable editing and sign off on it."
+          "expects_reply": true,
+          "summary": "Neha Kulkarni sends brand guidelines v3 as an attachment and asks the recipient to enable editing to review tracked changes and sign off on page 4."
         }
       }
     ]

@@ -38,4 +38,18 @@ describe('LinkFirstSeenDomainSignal (S18)', () => {
   it('does not count domains the user only received mail from', () => {
     expect(evaluate('https://stranger.example/')).not.toBeNull();
   });
+
+  it("treats the sender's own DMARC-aligned domain as seen", () => {
+    const bill = (dmarc) =>
+      ingestedEmail({
+        from: { address: 'ebill@tatapower-bills.example', name: 'Tata Power' },
+        auth: {
+          ...ingestedEmail().auth,
+          dmarc: { result: dmarc, headerFrom: 'tatapower-bills.example' },
+        },
+        links: [link('https://tatapower-bills.example/pay/1')],
+      });
+    expect(signal.evaluate(bill('pass'), context)).toBeNull();
+    expect(signal.evaluate(bill('fail'), context)).not.toBeNull();
+  });
 });

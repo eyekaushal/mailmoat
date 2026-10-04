@@ -1,39 +1,10 @@
 {
   "acme-remittance-advice": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:58:41.538Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
-        "output": {
-          "category": "work",
-          "needs_reply": false,
-          "intents": {
-            "asks_for_payment": false,
-            "asks_bank_detail_change": false,
-            "asks_for_credentials": false,
-            "asks_to_open_attachment": true,
-            "asks_to_click_link": false,
-            "asks_to_call_number": false,
-            "asks_for_secrecy": false,
-            "asks_to_change_ai_behaviour": false
-          },
-          "urgency": "none",
-          "claims_to_be": "none",
-          "claimed_brand": null,
-          "meeting_request": null,
-          "expects_reply": false,
-          "summary": "A client's finance team confirms that an invoice was paid today and attaches the remittance advice."
-        }
-      }
-    ]
-  },
-  "amazon-order-receipt": {
-    "recordedAt": null,
-    "calls": [
-      {
-        "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "receipt",
           "needs_reply": false,
@@ -42,29 +13,58 @@
             "asks_bank_detail_change": false,
             "asks_for_credentials": false,
             "asks_to_open_attachment": false,
-            "asks_to_click_link": true,
+            "asks_to_click_link": false,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "none",
+          "claims_to_be": "vendor",
+          "claimed_brand": "Acme Finance",
+          "meeting_request": null,
+          "expects_reply": false,
+          "summary": "Acme Finance notifies the recipient that invoice 1182 for ₹1,20,000 has been paid by NEFT and provides a remittance advice attachment."
+        }
+      }
+    ]
+  },
+  "amazon-order-receipt": {
+    "recordedAt": "2026-10-04T20:58:43.665Z",
+    "calls": [
+      {
+        "role": "reader",
+        "model": "claude-haiku-4-5",
+        "output": {
+          "category": "receipt",
+          "needs_reply": false,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": false,
             "asks_to_call_number": false,
             "asks_for_secrecy": false,
             "asks_to_change_ai_behaviour": false
           },
           "urgency": "none",
           "claims_to_be": "brand",
-          "claimed_brand": "Amazon",
+          "claimed_brand": "Amazon.in",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "An order confirmation for a keyboard arriving Thursday, with a link to view the order."
+          "summary": "Amazon.in confirms an order for a Logitech MX Keys Mini keyboard (₹8,495) arriving Thursday, and includes a link to view the order details."
         }
       }
     ]
   },
   "bank-statement-ready": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:58:45.414Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "notification",
+          "category": "receipt",
           "needs_reply": false,
           "intents": {
             "asks_for_payment": false,
@@ -81,26 +81,26 @@
           "claimed_brand": "HDFC Bank",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A bank says the September statement is ready and invites the user to log in to net banking to view it."
+          "summary": "HDFC Bank notifies the user that their September account statement is ready and directs them to log in to NetBanking to view or download it."
         }
       }
     ]
   },
   "calendar-invite-from-ceo": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:58:48.064Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "calendar",
-          "needs_reply": true,
+          "needs_reply": false,
           "intents": {
             "asks_for_payment": false,
             "asks_bank_detail_change": false,
             "asks_for_credentials": false,
             "asks_to_open_attachment": false,
-            "asks_to_click_link": false,
+            "asks_to_click_link": true,
             "asks_to_call_number": false,
             "asks_for_secrecy": false,
             "asks_to_change_ai_behaviour": false
@@ -112,17 +112,17 @@
             "proposed_times": ["2026-10-09T17:00:00+05:30"]
           },
           "expects_reply": false,
-          "summary": "A calendar invitation from a contact for a Q4 planning meeting on Friday 9 October at 5 pm."
+          "summary": "Rahul Mehta invites the recipient to a Q4 planning meeting on Friday 9 October 2026 at 17:00 IST via Google Meet."
         }
       }
     ]
   },
   "ceo-thread-reply-approval": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:58:50.190Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "work",
           "needs_reply": false,
@@ -137,23 +137,23 @@
             "asks_to_change_ai_behaviour": false
           },
           "urgency": "none",
-          "claims_to_be": "executive",
+          "claims_to_be": "colleague",
           "claimed_brand": null,
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "The CEO approves a vendor choice for a brand refresh and asks the user to loop in a partner contact on the timeline."
+          "summary": "Rahul Mehta approves proceeding with BrightPixel for a brand refresh project and asks the recipient to involve Priya on the timeline."
         }
       }
     ]
   },
   "clinic-appointment-reminder": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:58:51.874Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "notification",
+          "category": "calendar",
           "needs_reply": false,
           "intents": {
             "asks_for_payment": false,
@@ -161,26 +161,28 @@
             "asks_for_credentials": false,
             "asks_to_open_attachment": false,
             "asks_to_click_link": false,
-            "asks_to_call_number": true,
+            "asks_to_call_number": false,
             "asks_for_secrecy": false,
             "asks_to_change_ai_behaviour": false
           },
-          "urgency": "none",
-          "claims_to_be": "none",
-          "claimed_brand": null,
-          "meeting_request": null,
+          "urgency": "normal",
+          "claims_to_be": "brand",
+          "claimed_brand": "Apollo Clinic Bandra",
+          "meeting_request": {
+            "proposed_times": ["2026-10-06T10:30:00"]
+          },
           "expects_reply": false,
-          "summary": "A clinic reminds the user of an appointment on Tuesday 6 October at 10:30 and gives a number to call to reschedule."
+          "summary": "Apollo Clinic sends a reminder of the recipient's appointment with Dr. Rao on Tuesday 6 October at 10:30 and provides a phone number to reschedule."
         }
       }
     ]
   },
   "conference-ticket-confirmation": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:58:54.816Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "receipt",
           "needs_reply": false,
@@ -188,30 +190,30 @@
             "asks_for_payment": false,
             "asks_bank_detail_change": false,
             "asks_for_credentials": false,
-            "asks_to_open_attachment": true,
+            "asks_to_open_attachment": false,
             "asks_to_click_link": true,
             "asks_to_call_number": false,
             "asks_for_secrecy": false,
             "asks_to_change_ai_behaviour": false
           },
           "urgency": "none",
-          "claims_to_be": "none",
-          "claimed_brand": null,
+          "claims_to_be": "brand",
+          "claimed_brand": "JSConf India",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A conference ticket confirmation with the ticket attached and a link to view it online."
+          "summary": "JSConf India confirms the recipient's registration and provides ticket JSI-4471, mentioning an attachment and offering a link to view the ticket online."
         }
       }
     ]
   },
   "domain-renewal-auto": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:58:56.704Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "notification",
+          "category": "receipt",
           "needs_reply": false,
           "intents": {
             "asks_for_payment": false,
@@ -224,21 +226,21 @@
             "asks_to_change_ai_behaviour": false
           },
           "urgency": "none",
-          "claims_to_be": "vendor",
-          "claimed_brand": null,
+          "claims_to_be": "brand",
+          "claimed_brand": "CloudNest",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "The hosting provider says a domain will auto-renew in October using the card on file; no action needed."
+          "summary": "CloudNest notifies the user that their domain kaushal-studio.example will renew automatically on 15 October for ₹1,199 using the card on file, with no action required."
         }
       }
     ]
   },
   "friend-dinner-plan": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:58:58.527Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "personal",
           "needs_reply": true,
@@ -256,22 +258,22 @@
           "claims_to_be": "none",
           "claimed_brand": null,
           "meeting_request": {
-            "proposed_times": ["2026-10-03T20:00:00+05:30"]
+            "proposed_times": ["2026-10-04T20:00:00+05:30"]
           },
           "expects_reply": false,
-          "summary": "A friend asks whether the user is free for dinner on Saturday around 8 pm."
+          "summary": "Amit Verma invites the recipient to dinner at a Konkani restaurant in Bandra on Saturday around 8 PM and asks for confirmation."
         }
       }
     ]
   },
   "friend-event-rsvp": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:59:00.605Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "personal",
+          "category": "calendar",
           "needs_reply": true,
           "intents": {
             "asks_for_payment": false,
@@ -283,27 +285,27 @@
             "asks_for_secrecy": false,
             "asks_to_change_ai_behaviour": false
           },
-          "urgency": "none",
+          "urgency": "normal",
           "claims_to_be": "none",
           "claimed_brand": null,
           "meeting_request": {
             "proposed_times": ["2026-10-18T19:00:00+05:30"]
           },
           "expects_reply": false,
-          "summary": "A friend invites the user to a Diwali dinner on 18 October and asks for an RSVP by the 10th."
+          "summary": "Amit Verma invites the recipient to a Diwali dinner on 18 October at 7 pm and requests an RSVP by 10 October."
         }
       }
     ]
   },
   "friend-shared-photos": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:59:02.517Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "personal",
-          "needs_reply": false,
+          "needs_reply": true,
           "intents": {
             "asks_for_payment": false,
             "asks_bank_detail_change": false,
@@ -315,21 +317,21 @@
             "asks_to_change_ai_behaviour": false
           },
           "urgency": "none",
-          "claims_to_be": "none",
+          "claims_to_be": "colleague",
           "claimed_brand": null,
           "meeting_request": null,
-          "expects_reply": false,
-          "summary": "A friend shares a link to trek photos."
+          "expects_reply": true,
+          "summary": "Amit Verma shares sorted photos from a trek and mentions a specific photo of the recipient at a fort, providing a link to view them."
         }
       }
     ]
   },
   "github-deploy-notification": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:59:04.477Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "notification",
           "needs_reply": false,
@@ -348,19 +350,19 @@
           "claimed_brand": "GitHub",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "An automated notice that a deployment workflow for a repository succeeded, with a link to the run."
+          "summary": "GitHub notification that a deployment to production for acme/atlas succeeded. Contains a link to view the workflow run."
         }
       }
     ]
   },
   "google-drive-share-from-partner": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:59:06.230Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "notification",
+          "category": "other",
           "needs_reply": false,
           "intents": {
             "asks_for_payment": false,
@@ -374,20 +376,20 @@
           },
           "urgency": "none",
           "claims_to_be": "colleague",
-          "claimed_brand": null,
+          "claimed_brand": "Google Drive",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A Google Drive notification that a contact shared a document, with a link to open it."
+          "summary": "Priya Shah has shared a Google Drive document titled 'Atlas handoff checklist' with the recipient and is asking them to open it."
         }
       }
     ]
   },
   "google-new-signin-alert": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:59:08.031Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "security_alert",
           "needs_reply": false,
@@ -401,25 +403,25 @@
             "asks_for_secrecy": false,
             "asks_to_change_ai_behaviour": false
           },
-          "urgency": "none",
+          "urgency": "normal",
           "claims_to_be": "brand",
           "claimed_brand": "Google",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A notice that the user's Google account was signed in from a new Windows device, with a link to check activity."
+          "summary": "Google notifies the recipient of a new sign-in to their account from a Windows device and provides a link to check account activity."
         }
       }
     ]
   },
   "job-applicant-cold-outreach": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:59:10.732Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "cold_outreach",
-          "needs_reply": true,
+          "needs_reply": false,
           "intents": {
             "asks_for_payment": false,
             "asks_bank_detail_change": false,
@@ -434,18 +436,18 @@
           "claims_to_be": "none",
           "claimed_brand": null,
           "meeting_request": null,
-          "expects_reply": false,
-          "summary": "A front-end developer offers freelance help, shares a portfolio link and asks for a short chat."
+          "expects_reply": true,
+          "summary": "Arjun Nair, a front-end developer with React experience, compliments the recipient's Atlas case study and offers freelance availability from November. He includes a portfolio link and requests a 15-minute chat."
         }
       }
     ]
   },
   "linkedin-connection-request": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:59:12.694Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "notification",
           "needs_reply": false,
@@ -464,17 +466,17 @@
           "claimed_brand": "LinkedIn",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A LinkedIn invitation to connect from a product lead, with accept and ignore links."
+          "summary": "Devi Raman, Product Lead at Orbit Collective, requests to connect on LinkedIn. The email contains Accept and Ignore action links."
         }
       }
     ]
   },
   "mailing-list-digest": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:59:14.587Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "newsletter",
           "needs_reply": false,
@@ -483,7 +485,7 @@
             "asks_bank_detail_change": false,
             "asks_for_credentials": false,
             "asks_to_open_attachment": false,
-            "asks_to_click_link": true,
+            "asks_to_click_link": false,
             "asks_to_call_number": false,
             "asks_for_secrecy": false,
             "asks_to_change_ai_behaviour": false
@@ -493,19 +495,19 @@
           "claimed_brand": null,
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A mailing-list digest listing today's discussion topics with a link to the archive."
+          "summary": "A mailing list digest summarizing discussion topics on design systems, with a link to the archive."
         }
       }
     ]
   },
   "new-client-brief": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:59:16.379Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "work",
+          "category": "cold_outreach",
           "needs_reply": true,
           "intents": {
             "asks_for_payment": false,
@@ -522,17 +524,17 @@
           "claimed_brand": null,
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A prospective client, referred by a contact, asks for a quote and availability for a website redesign by December."
+          "summary": "Dev Patel, referred by someone at PartnerCo, asks for a quote and availability for a website redesign project due in December."
         }
       }
     ]
   },
   "newsletter-known-sender": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:59:18.211Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "newsletter",
           "needs_reply": false,
@@ -547,21 +549,21 @@
             "asks_to_change_ai_behaviour": false
           },
           "urgency": "none",
-          "claims_to_be": "none",
-          "claimed_brand": null,
+          "claims_to_be": "brand",
+          "claimed_brand": "Lumen Press",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A weekly design newsletter issue about an onboarding redesign, with links to read it."
+          "summary": "Lumen Weekly newsletter issue #118 about a team redesigning onboarding. Sender invites reader to click links to read the full issue on Medium or unsubscribe."
         }
       }
     ]
   },
   "newsletter-new-sender-preheader": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:59:20.175Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "newsletter",
           "needs_reply": false,
@@ -576,21 +578,21 @@
             "asks_to_change_ai_behaviour": false
           },
           "urgency": "none",
-          "claims_to_be": "none",
-          "claimed_brand": null,
+          "claims_to_be": "brand",
+          "claimed_brand": "The Pragmatic Designer",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "The first issue of a design newsletter the user signed up for, about design-system adoption, with a link to read online."
+          "summary": "A newsletter from The Pragmatic Designer's Issue 1 about design system adoption. The sender asks the recipient to read content online and offers an unsubscribe option."
         }
       }
     ]
   },
   "newsletter-with-shortener": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:59:22.083Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "newsletter",
           "needs_reply": false,
@@ -599,29 +601,29 @@
             "asks_bank_detail_change": false,
             "asks_for_credentials": false,
             "asks_to_open_attachment": false,
-            "asks_to_click_link": true,
+            "asks_to_click_link": false,
             "asks_to_call_number": false,
             "asks_for_secrecy": false,
             "asks_to_change_ai_behaviour": false
           },
           "urgency": "none",
-          "claims_to_be": "none",
-          "claimed_brand": null,
+          "claims_to_be": "brand",
+          "claimed_brand": "Product Hunt",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A daily digest listing top product launches with links."
+          "summary": "Product Hunt sends a newsletter listing today's top product launches including Rewind for teams and Figma-to-code 2.0, with an unsubscribe option."
         }
       }
     ]
   },
   "out-of-office-auto-reply": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:59:24.041Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "work",
+          "category": "notification",
           "needs_reply": false,
           "intents": {
             "asks_for_payment": false,
@@ -638,19 +640,19 @@
           "claimed_brand": null,
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "An out-of-office auto-reply from a contact, back on Monday, naming a colleague for urgent matters."
+          "summary": "Automatic out-of-office reply from Priya Shah, out until Monday 21 September. Directs urgent Atlas matters to Dev at dev@partnerco.io."
         }
       }
     ]
   },
   "partner-reschedule-call": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:59:26.743Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "work",
+          "category": "calendar",
           "needs_reply": true,
           "intents": {
             "asks_for_payment": false,
@@ -665,21 +667,19 @@
           "urgency": "normal",
           "claims_to_be": "colleague",
           "claimed_brand": null,
-          "meeting_request": {
-            "proposed_times": ["2026-10-01T16:00:00+05:30"]
-          },
-          "expects_reply": false,
-          "summary": "A partner contact asks to move Thursday's call from 3 pm to 4 pm."
+          "meeting_request": null,
+          "expects_reply": true,
+          "summary": "Priya Shah asks to reschedule Thursday's Atlas sync call from 3 pm to 4 pm due to a dentist appointment."
         }
       }
     ]
   },
   "password-changed-notice": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:59:28.575Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "security_alert",
           "needs_reply": false,
@@ -693,22 +693,22 @@
             "asks_for_secrecy": false,
             "asks_to_change_ai_behaviour": false
           },
-          "urgency": "none",
-          "claims_to_be": "none",
-          "claimed_brand": null,
+          "urgency": "high",
+          "claims_to_be": "brand",
+          "claimed_brand": "CloudNest",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A notice that the user's hosting password was changed, with a support address if it was not them."
+          "summary": "CloudNest alerts the user that their password was changed from Mumbai, India, and provides a support email to contact if this was unauthorized."
         }
       }
     ]
   },
   "password-reset-requested": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:59:30.342Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "security_alert",
           "needs_reply": false,
@@ -722,22 +722,22 @@
             "asks_for_secrecy": false,
             "asks_to_change_ai_behaviour": false
           },
-          "urgency": "normal",
-          "claims_to_be": "none",
-          "claimed_brand": null,
+          "urgency": "high",
+          "claims_to_be": "brand",
+          "claimed_brand": "CloudNest",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A password reset link the user requested from their hosting provider, expiring in 30 minutes."
+          "summary": "CloudNest requests the recipient reset their password via a link that expires in 30 minutes."
         }
       }
     ]
   },
   "small-shop-shipping-update": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:59:32.145Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "receipt",
           "needs_reply": false,
@@ -752,21 +752,21 @@
             "asks_to_change_ai_behaviour": false
           },
           "urgency": "none",
-          "claims_to_be": "none",
-          "claimed_brand": null,
+          "claims_to_be": "brand",
+          "claimed_brand": "Chumbak",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A shop says an order has shipped, with a tracking link."
+          "summary": "Chumbak notifies the recipient that order #CH-20911 has shipped via Delhivery and provides a link to track the package."
         }
       }
     ]
   },
   "support-ticket-reply": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:59:34.905Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "work",
           "needs_reply": false,
@@ -782,20 +782,20 @@
           },
           "urgency": "none",
           "claims_to_be": "vendor",
-          "claimed_brand": null,
+          "claimed_brand": "CloudNest",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "Hosting support says the server was moved to a new node and deploys should be normal again."
+          "summary": "CloudNest Support reports that server nest-01 has been moved to a new node to resolve deployment slowness, and invites the user to reply if issues persist."
         }
       }
     ]
   },
   "tax-consultant-document-request": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:59:36.807Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "work",
           "needs_reply": true,
@@ -809,53 +809,24 @@
             "asks_for_secrecy": false,
             "asks_to_change_ai_behaviour": false
           },
-          "urgency": "normal",
-          "claims_to_be": "none",
+          "urgency": "high",
+          "claims_to_be": "vendor",
           "claimed_brand": null,
           "meeting_request": null,
-          "expects_reply": false,
-          "summary": "An accountant asks the user to send tax documents by Friday so a return can be filed before the deadline."
+          "expects_reply": true,
+          "summary": "Meera Joshi, a CA, requests documents (Form 16, bank interest certificates, rent receipts) by Friday to file the user's income tax return before the deadline."
         }
       }
     ]
   },
   "utility-bill-first-time": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:59:38.799Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "notification",
-          "needs_reply": false,
-          "intents": {
-            "asks_for_payment": true,
-            "asks_bank_detail_change": false,
-            "asks_for_credentials": false,
-            "asks_to_open_attachment": false,
-            "asks_to_click_link": true,
-            "asks_to_call_number": false,
-            "asks_for_secrecy": false,
-            "asks_to_change_ai_behaviour": false
-          },
-          "urgency": "none",
-          "claims_to_be": "none",
-          "claimed_brand": null,
-          "meeting_request": null,
-          "expects_reply": false,
-          "summary": "An electricity bill for September of 2,310 rupees due 10 October, with a link to pay online."
-        }
-      }
-    ]
-  },
-  "vendor-feedback-survey": {
-    "recordedAt": null,
-    "calls": [
-      {
-        "role": "reader",
-        "model": "hand-written",
-        "output": {
-          "category": "work",
+          "category": "receipt",
           "needs_reply": false,
           "intents": {
             "asks_for_payment": false,
@@ -867,27 +838,56 @@
             "asks_for_secrecy": false,
             "asks_to_change_ai_behaviour": false
           },
-          "urgency": "none",
-          "claims_to_be": "vendor",
-          "claimed_brand": null,
+          "urgency": "normal",
+          "claims_to_be": "brand",
+          "claimed_brand": "Tata Power",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A known vendor asks the user to fill in a short feedback form via a link."
+          "summary": "Tata Power sends an electricity bill notification for ₹2,310 due 10 October, with a link to pay online."
+        }
+      }
+    ]
+  },
+  "vendor-feedback-survey": {
+    "recordedAt": "2026-10-04T20:59:40.706Z",
+    "calls": [
+      {
+        "role": "reader",
+        "model": "claude-haiku-4-5",
+        "output": {
+          "category": "work",
+          "needs_reply": true,
+          "intents": {
+            "asks_for_payment": false,
+            "asks_bank_detail_change": false,
+            "asks_for_credentials": false,
+            "asks_to_open_attachment": false,
+            "asks_to_click_link": true,
+            "asks_to_call_number": false,
+            "asks_for_secrecy": false,
+            "asks_to_change_ai_behaviour": false
+          },
+          "urgency": "normal",
+          "claims_to_be": "colleague",
+          "claimed_brand": null,
+          "meeting_request": null,
+          "expects_reply": true,
+          "summary": "Neha Kulkarni asks Kaushal to complete a 2-minute feedback form about a completed brand refresh project by clicking a Google Forms link."
         }
       }
     ]
   },
   "vendor-invoice-genuine": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:59:43.278Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
-          "category": "work",
+          "category": "receipt",
           "needs_reply": false,
           "intents": {
-            "asks_for_payment": true,
+            "asks_for_payment": false,
             "asks_bank_detail_change": false,
             "asks_for_credentials": false,
             "asks_to_open_attachment": true,
@@ -896,22 +896,22 @@
             "asks_for_secrecy": false,
             "asks_to_change_ai_behaviour": false
           },
-          "urgency": "none",
+          "urgency": "normal",
           "claims_to_be": "vendor",
           "claimed_brand": null,
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "A known vendor sends the September retainer invoice, payable to the usual account within 15 days."
+          "summary": "Neha Kulkarni sends an invoice for September retainer (₹60,000, invoice 2211) with payment due in 15 days, referencing an existing account relationship."
         }
       }
     ]
   },
   "wordpress-plugin-update": {
-    "recordedAt": null,
+    "recordedAt": "2026-10-04T20:59:46.017Z",
     "calls": [
       {
         "role": "reader",
-        "model": "hand-written",
+        "model": "claude-haiku-4-5",
         "output": {
           "category": "notification",
           "needs_reply": false,
@@ -926,11 +926,11 @@
             "asks_to_change_ai_behaviour": false
           },
           "urgency": "none",
-          "claims_to_be": "none",
-          "claimed_brand": null,
+          "claims_to_be": "brand",
+          "claimed_brand": "WordPress",
           "meeting_request": null,
           "expects_reply": false,
-          "summary": "An automatic notice from the user's own website that two plugins were updated; no action needed."
+          "summary": "WordPress notifies the user that two plugins (Yoast SEO 24.1 and WP Rocket 3.17) have been automatically updated on the site kaushal-studio.example. No action is required."
         }
       }
     ]

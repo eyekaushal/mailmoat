@@ -5,6 +5,5 @@
   "expect": {
     "level": "DANGEROUS",
     "signals": ["S6", "S7", "S9"]
-  },
-  "knownGap": "The callback rule (§7.4) only fires for claims_to_be = brand; a sender claiming to be a bank with the same pattern reaches SUSPICIOUS by score, not DANGEROUS."
+  }
 }
