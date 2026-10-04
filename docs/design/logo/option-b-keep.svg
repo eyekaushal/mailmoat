@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="b-body" x1="12" y1="12" x2="52" y2="54" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#8a7bf7"/>
+      <stop offset="1" stop-color="#4f39dc"/>
+    </linearGradient>
+    <linearGradient id="b-sheen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <!-- the letter is the keep: an envelope whose top edge is a battlement -->
+  <path d="M11 24h8v-9h8v9h10v-9h8v9h8v20a7 7 0 0 1-7 7H18a7 7 0 0 1-7-7z" fill="url(#b-body)"/>
+  <path d="M11 24h8v-9h8v9h10v-9h8v9h8v12H11z" fill="url(#b-sheen)"/>
+  <!-- the flap -->
+  <path d="M15 29.5L32 41l17-11.5" fill="none" stroke="#2b1aa6" stroke-opacity="0.28" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" transform="translate(0 1.2)"/>
+  <path d="M15 29.5L32 41l17-11.5" fill="none" stroke="#f5f3ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

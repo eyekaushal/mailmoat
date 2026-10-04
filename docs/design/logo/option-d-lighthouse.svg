@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="l-tower" x1="24" y1="18" x2="40" y2="52" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#3a5a7e"/>
+      <stop offset="1" stop-color="#22395a"/>
+    </linearGradient>
+    <linearGradient id="l-beam" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#f6b93b" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#f6b93b" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="l-beam-l" x1="1" y1="0" x2="0" y2="0">
+      <stop offset="0" stop-color="#f6b93b" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#f6b93b" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="l-sea" x1="8" y1="0" x2="56" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#7fb3d5"/>
+      <stop offset="1" stop-color="#4f8fc0"/>
+    </linearGradient>
+  </defs>
+  <!-- the lighthouse: it watches the water and warns before anything reaches the shore -->
+  <path d="M38 16L60 9v14z" fill="url(#l-beam)"/>
+  <path d="M26 16L4 9v14z" fill="url(#l-beam-l)"/>
+  <path d="M26.5 22h11l3 28h-17z" fill="url(#l-tower)"/>
+  <path d="M27.6 31h8.8l.6 5h-10zM28.6 41h6.8l.6 5h-8z" fill="#ffffff" fill-opacity="0.85"/>
+  <rect x="25.5" y="18" width="13" height="5" rx="1.5" fill="#22395a"/>
+  <rect x="28" y="12.5" width="8" height="6" rx="1.5" fill="#f6b93b"/>
+  <path d="M24 10h16" stroke="#22395a" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M9 55c3.8 0 3.8 2.4 7.6 2.4s3.8-2.4 7.6-2.4 3.8 2.4 7.6 2.4 3.8-2.4 7.6-2.4 3.8 2.4 7.6 2.4 3.8-2.4 7.6-2.4" fill="none" stroke="url(#l-sea)" stroke-width="2.8" stroke-linecap="round"/>
+</svg>

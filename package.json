@@ -28,7 +28,8 @@
     "llm:smoke": "node --env-file-if-exists=.env server/scripts/llm-smoke.js",
     "reader:sample": "node --env-file-if-exists=.env server/scripts/reader-sample.js",
     "attack-lab": "node --env-file-if-exists=.env server/test/attack-lab/run.js",
-    "demo": "node server/test/attack-lab/demo.js"
+    "demo": "node server/test/attack-lab/demo.js",
+    "demo:ui": "node server/test/attack-lab/demo-ui.js"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

@@ -1,5 +1,6 @@
 # Private planning (never commit)
 notes/
+docs/reference_docs
 
 # Dependencies and builds
 node_modules/

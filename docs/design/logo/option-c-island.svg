@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="i-deep" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1f3f78"/>
+      <stop offset="1" stop-color="#10264f"/>
+    </linearGradient>
+    <linearGradient id="i-sand" x1="22" y1="22" x2="42" y2="42" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f3d58a"/>
+      <stop offset="1" stop-color="#dba646"/>
+    </linearGradient>
+  </defs>
+  <!-- the moat from above: water in rings around one small island -->
+  <rect x="6" y="6" width="52" height="52" rx="16" fill="url(#i-deep)"/>
+  <rect x="13.5" y="13.5" width="37" height="37" rx="11.5" fill="none" stroke="#3f6cc0" stroke-width="2.2"/>
+  <rect x="19.5" y="19.5" width="25" height="25" rx="8" fill="none" stroke="#7fa6e6" stroke-width="2.2"/>
+  <rect x="25.5" y="25.5" width="13" height="13" rx="4" fill="url(#i-sand)"/>
+</svg>
