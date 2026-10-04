@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Navigate, Outlet } from 'react-router';
 import { useApi } from '../lib/useApi.js';
+import { Aside } from './Aside.jsx';
 import { KeyHintBar } from './KeyHintBar.jsx';
 import { LoadingState } from './LoadingState.jsx';
 import { Rail } from './Rail.jsx';
@@ -48,9 +49,12 @@ export function Layout() {
       <Wallpaper />
       <div className="flex min-h-0 flex-1">
         <Rail onShowKeyHints={() => setHints(false)} />
-        <main className="panel m-2 ml-0 flex min-w-0 flex-1 flex-col overflow-y-auto">
-          <Outlet />
-        </main>
+        <div className="flex min-w-0 flex-1 gap-2 p-2 pl-0">
+          <main className="panel flex min-w-0 flex-1 flex-col overflow-y-auto">
+            <Outlet />
+          </main>
+          <Aside />
+        </div>
       </div>
       {!hintsHidden && <KeyHintBar onDismiss={() => setHints(true)} />}
     </div>

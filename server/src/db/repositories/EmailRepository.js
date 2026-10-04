@@ -14,7 +14,7 @@ const MAX_ATTEMPTS = 5;
  * Stored email metadata (never bodies) and the queue of new mail awaiting the security pipeline.
  *
  * The subject and snippet are untrusted text kept for the inbox list. They are returned only by
- * the list methods (`page`, `listByIds`); `get`, `search` and the other record methods feed the
+ * the list methods (`page`, `listByIds`, `listThreadsFrom`); `get`, `search` and the other record methods feed the
  * agent and the rules and never include them, so the Planner cannot receive them (invariant 2).
  */
 export class EmailRepository {
@@ -259,6 +259,25 @@ export class EmailRepository {
     return this.#listRows([`e.gmail_id IN (${marks})`], gmailIds, gmailIds.length).map((row) =>
       this.#toItem(row),
     );
+  }
+
+  /**
+   * The sender card (PLAN §13.6): the newest message of each thread this address wrote to,
+   * newest thread first. A list shape for the UI only, never the agent.
+   * @param {string} address
+   * @param {number} [limit]
+   * @returns {InboxItem[]}
+   */
+  listThreadsFrom(address, limit = 5) {
+    // SQLite's bare-column rule: with one MAX() the other columns come from that same row.
+    return this.#listRows(
+      [
+        `e.gmail_id IN (SELECT gmail_id FROM (
+           SELECT x.gmail_id, MAX(x.date) FROM emails x WHERE x.from_addr = ? GROUP BY x.thread_id))`,
+      ],
+      [address.toLowerCase()],
+      limit,
+    ).map((row) => this.#toItem(row));
   }
 
   #listRows(where, params, limit) {

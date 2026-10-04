@@ -1,114 +1,140 @@
-import { Sparkle } from '@phosphor-icons/react';
+import { MagnifyingGlass } from '@phosphor-icons/react';
 import { useState } from 'react';
+import { useSWRConfig } from 'swr';
 import { Button } from '../../components/Button.jsx';
-import { CategoryBadge } from '../../components/CategoryBadge.jsx';
 import { EmptyState } from '../../components/EmptyState.jsx';
 import { LoadingState } from '../../components/LoadingState.jsx';
-import { RiskBadge } from '../../components/RiskBadge.jsx';
+import { dayGroup } from '../../lib/dates.js';
 import { useApi, useApiClient } from '../../lib/useApi.js';
+import { EmailRow } from './EmailRow.jsx';
 
-/** Today → time; this year → day and month; else the date. */
-export function shortDate(iso, now = new Date()) {
-  const date = new Date(iso);
-  if (date.toDateString() === now.toDateString()) {
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+/** Rows in list order, split under Today / Yesterday / date headings. */
+export function groupByDay(items, now) {
+  const groups = [];
+  for (const email of items) {
+    const title = dayGroup(email.date, now);
+    const last = groups.at(-1);
+    if (last?.title === title) last.items.push(email);
+    else groups.push({ title, items: [email] });
   }
-  if (date.getFullYear() === now.getFullYear()) {
-    return date.toLocaleDateString([], { day: 'numeric', month: 'short' });
-  }
-  return date.toLocaleDateString();
+  return groups;
 }
 
 /**
- * The rows of one tab (PRD F5.2). Subjects are not stored (only hashed), so the row shows the
- * sender and the Reader's summary, marked as AI output about an untrusted email.
- * @param {{ query: string, selectedId?: string | null, onSelect: (gmailId: string) => void }} props
+ * The rows of one tab or one search (PLAN §13.5). `query` is the first page's path; both
+ * `GET /emails` and `GET /search` page with `&cursor=`. Row actions go through the server, so the
+ * Policy Engine still decides; the outcome is one quiet line above the list, never a toast.
+ * @param {{ query: string, terms?: string[], now?: Date, onOpen: (gmailId: string) => void }} props
  */
-export function EmailList({ query, selectedId, onSelect }) {
+export function EmailList({ query, terms = [], now, onOpen }) {
   const client = useApiClient();
+  const { mutate: mutateAll } = useSWRConfig();
   const { data: first, error } = useApi(query);
   const [more, setMore] = useState({ items: [], nextCursor: undefined, loading: false });
+  const [gone, setGone] = useState(() => new Set());
+  const [notice, setNotice] = useState(null);
+  const searching = query.startsWith('/search');
 
   if (error) {
     return (
-      <p role="alert" className="p-4 text-sm text-danger">
+      <p role="alert" className="px-5 py-4 text-base text-danger">
         {error.message}
       </p>
     );
   }
-  if (!first) return <LoadingState label="Loading emails…" />;
+  if (!first) return <LoadingState label={searching ? 'Searching Gmail…' : 'Loading emails…'} />;
 
-  const items = [...first.items, ...more.items];
+  const items = [...first.items, ...more.items].filter((email) => !gone.has(email.gmailId));
   const nextCursor = more.nextCursor === undefined ? first.nextCursor : more.nextCursor;
-  if (items.length === 0) {
-    return (
-      <EmptyState
-        title="Nothing here"
-        description="New mail appears as soon as it is synced and analysed."
-      />
-    );
-  }
 
   async function loadMore() {
-    setMore((m) => ({ ...m, loading: true }));
+    setMore((state) => ({ ...state, loading: true }));
     const page = await client.get(`${query}&cursor=${encodeURIComponent(nextCursor)}`);
-    setMore((m) => ({
-      items: [...m.items, ...page.items],
+    setMore((state) => ({
+      items: [...state.items, ...page.items],
       nextCursor: page.nextCursor,
       loading: false,
     }));
   }
 
+  async function act(work) {
+    setNotice(null);
+    try {
+      setNotice({ ok: true, text: await work() });
+      await mutateAll(
+        (key) =>
+          typeof key === 'string' && (key.startsWith('/emails') || key.startsWith('/summary')),
+      );
+    } catch (caught) {
+      setNotice({ ok: false, text: caught.message });
+    }
+  }
+
+  const archive = (email) =>
+    act(async () => {
+      const result = await client.post(`/emails/${email.gmailId}/archive`);
+      if (!result.done) return `Not archived: ${result.reason}`;
+      setGone((set) => new Set(set).add(email.gmailId));
+      return 'Archived.';
+    });
+
+  const reply = (email) =>
+    act(async () => {
+      await client.post(`/emails/${email.gmailId}/draft-reply`, {});
+      return 'Draft saved in Gmail Drafts. Nothing is sent until you send it.';
+    });
+
+  const trust = (email) =>
+    act(async () => {
+      await client.post(`/emails/${email.gmailId}/trust-sender`, { trusted: true });
+      return 'Sender marked trusted. This only stops first-time-sender warnings; risk levels are never lowered.';
+    });
+
   return (
-    <div>
-      <ul className="divide-y divide-line">
-        {items.map((email) => {
-          const selected = email.gmailId === selectedId;
-          return (
-            <li key={email.gmailId}>
-              <button
-                type="button"
-                onClick={() => onSelect(email.gmailId)}
-                aria-current={selected ? 'true' : undefined}
-                className={`block w-full px-4 py-3 text-left hover:bg-surface-2 ${selected ? 'bg-accent-soft/60' : ''}`}
-              >
-                <div className="flex items-center gap-2">
-                  {!email.isRead && (
-                    <span aria-label="Unread" className="size-2 shrink-0 rounded-full bg-accent" />
-                  )}
-                  <span
-                    className={`min-w-0 flex-1 truncate text-sm ${email.isRead ? '' : 'font-semibold'}`}
-                  >
-                    {email.fromName || email.fromAddr}
-                  </span>
-                  <time dateTime={email.date} className="shrink-0 text-xs text-muted">
-                    {shortDate(email.date)}
-                  </time>
-                </div>
-                <p className="mt-0.5 flex items-start gap-1 text-sm text-muted">
-                  <Sparkle
-                    aria-label="AI summary of an untrusted email"
-                    className="mt-0.5 size-3.5 shrink-0"
-                  />
-                  <span className="line-clamp-2">{email.summary ?? 'Not analysed yet.'}</span>
-                </p>
-                <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-                  <RiskBadge level={email.verdict?.level} size="sm" />
-                  {email.category && <CategoryBadge category={email.category} />}
-                  {email.verdict?.injectionAttempt && (
-                    <span className="rounded bg-danger-soft px-1.5 py-0.5 text-xs font-medium text-danger">
-                      Injection attempt
-                    </span>
-                  )}
-                </div>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
+    <div className="pb-4">
+      {notice && (
+        <p
+          role="status"
+          className={`px-5 py-2 text-sm ${notice.ok ? 'text-secondary' : 'text-danger'}`}
+        >
+          {notice.text}
+        </p>
+      )}
+      {items.length === 0 &&
+        (searching ? (
+          <EmptyState
+            icon={MagnifyingGlass}
+            title="No matches"
+            description="Gmail found nothing for this search."
+          />
+        ) : (
+          <EmptyState
+            title="Nothing here"
+            description="New mail appears as soon as it is synced and analysed."
+          />
+        ))}
+      {groupByDay(items, now).map((group) => (
+        <section key={group.title} aria-label={group.title}>
+          <h3 className="px-5 pt-3 pb-1 text-sm font-medium text-secondary">{group.title}</h3>
+          <ul>
+            {group.items.map((email) => (
+              <EmailRow
+                key={email.gmailId}
+                email={email}
+                terms={terms}
+                now={now}
+                onOpen={() => onOpen(email.gmailId)}
+                onArchive={() => archive(email)}
+                onReply={() => reply(email)}
+                onTrust={() => trust(email)}
+              />
+            ))}
+          </ul>
+        </section>
+      ))}
       {nextCursor && (
-        <div className="p-3 text-center">
-          <Button variant="secondary" onClick={loadMore} disabled={more.loading}>
+        <div className="flex justify-center pt-3">
+          <Button variant="ghost" onClick={loadMore} disabled={more.loading}>
             {more.loading ? 'Loading…' : 'Load more'}
           </Button>
         </div>

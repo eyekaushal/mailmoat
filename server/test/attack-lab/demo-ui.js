@@ -3,6 +3,7 @@
 // Reader output), the rules, labels and audit log are real; Gmail and Calendar are in-memory fakes.
 // Live LLM calls (chat, drafting) have no recordings, so they fail closed and the UI shows that.
 // From the repo root:  npm run build && npm run demo:ui   → http://127.0.0.1:4747
+import { createHash } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { ActionExecutor } from '../../src/actions/ActionExecutor.js';
@@ -309,13 +310,23 @@ const cases = lab
   .sort((a, b) => a.key - b.key)
   .map(({ entry }) => entry);
 const now = Date.now();
+// Mail from one sender under one subject (Re:/Fwd: aside) forms a thread, so the reading view
+// has conversations to collapse and expand.
+const threadOf = (entry) => {
+  const subject = String(entry.headers.subject ?? '')
+    .replace(/^(\s*(re|fwd?)\s*:)+/i, '')
+    .trim()
+    .toLowerCase();
+  const key = `${entry.headers.from ?? ''}|${subject}`;
+  return `thread-${createHash('sha1').update(key).digest('hex').slice(0, 16)}`;
+};
 let seeded = 0;
 for (const [index, entry] of cases.entries()) {
   // Route params only accept [A-Za-z0-9_-]; spread the mail over the last few days so Today and
   // the 7-day overview have something to show.
   const gmailId = `${entry.set}-${entry.name}`.replace(/[^A-Za-z0-9_-]/g, '-').slice(0, 64);
   const internalDate = new Date(now - index * SPREAD_MINUTES * 60_000);
-  gmail.addMessage({ id: gmailId, raw: entry.raw, internalDate });
+  gmail.addMessage({ id: gmailId, raw: entry.raw, internalDate, threadId: threadOf(entry) });
   if (index % 3 === 0) await gmail.modifyLabels(gmailId, { remove: ['UNREAD'] });
   const message = await gmail.getRawMessage(gmailId);
   const record = mapper.toRecord({
@@ -474,8 +485,6 @@ const app = new App({
       executor,
       drafts,
       meetings,
-      gmail,
-      ingestor,
       auditLog,
       timeZone,
     }),

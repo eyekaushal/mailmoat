@@ -217,7 +217,7 @@ Mirrors the Inbox Zero "AI Assistant" page (tabs **Rules / Test / History**), bu
 | F5.1 | Tab bar across the top: **All · To Reply · Awaiting · FYI · Newsletter · Marketing · Calendar · Receipt · Notification · Cold · ⚠ Suspicious · ⛔ Dangerous**, each with an unread count. |
 | F5.2 | List rows show sender, subject, snippet, time, category badge and a risk badge (colour + icon, not colour alone). |
 | F5.3 | Opening an email shows: risk banner with top 3 reasons, the Reader summary (marked "AI summary of an untrusted email"), plain visible text, disarmed links (`text → real-domain`), and actions (Draft reply, Archive, Mark trusted, Report not-phishing). |
-| F5.4 | "View original" renders sanitised HTML in a sandboxed iframe with remote content blocked (`SECURITY_APPROACH.md §7.7`). |
+| F5.4 | ~~"View original" renders sanitised HTML in a sandboxed iframe~~ Removed in the redesign (`PLAN.md §13.4`, R04): the reading view is plain text only and raw HTML never leaves the server. |
 | F5.5 | Labels are also applied in Gmail, so the same organisation appears natively in Gmail's sidebar. |
 
 **AC:** No remote request is made by the browser when viewing any email (verified by the attack lab's rendering test).
