@@ -7,6 +7,16 @@ import { ApiClient } from '../../src/lib/ApiClient.js';
 import { ApiProvider } from '../../src/lib/useApi.js';
 import { TooltipProvider } from '../../src/ui/Tooltip.jsx';
 
+const TODAY = {
+  date: '2026-10-05',
+  received: 4,
+  byRule: {},
+  needsReply: 1,
+  meetingsProposed: 0,
+  threats: { suspicious: 0, dangerous: 0, injection: 0 },
+  highlights: [],
+};
+
 function fakeFetch(health, approvals = [], settings = {}) {
   return async (url) => {
     const body =
@@ -16,7 +26,9 @@ function fakeFetch(health, approvals = [], settings = {}) {
           ? approvals
           : url === '/api/settings'
             ? { settings }
-            : {};
+            : url === '/api/summary/today'
+              ? TODAY
+              : {};
     return new Response(JSON.stringify(body), {
       headers: { 'content-type': 'application/json' },
     });
@@ -69,6 +81,18 @@ describe('Layout', () => {
     );
     expect(screen.getByRole('note', { name: 'Keyboard hints' }).textContent).toContain('to search');
     expect(document.querySelector('.wallpaper').dataset.wallpaper).toBe('tide');
+  });
+
+  it('puts Today in the right panel of the inbox and nowhere else', async () => {
+    const { unmount } = renderShell({ health: connected });
+    const aside = await screen.findByRole('complementary');
+    await waitFor(() => expect(aside.textContent).toContain('need'));
+    expect(aside.className).toContain('panel');
+    expect(aside.className).toContain('min-[1100px]:flex');
+    unmount();
+    renderShell({ health: connected, at: '/settings' });
+    await screen.findByText('Settings screen');
+    expect(screen.queryByRole('complementary')).toBeNull();
   });
 
   it('shows the pending approvals count on the Approvals item', async () => {
