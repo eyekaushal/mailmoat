@@ -178,6 +178,43 @@ describe('ReadingView', () => {
     });
   });
 
+  it('marks an unread email read on open and refreshes the lists, but leaves a read one alone', async () => {
+    const { server } = open({ 'POST /emails/a/read': { gmailId: 'a', done: true } });
+    await waitFor(() => expect(server.calls.some((c) => c.path === '/emails/a/read')).toBe(true));
+    expect(server.calls.filter((c) => c.path === '/emails/a/read')).toHaveLength(1);
+    expect(screen.queryByRole('alert')).toBeNull();
+
+    const read = open({
+      'GET /emails/a': detail({ email: { ...detail().email, isRead: true } }),
+    });
+    await waitFor(() => expect(screen.getAllByText('Launch deck').length).toBeGreaterThan(0));
+    expect(read.server.calls.some((c) => c.path === '/emails/a/read')).toBe(false);
+  });
+
+  it('shows the AI summary once: the trace repeats no "Summary of an untrusted email"', async () => {
+    open(
+      {
+        'GET /emails/a': detail({ verdict: SUSPICIOUS }),
+        'GET /threads/t1': thread({ verdict: SUSPICIOUS }),
+        'GET /emails/a/trace': {
+          gmailId: 'a',
+          direction: 'inbound',
+          auth: null,
+          signals: [],
+          reader: { failed: false, form: detail().readerForm },
+          verdict: { ...SUSPICIOUS, floor: 'SUSPICIOUS', reasons: ['First-time sender'] },
+          rules: [],
+          events: [],
+        },
+      },
+      {},
+      '/inbox/a?trace=1',
+    );
+    await waitFor(() => expect(screen.getByText('First-time sender')).toBeTruthy());
+    expect(screen.queryByText(/Summary of an untrusted email/)).toBeNull();
+    expect(screen.getByText(/AI summary/)).toBeTruthy();
+  });
+
   it('opens the trace at once when Security Center links with ?trace=1', async () => {
     const { server } = open(
       {

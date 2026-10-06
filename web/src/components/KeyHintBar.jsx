@@ -20,32 +20,34 @@ export function KeyHintBar({ onDismiss }) {
     <div
       role="note"
       aria-label="Keyboard hints"
-      className="rail relative flex h-9 shrink-0 items-center justify-center gap-3 px-3 text-sm text-secondary"
+      className="flex h-9 shrink-0 items-center justify-center pb-2 text-sm text-secondary"
     >
-      <span className="hidden sm:inline">Hit</span>
-      {KEY_HINTS.map(({ keys, text }, index) => (
-        <span key={text} className="flex items-center gap-1.5">
-          {index > 0 && (
-            <span aria-hidden="true" className="mr-1.5 text-tertiary">
-              ·
-            </span>
-          )}
-          {keys.map((key) => (
-            <KeyHint key={key}>{key}</KeyHint>
-          ))}
-          <span>{text}</span>
-        </span>
-      ))}
-      <Tooltip label="Hide keyboard hints" side="top">
-        <button
-          type="button"
-          aria-label="Hide keyboard hints"
-          onClick={onDismiss}
-          className="absolute right-3 rounded-md p-1 text-tertiary transition-colors duration-150 ease-out-soft hover:bg-surface-2 hover:text-ink"
-        >
-          <X size={14} />
-        </button>
-      </Tooltip>
+      <div className="rail flex h-7 items-center gap-3 rounded-full pr-1 pl-3">
+        <span className="hidden sm:inline">Hit</span>
+        {KEY_HINTS.map(({ keys, text }, index) => (
+          <span key={text} className="flex items-center gap-1.5">
+            {index > 0 && (
+              <span aria-hidden="true" className="mr-1.5 text-tertiary">
+                ·
+              </span>
+            )}
+            {keys.map((key) => (
+              <KeyHint key={key}>{key}</KeyHint>
+            ))}
+            <span>{text}</span>
+          </span>
+        ))}
+        <Tooltip label="Hide keyboard hints" side="top">
+          <button
+            type="button"
+            aria-label="Hide keyboard hints"
+            onClick={onDismiss}
+            className="rounded-full p-1 text-tertiary transition-colors duration-150 ease-out-soft hover:bg-surface-2 hover:text-ink"
+          >
+            <X size={14} />
+          </button>
+        </Tooltip>
+      </div>
     </div>
   );
 }

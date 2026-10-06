@@ -84,15 +84,13 @@ function Shell() {
   return (
     <div className="flex h-full flex-col">
       <Wallpaper />
-      <div className="flex min-h-0 flex-1">
+      <div className="flex min-h-0 flex-1 gap-2 p-2">
         <Rail onShowKeyHints={() => setHints(false)} />
-        <div className="flex min-w-0 flex-1 gap-2 p-2 pl-0">
-          {ask.isOpen && <AskPanel />}
-          <main className="panel flex min-w-0 flex-1 flex-col overflow-y-auto">
-            <Outlet />
-          </main>
-          <Aside />
-        </div>
+        {ask.isOpen && <AskPanel />}
+        <main className="panel flex min-w-0 flex-1 flex-col overflow-y-auto">
+          <Outlet />
+        </main>
+        <Aside />
       </div>
       {!hintsHidden && <KeyHintBar onDismiss={() => setHints(true)} />}
       <KeyboardHelp open={helpOpen} onOpenChange={setHelpOpen} />

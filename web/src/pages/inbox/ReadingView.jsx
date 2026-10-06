@@ -52,6 +52,24 @@ export function ReadingView({ gmailId, onClose, now }) {
   const [whyOpen, setWhyOpen] = useState(params.get('trace') === '1');
   const { data: trace } = useApi(whyOpen ? `/emails/${gmailId}/trace` : null);
 
+  // Opening an email reads it: the unread dot and the tab counts follow. Best effort; a refusal
+  // or a network error changes nothing the user can act on, so it is not reported.
+  const unread = data ? !data.email.isRead : false;
+  useEffect(() => {
+    if (!unread) return;
+    let cancelled = false;
+    client
+      .post(`/emails/${gmailId}/read`)
+      .then(() => {
+        if (cancelled) return;
+        return mutateAll((key) => typeof key === 'string' && key.startsWith('/emails'));
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [unread, gmailId, client, mutateAll]);
+
   const verdict = data?.verdict ?? null;
   const level = verdict?.level ?? null;
   const dangerous = level === 'DANGEROUS';
@@ -297,7 +315,7 @@ export function ReadingView({ gmailId, onClose, now }) {
             {whyOpen &&
               (trace ? (
                 <div className="mt-3 space-y-3">
-                  <PipelineTrace trace={trace} />
+                  <PipelineTrace trace={trace} showSummary={false} />
                   <Button variant="ghost" onClick={feedback} disabled={busy !== null}>
                     {notPhishing ? 'Withdraw “not phishing”' : 'Report as not phishing'}
                   </Button>

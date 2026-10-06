@@ -49,6 +49,48 @@ describe('InboxTabs', () => {
 });
 
 describe('InboxPage', () => {
+  it('hides the tab of a rule the user switched off', async () => {
+    const server = fakeServer({
+      'GET /emails/counts': counts,
+      'GET /emails': { items: [row('a')], nextCursor: null },
+      'GET /rules': [
+        { id: 'to_reply', enabled: false },
+        { id: 'newsletter', enabled: true },
+      ],
+    });
+    renderPage(<InboxPage />, { server, path: '/inbox?tab=to_reply', route: '/inbox' });
+    await waitFor(() => expect(screen.getByText('Rahul')).toBeTruthy());
+    await waitFor(() => expect(screen.queryByRole('tab', { name: /To reply/ })).toBeNull());
+    expect(screen.getByRole('tab', { name: /Newsletter/ })).toBeTruthy();
+    expect(screen.getByRole('tab', { name: /^All/ }).getAttribute('aria-selected')).toBe('true');
+  });
+
+  it('comes back from an email to the same place in the list', async () => {
+    const server = fakeServer({
+      'GET /emails/counts': counts,
+      'GET /emails': { items: [row('a'), row('b')], nextCursor: null },
+      'GET /emails/a': {
+        email: { ...row('a'), threadId: 't1' },
+        verdict: row('a').verdict,
+        readerForm: null,
+        signals: [],
+        rules: [],
+        sender: { trusted: false, sentCount: 0, receivedCount: 1 },
+      },
+      'GET /threads/t1': { threadId: 't1', messages: [] },
+      'POST /emails/a/read': { gmailId: 'a', done: true },
+    });
+    renderPage(<InboxPage />, { server, path: '/inbox', route: '/inbox/:gmailId?' });
+    await waitFor(() => expect(screen.getAllByText('Quarterly deck').length).toBe(2));
+    const list = document.querySelector('.overflow-y-auto');
+    list.scrollTop = 120;
+    fireEvent.click(screen.getAllByRole('button', { name: /Quarterly deck/ })[0]);
+    await screen.findByRole('button', { name: 'Back to inbox' });
+    fireEvent.click(screen.getByRole('button', { name: 'Back to inbox' }));
+    await waitFor(() => expect(screen.getAllByText('Quarterly deck').length).toBe(2));
+    expect(document.querySelector('.overflow-y-auto').scrollTop).toBe(120);
+  });
+
   it('walks the rows with j and k so Enter can open the focused one', async () => {
     const server = fakeServer({
       'GET /emails/counts': counts,

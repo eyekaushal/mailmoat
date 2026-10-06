@@ -166,6 +166,23 @@ describe('BulkUnsubscribePage', () => {
     expect(screen.queryByRole('toolbar')).toBeNull();
   });
 
+  it('says so when the selected senders have no safe unsubscribe link', async () => {
+    const server = fakeServer({
+      'GET /senders': [sender('promo@evil.example', { method: 'block' })],
+    });
+    renderPage(<BulkUnsubscribePage />, { server });
+    await waitFor(() => expect(screen.getByLabelText('Select all')).toBeTruthy());
+    fireEvent.click(screen.getByLabelText('Select all'));
+    fireEvent.click(
+      within(screen.getByRole('toolbar')).getByRole('button', { name: 'Unsubscribe' }),
+    );
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(screen.getByRole('status').textContent).toContain(
+      '1 selected sender has no safe unsubscribe link. Use Block instead',
+    );
+    expect(server.calls.some((c) => c.method === 'POST')).toBe(false);
+  });
+
   it('searches by name or address and loads more', async () => {
     const many = Array.from({ length: 50 }, (_, i) =>
       sender(`s${i}@x.example`, { name: i === 3 ? 'Weekly Digest' : null }),

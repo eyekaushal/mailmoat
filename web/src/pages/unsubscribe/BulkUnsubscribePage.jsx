@@ -154,7 +154,15 @@ export function BulkUnsubscribePage() {
           ? chosen.filter((s) => s.status === 'NONE')
           : chosen;
     const skipped = chosen.length - targets.length;
-    if (targets.length === 0) return;
+    if (targets.length === 0) {
+      report(
+        false,
+        action === 'unsubscribe'
+          ? `${plural(chosen.length, 'selected sender')} ${chosen.length === 1 ? 'has' : 'have'} no safe unsubscribe link. Use Block instead: future mail is archived and the sender is never contacted.`
+          : `${plural(chosen.length, 'selected sender')} ${chosen.length === 1 ? 'is' : 'are'} already decided. Undo from the row menu first.`,
+      );
+      return;
+    }
     setConfirm({
       title: `${BULK_VERBS[action]} ${plural(targets.length, 'sender')}?`,
       description: skipped

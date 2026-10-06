@@ -296,13 +296,13 @@ describe('VerdictRepository feedback, auth, counts and feed', () => {
 
   it('counts by level since a date and lists flagged mail newest first', () => {
     const repos = { emails: new EmailRepository(db), verdicts: new VerdictRepository(db) };
-    storeEmail(repos, 'a', { at: new Date('2026-10-05T00:00:00Z') });
+    storeEmail(repos, 'a', { date: '2026-10-05T00:00:00.000Z' });
     storeEmail(repos, 'b', {
       level: 'DANGEROUS',
       injectionAttempt: true,
-      at: new Date('2026-10-06T00:00:00Z'),
+      date: '2026-10-06T00:00:00.000Z',
     });
-    storeEmail(repos, 'c', { level: 'SUSPICIOUS', at: new Date('2026-09-01T00:00:00Z') });
+    storeEmail(repos, 'c', { level: 'SUSPICIOUS', date: '2026-09-01T00:00:00.000Z' });
     expect(repos.verdicts.counts({ since: '2026-10-01T00:00:00.000Z' })).toEqual({
       scanned: 2,
       safe: 1,
@@ -319,6 +319,29 @@ describe('VerdictRepository feedback, auth, counts and feed', () => {
     });
     expect(repos.verdicts.listFlagged().map((v) => v.gmailId)).toEqual(['b', 'c']);
     expect(repos.verdicts.listFlagged({ limit: 1 })).toHaveLength(1);
+  });
+
+  it('orders the flagged list by the email date, not by when it was analysed', () => {
+    const repos = { emails: new EmailRepository(db), verdicts: new VerdictRepository(db) };
+    // An older email analysed later (a backfill) must not jump to the top of the feed.
+    storeEmail(repos, 'old', {
+      level: 'SUSPICIOUS',
+      date: '2026-09-01T00:00:00.000Z',
+      at: new Date('2026-10-07T00:00:00Z'),
+    });
+    storeEmail(repos, 'new', { level: 'DANGEROUS', date: '2026-10-06T00:00:00.000Z' });
+    expect(repos.verdicts.listFlagged().map((v) => v.gmailId)).toEqual(['new', 'old']);
+  });
+
+  it('sets the read flag and the unread counts follow', () => {
+    const repos = { emails: new EmailRepository(db), verdicts: new VerdictRepository(db) };
+    storeEmail(repos, 'a');
+    expect(repos.emails.unreadCounts().all).toBe(1);
+    repos.emails.setRead('a', true);
+    expect(repos.emails.get('a').isRead).toBe(true);
+    expect(repos.emails.unreadCounts().all).toBe(0);
+    repos.emails.setRead('a', false);
+    expect(repos.emails.get('a').isRead).toBe(false);
   });
 });
 

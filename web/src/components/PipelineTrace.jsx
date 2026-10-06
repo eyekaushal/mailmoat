@@ -36,9 +36,10 @@ function Pairs({ entries }) {
  *   verdict: { level: string, score: number, floor: string, reasons: string[] } | null,
  *   rules: { ruleId: string, actionsTaken: string[], status?: string }[],
  *   events: { id: number, ts: string, actor: string, event: string, decision?: string | null, reason?: string | null }[],
- * }, preview?: boolean }} props `preview` = the Test tab: rules that would run, nothing ran
+ * }, preview?: boolean, showSummary?: boolean }} props `preview` = the Test tab: rules that
+ *   would run, nothing ran; `showSummary` off when the screen already shows the AI summary
  */
-export function PipelineTrace({ trace, preview = false }) {
+export function PipelineTrace({ trace, preview = false, showSummary = true }) {
   const { auth, signals, reader, verdict, rules, events } = trace;
   const form = reader.form;
   const intents = form ? Object.keys(form.intents ?? {}).filter((key) => form.intents[key]) : [];
@@ -93,7 +94,7 @@ export function PipelineTrace({ trace, preview = false }) {
                 ],
               ]}
             />
-            {form.summary && (
+            {showSummary && form.summary && (
               <p className="rounded-sm bg-surface-3 px-2 py-1.5 text-sm">
                 <span className="font-medium text-secondary">Summary of an untrusted email: </span>
                 <span className="whitespace-pre-wrap">{form.summary}</span>
