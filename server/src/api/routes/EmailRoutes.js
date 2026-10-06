@@ -124,6 +124,15 @@ export class EmailRoutes {
       response.json(await this.#organise('archive', record));
     });
 
+    // Opening an email marks it read, in Gmail through the same reversible action the rules use
+    // and locally at once, so the unread dot and the tab counts follow the user's reading.
+    router.post('/emails/:id/read', async (request, response) => {
+      const record = this.#record(request.params);
+      const result = await this.#organise('mark_read', record);
+      if (result.done) emails.setRead(record.gmailId, true);
+      response.json(result);
+    });
+
     router.post('/emails/:id/draft-reply', async (request, response) => {
       const record = this.#record(request.params);
       const { instructions, allowSuspicious } = validate(DraftReplySchema, request.body ?? {});

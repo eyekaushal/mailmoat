@@ -194,7 +194,7 @@ tab), 600 nowhere. Letter-spacing −0.01 em at 17 px and above. Numbers in list
   default), `valley` (Monet, *The Valley of the Nervia*), `gradient` (cream to sky), `none`
   (`canvas`). Bundled at 1800 px, public domain. The painting is tone, not focus: panels are
   translucent and blur it; it shows in the 8 px gutters and through the rail.
-- **Rail** (`Rail`): 56 px, mark at the top, seven icon-only items with tooltips (Inbox, Ask AI,
+- **Rail** (`Rail`): 56 px, a rounded panel of the same height as the main column, sitting in the same 8 px gutter row; mark at the top, seven icon-only items with tooltips (Inbox, Ask AI,
   Assistant, Approvals, Unsubscribe, Security, Settings), the approvals count as a small
   bubble, the account footer at the bottom (avatar; menu shows avatar · name · email · chevron,
   connection status, Settings, keyboard hints).

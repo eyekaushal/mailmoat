@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { ActionExecutor } from '../../../../src/actions/ActionExecutor.js';
+import { MarkReadTool } from '../../../../src/agent/tools/MarkReadTool.js';
 import { ArchiveTool } from '../../../../src/agent/tools/ArchiveTool.js';
 import { ToolRegistry } from '../../../../src/agent/tools/ToolRegistry.js';
 import { EmailRoutes } from '../../../../src/api/routes/EmailRoutes.js';
@@ -23,6 +24,7 @@ let db;
 let repos;
 let api;
 let archived;
+let readIds;
 let drafted;
 let proposed;
 
@@ -46,12 +48,14 @@ beforeEach(async () => {
     audit: new AuditLogRepository(db),
   };
   archived = [];
+  readIds = [];
   drafted = [];
   proposed = [];
   const logger = new Logger({ level: 'error', sink: () => {} });
   const auditLog = new AuditLog(repos.audit);
   const registry = new ToolRegistry([
     new ArchiveTool({ gmail: { archive: async (id) => archived.push(id) } }),
+    new MarkReadTool({ gmail: { modifyLabels: async (id) => readIds.push(id) } }),
   ]);
   api = await startApi({
     routes: [
@@ -299,6 +303,18 @@ describe('POST /api/emails/:id actions', () => {
     });
     expect(archived).toEqual(['a']);
     expect(repos.audit.recent({ event: 'action_performed' })).toHaveLength(1);
+  });
+
+  it('marks an opened email read in Gmail and locally, through the Policy Engine', async () => {
+    storeEmail(repos, 'a');
+    expect(repos.emails.get('a').isRead).toBe(false);
+    const res = await api.post('/api/emails/a/read');
+    expect(res.status).toBe(200);
+    expect(res.json).toMatchObject({ gmailId: 'a', done: true, decision: 'ALLOW' });
+    expect(readIds).toEqual(['a']);
+    expect(repos.emails.get('a').isRead).toBe(true);
+    expect(repos.emails.unreadCounts().all).toBe(0);
+    expect((await api.post('/api/emails/nope/read')).status).toBe(404);
   });
 
   it('drafts a reply and proposes/saves meetings via the services, validating input', async () => {

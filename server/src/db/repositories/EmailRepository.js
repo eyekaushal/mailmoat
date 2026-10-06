@@ -65,6 +65,11 @@ export class EmailRepository {
    * Gmail's snippet from the metadata fetch.
    * @param {string} gmailId @param {string} snippet
    */
+  /** The user opened (or un-read) the email; Gmail is updated by the mark_read action. */
+  setRead(gmailId, isRead) {
+    this.#db.run('UPDATE emails SET is_read = ? WHERE gmail_id = ?', [Number(isRead), gmailId]);
+  }
+
   setSnippet(gmailId, snippet) {
     this.#db.run('UPDATE emails SET snippet = ? WHERE gmail_id = ?', [snippet, gmailId]);
   }

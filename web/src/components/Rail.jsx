@@ -94,7 +94,10 @@ export function Rail({ onShowKeyHints }) {
   const badges = { approvals: approvals?.length || 0 };
 
   return (
-    <nav aria-label="Main" className="rail flex h-full w-14 shrink-0 flex-col items-center py-3">
+    <nav
+      aria-label="Main"
+      className="rail flex h-full w-14 shrink-0 flex-col items-center rounded-lg py-3"
+    >
       <img src="/brand/mark.svg" alt="mailmoat" className="mb-3 size-7 rounded-[7px]" />
       <ul className="flex flex-1 flex-col items-center gap-1">
         {NAV_ITEMS.map((item) =>

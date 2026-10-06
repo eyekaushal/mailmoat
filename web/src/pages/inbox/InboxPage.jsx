@@ -1,5 +1,5 @@
 import { MagnifyingGlass, X } from '@phosphor-icons/react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router';
 import { isTyping } from '../../lib/keyboard.js';
 import { termsOf } from '../../ui/Highlight.jsx';
@@ -8,6 +8,9 @@ import { SearchLine } from '../../ui/SearchLine.jsx';
 import { EmailList } from './EmailList.jsx';
 import { InboxTabs, queryForTab } from './InboxTabs.jsx';
 import { ReadingView } from './ReadingView.jsx';
+
+/** Where each list (per tab or search) was scrolled to when an email was opened. */
+const scrollPositions = new Map();
 
 /** `j` / `k`: focus the next or previous row; Enter then opens it, `e` / `r` act on it. */
 function moveFocus(direction) {
@@ -36,6 +39,18 @@ export function InboxPage() {
   const suffix = listParams.size > 0 ? `?${listParams}` : '';
   const query = q ? `/search?q=${encodeURIComponent(q)}` : queryForTab(tab);
   const terms = useMemo(() => termsOf(q), [q]);
+  const scroller = useRef(null);
+
+  // Coming back from an email lands where the list was, not at the top.
+  useLayoutEffect(() => {
+    if (gmailId || !scroller.current) return;
+    scroller.current.scrollTop = scrollPositions.get(query) ?? 0;
+  }, [gmailId, query]);
+
+  function open(id) {
+    if (scroller.current) scrollPositions.set(query, scroller.current.scrollTop);
+    navigate(`/inbox/${id}${suffix}`);
+  }
 
   const update = useCallback(
     (changes) => {
@@ -106,13 +121,8 @@ export function InboxPage() {
           onChange={(next) => update({ tab: next === 'all' ? null : next })}
         />
       )}
-      <div className="min-h-0 flex-1 overflow-y-auto border-t border-line">
-        <EmailList
-          key={query}
-          query={query}
-          terms={terms}
-          onOpen={(id) => navigate(`/inbox/${id}${suffix}`)}
-        />
+      <div ref={scroller} className="min-h-0 flex-1 overflow-y-auto border-t border-line">
+        <EmailList key={query} query={query} terms={terms} onOpen={open} />
       </div>
     </div>
   );

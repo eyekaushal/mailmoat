@@ -24,10 +24,15 @@ export function queryForTab(tabId) {
  */
 export function InboxTabs({ active, onChange }) {
   const { data: counts } = useApi('/emails/counts', { refreshInterval: 30_000 });
-  const items = TABS.map((tab) => ({
+  const { data: rules } = useApi('/rules');
+  // A rule the user switched off no longer labels mail, so its tab goes too; until the rules
+  // are known every tab shows.
+  const disabled = new Set((rules ?? []).filter((r) => r.enabled === false).map((r) => r.id));
+  const shown = TABS.filter((tab) => !tab.rule || !disabled.has(tab.rule));
+  const items = shown.map((tab) => ({
     ...tab,
     count: !counts ? 0 : tab.rule ? (counts.byRule?.[tab.rule] ?? 0) : (counts.all ?? 0),
   }));
-  const value = TABS.some((tab) => tab.id === active) ? active : 'all';
+  const value = shown.some((tab) => tab.id === active) ? active : 'all';
   return <Tabs label="Inbox tabs" value={value} items={items} onChange={onChange} />;
 }

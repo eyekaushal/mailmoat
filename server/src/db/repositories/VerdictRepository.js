@@ -145,7 +145,7 @@ export class VerdictRepository {
         `SELECT v.*, e.from_addr, e.from_domain, e.from_name, e.date
          FROM verdicts v JOIN emails e ON e.gmail_id = v.gmail_id
          WHERE v.level <> 'SAFE'
-         ORDER BY v.created_at DESC, v.gmail_id DESC LIMIT ?`,
+         ORDER BY e.date DESC, v.gmail_id DESC LIMIT ?`,
         [limit],
       )
       .map((row) => ({

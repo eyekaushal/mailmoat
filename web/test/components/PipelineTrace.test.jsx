@@ -96,6 +96,12 @@ describe('PipelineTrace', () => {
     expect(screen.queryByText(/Audit events/)).toBeNull();
   });
 
+  it('leaves the summary out when the screen already shows it (reading view)', () => {
+    render(<PipelineTrace trace={trace} showSummary={false} />);
+    expect(screen.queryByText(/Summary of an untrusted email/)).toBeNull();
+    expect(screen.getByText('asks_for_payment, asks_for_secrecy')).toBeTruthy();
+  });
+
   it('explains a failed Reader and missing pieces', () => {
     render(
       <PipelineTrace
