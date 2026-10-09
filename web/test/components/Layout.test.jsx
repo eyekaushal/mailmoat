@@ -141,7 +141,7 @@ describe('Layout', () => {
     expect(toggle.getAttribute('aria-pressed')).toBe('false');
     fireEvent.click(toggle);
     const panel = screen.getByRole('complementary', { name: 'Ask AI' });
-    expect(panel.textContent).toContain('Find, write, schedule, or ask anything');
+    expect(panel.textContent).toContain('What can I help you with today?');
     expect(toggle.getAttribute('aria-pressed')).toBe('true');
     expect(toggle.className).toContain('bg-accent-soft');
     expect(screen.getByText('Inbox screen')).toBeTruthy();

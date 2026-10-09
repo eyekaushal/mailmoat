@@ -2,10 +2,13 @@ import { randomUUID } from 'node:crypto';
 import { EmailFacts } from '../agent/EmailFacts.js';
 import { HandleStore } from '../agent/HandleStore.js';
 import { ChatError, PlanError } from '../core/errors.js';
+import { AnswerComposer } from './AnswerComposer.js';
 
-const CONTEXT_DAYS = 7;
+// Fifteen days (PLAN §15.1 decision 2): what the user still has in mind, small enough to keep the
+// Planner's input and latency down. Older mail is reachable by name through search_emails.
+const CONTEXT_DAYS = 15;
 const MAX_CONTEXT_EMAILS = 50;
-const RECENT_LIMIT = 30;
+const RECENT_LIMIT = 40;
 const TITLE_CHARS = 60;
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -35,6 +38,13 @@ const STEP_LABELS = {
   save_memory: 'Saving to memory…',
 };
 
+/** What a tool's result is for the panel (PLAN §15.1 decision 3); tools not listed show nothing. */
+const RESULT_KINDS = {
+  search_emails: 'emails',
+  summarise: 'summary',
+  extract: 'value',
+};
+
 /** How an approval is shown (F8.3). */
 const CARD_KINDS = {
   send_email: 'email',
@@ -48,14 +58,15 @@ const CARD_KINDS = {
 /**
  * @typedef {{ type: 'status', text: string }
  *   | { type: 'step', step: number, tool: string, label: string, status: 'running'|'done'|'pending'|'denied', reason?: string }
- *   | { type: 'result', step: number, tool: string, value: unknown, untrusted: boolean, sources: object[] }
+ *   | { type: 'result', step: number, tool: string, kind: 'emails'|'summary'|'value'|'none', value: unknown, untrusted: boolean, sources: object[] }
  *   | { type: 'card', card: Card }
  *   | { type: 'message', text: string }} ChatEvent
  * @typedef {{
  *   approvalId: string, kind: string, tool: string, reason: string,
  *   fields: Record<string, { value: unknown, sources: { type: string, id?: string, from?: string, date?: string }[] }>,
  * }} Card
- * @typedef {{ text: string, intent: 'find'|'write'|'schedule'|'none', status: string, steps: object[], cards: Card[], results: object[] }} AssistantContent
+ * @typedef {{ text: string, progress: string, intent: 'find'|'write'|'schedule'|'none', status: string, steps: object[], cards: Card[], results: object[] }} AssistantContent
+ *   `progress` is the Planner's own line shown while the plan ran; `text` is the answer composed from typed results
  */
 
 /**
@@ -129,6 +140,7 @@ export class ChatService {
     const handles = this.#handles(context);
     const content = {
       text: '',
+      progress: '',
       intent: 'none',
       status: 'completed',
       steps: [],
@@ -147,7 +159,10 @@ export class ChatService {
     }
 
     content.intent = ChatService.#intent(plan);
-    content.text = plan.message;
+    // The Planner's message is written before anything runs: it is the progress line. The
+    // answer is composed in code from the typed results once the plan has run (PLAN §15.1).
+    content.progress = plan.message;
+    onEvent({ type: 'status', text: plan.message });
     const run = await interpreter.run(plan, {
       request: text,
       handles,
@@ -156,6 +171,14 @@ export class ChatService {
       onStep: (event) => this.#onStep(event, content, onEvent),
     });
     content.status = run.status;
+    content.text = new AnswerComposer({ timeZone }).compose({
+      status: run.status,
+      planMessage: plan.message,
+      steps: content.steps,
+      results: content.results,
+      cards: content.cards,
+      query: ChatService.#query(plan),
+    });
     auditLog.record({
       actor: 'user',
       event: 'chat_turn',
@@ -176,16 +199,17 @@ export class ChatService {
     this.#chat(chatId);
     const approval = approvals.get(approvalId);
     if (!approval) throw new ChatError('Unknown approval');
+    const composer = new AnswerComposer({ timeZone });
     let outcome;
     if (action === 'approve') {
       const result = await approvals.approve(approvalId, { via: 'chat', timeZone });
       outcome =
         result.status === 'performed'
-          ? { status: 'performed', text: `Done: ${ChatService.#pastTense(approval.tool)}.` }
-          : { status: 'denied', text: `Not done: ${result.reason}` };
+          ? { status: 'performed', text: composer.decided(approval, 'performed') }
+          : { status: 'denied', text: composer.decided(approval, 'denied', result.reason) };
     } else if (action === 'reject') {
       approvals.reject(approvalId, { via: 'chat' });
-      outcome = { status: 'rejected', text: 'Discarded.' };
+      outcome = { status: 'rejected', text: composer.decided(approval, 'rejected') };
     } else {
       throw new ChatError(`Unknown action: ${action}`);
     }
@@ -268,12 +292,16 @@ export class ChatService {
     onEvent({ type: 'step', ...step });
     if (event.result) {
       const { value, sources } = event.result.toJSON();
-      // F8.7: anything with an email source is untrusted text and is shown as such.
+      const kind = RESULT_KINDS[event.tool] ?? 'none';
+      // F8.7: anything with an email source is untrusted text and is shown as such. The panel
+      // renders results by kind (PLAN §15.1 decision 3); an email list carries ids and the
+      // browser fetches the rows, so no email text travels in the chat record for it.
       const result = {
         step: event.step,
         tool: event.tool,
-        value,
-        sources,
+        kind,
+        value: kind === 'emails' ? ChatService.#emailList(value) : value,
+        sources: sources.map((source) => this.#describe(source)),
         untrusted: sources.some((source) => source.type === 'email'),
       };
       content.results.push(result);
@@ -286,15 +314,37 @@ export class ChatService {
     }
   }
 
+  /** A source with the sender and date the panel shows ("from email from X on date"). */
+  #describe(source) {
+    if (source.type !== 'email') return source;
+    const record = this.#deps.emails.get(source.id);
+    return record ? { ...source, from: record.fromAddr, date: record.date } : source;
+  }
+
+  /** Ids and sender addresses only: the rows come from the inbox API, the summaries never travel. */
+  static #emailList(value) {
+    return {
+      count: value?.count ?? 0,
+      ids: (value?.emails ?? []).map((email) => email.id),
+      senders: value?.senders ?? [],
+    };
+  }
+
+  /** What the user asked for, from the plan's literal arguments, for the answer line. */
+  static #query(plan) {
+    const search = plan.steps.find((step) => step.tool === 'search_emails');
+    const args = search?.args ?? {};
+    return {
+      sender: typeof args.from === 'string' ? args.from : null,
+      needsReply: args.needs_reply === true,
+    };
+  }
+
   /** The preview (F8.3) with every value's data sources spelled out (F8.4). */
   #card(approvalId) {
-    const { approvals, emails } = this.#deps;
+    const { approvals } = this.#deps;
     const approval = approvals.get(approvalId);
-    const describe = (source) => {
-      if (source.type !== 'email') return source;
-      const record = emails.get(source.id);
-      return record ? { ...source, from: record.fromAddr, date: record.date } : source;
-    };
+    const describe = (source) => this.#describe(source);
     return {
       approvalId,
       kind: CARD_KINDS[approval.tool] ?? 'action',
@@ -321,18 +371,5 @@ export class ChatService {
       if (names.some((name) => tools.has(name))) return intent;
     }
     return 'none';
-  }
-
-  static #pastTense(tool) {
-    return (
-      {
-        send_email: 'email sent',
-        create_draft: 'draft saved',
-        reply: 'reply drafted',
-        create_calendar_event: 'event created and invitations sent',
-        unsubscribe: 'unsubscribed',
-        block_sender: 'sender blocked',
-      }[tool] ?? `${tool} performed`
-    );
   }
 }

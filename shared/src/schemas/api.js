@@ -50,6 +50,12 @@ export const EmailListQuerySchema = z.object({
   risk: z.enum(RISK_LEVELS).optional(),
   cursor: z.string().max(400).optional(),
   limit: LIMIT,
+  /** Comma-separated Gmail ids: the rows for an Ask AI email list (PLAN §15.1 decision 3). */
+  ids: z
+    .string()
+    .max(2000)
+    .regex(/^[A-Za-z0-9_-]+(,[A-Za-z0-9_-]+)*$/)
+    .optional(),
 });
 /** Live Gmail search; `cursor` is Gmail's opaque page token. */
 export const SearchQuerySchema = z.object({

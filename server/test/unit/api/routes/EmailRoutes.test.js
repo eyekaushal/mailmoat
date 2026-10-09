@@ -270,6 +270,16 @@ describe('GET /api/emails', () => {
     expect((await api.get('/api/emails?limit=0')).status).toBe(400);
   });
 
+  it('returns the rows for given ids in that order, for Ask AI email lists', async () => {
+    storeEmail(repos, 'a', { date: '2026-10-01T09:00:00.000Z' });
+    storeEmail(repos, 'b', { date: '2026-10-02T09:00:00.000Z' });
+    const { items, nextCursor } = (await api.get('/api/emails?ids=a,b,missing')).json;
+    expect(items.map((e) => e.gmailId)).toEqual(['a', 'b']);
+    expect(items[0]).toMatchObject({ subject: '', avatar: { initials: 'R' } });
+    expect(nextCursor).toBeNull();
+    expect((await api.get('/api/emails?ids=a,%20b')).status).toBe(400);
+  });
+
   it('counts unread mail per tab', async () => {
     storeEmail(repos, 'a', { ruleIds: ['fyi'] });
     storeEmail(repos, 'b', { ruleIds: ['fyi'], isRead: true });

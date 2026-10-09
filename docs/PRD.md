@@ -256,7 +256,7 @@ A chat panel ("Ask mailmoat") similar to Superhuman's AI panel. The user's messa
 | ID | Requirement |
 |---|---|
 | F8.1 | Supported intents in v1: **(a) find/summarise emails** ("what did Rahul send this week?"), **(b) draft or send an email / reply**, **(c) schedule a meeting** ("find time with Mia and Amy after my flight"). Other requests get a polite "not supported yet". |
-| F8.2 | The Planner outputs a JSON plan; the Interpreter executes it; results stream back as steps ("Searching inbox…", "Checking calendar…", "Drafting…"). |
+| F8.2 | The Planner outputs a JSON plan; the Interpreter executes it; the Planner's message is the progress line shown while it runs, and the **answer is composed in code from typed results** afterwards ("3 emails need a reply", "Done! Your meeting is scheduled for …"). Results render as an email list, a summary or a card, never raw data (B28c, `PLAN.md §15`). |
 | F8.3 | Any side effect is shown as a **preview card** (email: to/cc/subject/body/data sources; event: title/time/attendees) with **Edit** and **Send/Save**. Nothing happens until the user clicks. |
 | F8.4 | Values that came from emails are visibly marked on cards (e.g. "flight time from email: *Your IndiGo booking*"). |
 | F8.5 | Chat history is stored locally; a "New chat" button clears context. |

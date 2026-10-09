@@ -28,10 +28,18 @@ export function fakeRepos(emails = [{ record: RECORD, form: FORM, verdict: VERDI
   return {
     emails: {
       get: (id) => byId.get(id)?.record,
-      search: ({ from, direction, since, until, limit }) =>
+      search: ({ from, sender, direction, since, until, limit }) =>
         emails
           .map((e) => e.record)
           .filter((r) => !from || r.fromAddr === from || r.fromDomain === from)
+          .filter((r) => {
+            if (!sender) return true;
+            const haystack = `${r.fromName ?? ''} ${r.fromAddr} ${r.fromDomain}`.toLowerCase();
+            return sender
+              .toLowerCase()
+              .split(/\s+/)
+              .every((word) => haystack.includes(word));
+          })
           .filter((r) => !direction || r.direction === direction)
           .filter((r) => !since || r.date >= since)
           .filter((r) => !until || r.date <= until)

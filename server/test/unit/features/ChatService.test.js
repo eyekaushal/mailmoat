@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { ActionExecutor } from '../../../src/actions/ActionExecutor.js';
+import { EmailFacts } from '../../../src/agent/EmailFacts.js';
 import { ApprovalService } from '../../../src/actions/ApprovalService.js';
 import { PlanInterpreter } from '../../../src/agent/PlanInterpreter.js';
 import { CreateCalendarEventTool } from '../../../src/agent/tools/CreateCalendarEventTool.js';
@@ -54,6 +55,7 @@ function store(
     level = 'SAFE',
     summary = 'A note.',
     date = '2026-10-07T09:00:00.000Z',
+    fromName = null,
   } = {},
 ) {
   const record = {
@@ -62,7 +64,7 @@ function store(
     direction: 'inbound',
     fromAddr,
     fromDomain: fromAddr.split('@')[1],
-    fromName: null,
+    fromName,
     toAddrs: ['kaushal@gmail.com'],
     recipientNames: {},
     date,
@@ -263,7 +265,14 @@ describe('ChatService: find time after my flight (F8 AC)', () => {
       value: ['2026-10-09T17:00:00+05:30'],
     });
 
+    // The plan's message is the progress line; the answer is composed from typed results.
+    expect(content.progress).toBe(
+      'I will check your flight time and your calendar, then propose an event.',
+    );
+    expect(content.text).toBe('Here is the event. Save it when it looks right.');
+    expect(content.results[0].kind).toBe('value');
     expect(events.map((e) => e.type)).toEqual([
+      'status',
       'status',
       'step',
       'step',
@@ -277,6 +286,10 @@ describe('ChatService: find time after my flight (F8 AC)', () => {
       'message',
     ]);
     expect(events[1]).toEqual({
+      type: 'status',
+      text: 'I will check your flight time and your calendar, then propose an event.',
+    });
+    expect(events[2]).toEqual({
       type: 'step',
       step: 0,
       tool: 'extract',
@@ -305,7 +318,7 @@ describe('ChatService: find time after my flight (F8 AC)', () => {
     });
     expect(decided).toEqual({
       status: 'performed',
-      text: 'Done: event created and invitations sent.',
+      text: 'Done! Your meeting is scheduled for Fri 9 Oct, 17:00 to 18:00.',
     });
     expect(calendar.calls.at(-1)[1]).toMatchObject({
       summary: 'Launch strategy',
@@ -353,21 +366,34 @@ describe('ChatService: other intents and history', () => {
       message: 'what did rahul@acme-corp.com send this week?',
     });
     expect(first).toMatchObject({ intent: 'find', status: 'completed' });
-    expect(first.results[0]).toMatchObject({
+    // An email list carries ids and sender addresses only; the rows come from the inbox API.
+    expect(first.results[0]).toEqual({
+      step: 0,
       tool: 'search_emails',
+      kind: 'emails',
       untrusted: true,
-      value: {
-        count: 1,
-        emails: [expect.objectContaining({ id: 'm1', summary: 'Rahul asks about lunch.' })],
-      },
+      value: { count: 1, ids: ['m1'], senders: ['rahul@acme-corp.com'] },
+      sources: [
+        { type: 'inbox' },
+        { type: 'email', id: 'm1', from: 'rahul@acme-corp.com', date: '2026-10-07T09:00:00.000Z' },
+        { type: 'user' }, // the sender the user typed
+      ],
     });
+    expect(JSON.stringify(first.results)).not.toContain('lunch');
+    expect(first.text).toBe('1 email from rahul@acme-corp.com.');
+    expect(first.progress).toBe('Here is what Rahul sent.');
 
     const second = await s.send({ chatId: chat.id, message: 'summarise it', emailId: 'm2' });
     expect(second.results[0]).toMatchObject({
       tool: 'summarise',
+      kind: 'summary',
       untrusted: true,
       value: { summary: 'Rahul asks about lunch.' },
+      sources: expect.arrayContaining([
+        expect.objectContaining({ type: 'email', id: 'm1', from: 'rahul@acme-corp.com' }),
+      ]),
     });
+    expect(second.text).toBe('Here is the summary.');
     // Context: the email the panel was opened from, the one surfaced earlier, then recent mail.
     expect(plannerCalls[1].emails.map((e) => e.record.gmailId)).toEqual(['m2', 'm1']);
     expect(s.messages(chat.id)).toHaveLength(4);
@@ -408,6 +434,39 @@ describe('ChatService: other intents and history', () => {
     await expect(
       s.decide({ chatId: chat.id, approvalId: 'nope', action: 'approve' }),
     ).rejects.toThrow(ChatError);
+  });
+
+  it('finds a sender by name in code, ranks the real contact first and names an ambiguity (PLAN §15.1)', async () => {
+    store('real', {
+      fromAddr: 'neha@brightpixel.studio',
+      fromName: 'Neha Kulkarni',
+      date: '2026-10-05T09:00:00.000Z',
+    });
+    store('fake', {
+      fromAddr: 'neha.kulkarni.pm@gmail.com',
+      fromName: 'Neha Kulkarni',
+      level: 'SUSPICIOUS',
+      date: '2026-10-06T09:00:00.000Z',
+    });
+    store('other', { fromAddr: 'amit@example.com', fromName: 'Amit Verma' });
+    db.run(
+      "INSERT INTO contacts (address, domain, first_seen, last_seen, sent_count) VALUES ('neha@brightpixel.studio', 'brightpixel.studio', 't', 't', 2)",
+    );
+    plans.push(plan('Searching your inbox…', [['search_emails', { from: 'Neha' }]]));
+    const s = service();
+    const chat = s.create();
+    const content = await s.send({ chatId: chat.id, message: 'summarise what Neha sent' });
+    // The contact the user writes to comes first; the look-alike is listed with its own risk.
+    expect(content.results[0].value).toEqual({
+      count: 2,
+      ids: ['real', 'fake'],
+      senders: ['neha@brightpixel.studio', 'neha.kulkarni.pm@gmail.com'],
+    });
+    expect(content.text).toBe('2 emails from Neha. 2 senders match “Neha”; check the addresses.');
+    // Names never reach the Planner: it sees typed facts only (EmailFacts whitelist).
+    const facts = plannerCalls[0].emails.map((e) => EmailFacts.from(e));
+    expect(JSON.stringify(facts)).not.toContain('Kulkarni');
+    expect(facts.map((f) => f.from.address)).toContain('neha@brightpixel.studio');
   });
 
   it('answers unsupported requests and Planner failures without running anything', async () => {

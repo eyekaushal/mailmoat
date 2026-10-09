@@ -67,6 +67,13 @@
   --chip-block: #fbe3ec;
   --chip-block-ink: #9a2f5a;
 
+  /* Ask AI (PLAN §15): the lighthouse palette as a gradient, navy to sea blue with a glint of
+     lantern amber at the far end. Used for the sparkle, the card border and the arrow button. */
+  --ask-a: #2a4a7f;
+  --ask-b: #5f8fd8;
+  --ask-c: #ffcf6b;
+  --ask-gradient: linear-gradient(135deg, var(--ask-a) 0%, var(--ask-b) 70%, var(--ask-c) 140%);
+
   --shadow-panel: 0 1px 2px rgba(20, 24, 40, 0.05), 0 8px 24px rgba(20, 24, 40, 0.05);
   --shadow-pop: 0 2px 6px rgba(20, 24, 40, 0.08), 0 12px 32px rgba(20, 24, 40, 0.14);
   --ease: cubic-bezier(0.2, 0.7, 0.3, 1);
@@ -254,6 +261,37 @@ body {
     opacity: 1;
     transform: none;
   }
+}
+
+/* Ask AI cards: a hairline gradient border over the solid panel, radius 12. */
+.ask-card {
+  border: 1.5px solid transparent;
+  border-radius: 12px;
+  background:
+    linear-gradient(var(--panel-solid), var(--panel-solid)) padding-box,
+    var(--ask-gradient) border-box;
+}
+.ask-gradient-text {
+  background: var(--ask-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.ask-arrow {
+  background: var(--ask-gradient);
+  color: #fff;
+}
+@keyframes ask-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+.ask-progress {
+  animation: ask-pulse 1.6s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {

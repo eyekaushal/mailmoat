@@ -486,6 +486,38 @@ describe("EmailRepository inbox is Gmail's Inbox tab (PLAN §14.1 decision 7)", 
   });
 });
 
+describe('EmailRepository.search by sender text (PLAN §15.1 decision 1)', () => {
+  it('matches every word against name, address and domain, contacts the user wrote to first', () => {
+    const repos = { emails: new EmailRepository(db), verdicts: new VerdictRepository(db) };
+    const contacts = new ContactRepository(db);
+    storeEmail(repos, 'real', {
+      fromAddr: 'neha@brightpixel.studio',
+      fromName: 'Neha Kulkarni',
+      date: '2026-10-01T00:00:00.000Z',
+    });
+    storeEmail(repos, 'fake', {
+      fromAddr: 'neha.kulkarni.pm@gmail.com',
+      fromName: 'Neha Kulkarni',
+      date: '2026-10-03T00:00:00.000Z',
+    });
+    storeEmail(repos, 'amit', { fromAddr: 'amit@example.com', fromName: 'Amit Verma' });
+    contacts.recordSent('neha@brightpixel.studio', new Date('2026-09-01T00:00:00Z'), 'Neha');
+
+    const ids = (filter) => repos.emails.search(filter).map((r) => r.gmailId);
+    expect(ids({ sender: 'neha' })).toEqual(['real', 'fake']); // contact first, then newest
+    expect(ids({ sender: 'Neha Kulkarni' })).toEqual(['real', 'fake']);
+    expect(ids({ sender: 'kulkarni neha' })).toEqual(['real', 'fake']);
+    expect(ids({ sender: 'gmail.com' })).toEqual(['fake']);
+    expect(ids({ sender: 'amit@example.com' })).toEqual(['amit']);
+    expect(ids({ sender: 'Amit Verma' })).toEqual(['amit']);
+    expect(ids({ sender: 'nobody' })).toEqual([]);
+    // Exact `from` is untouched for the unsubscribe code.
+    expect(ids({ from: 'neha@brightpixel.studio' })).toEqual(['real']);
+    // The match key is only ever a parameter: no SQL in a name.
+    expect(ids({ sender: "x' OR 1=1 --" })).toEqual([]);
+  });
+});
+
 describe('AuditLogRepository filters and counts', () => {
   it('filters recent entries by event and subject, and counts by decision since a date', () => {
     const audit = new AuditLogRepository(db);

@@ -1,22 +1,17 @@
-import {
-  ClockCounterClockwise,
-  PaperPlaneRight,
-  Plus,
-  Sparkle,
-  Trash,
-  X,
-} from '@phosphor-icons/react';
+import { ArrowUp, ClockCounterClockwise, Plus, Sparkle, Trash, X } from '@phosphor-icons/react';
 import { useEffect, useRef, useState } from 'react';
 import { applyEvent, emptyTurn } from '../../lib/chatTurn.js';
 import { useApi, useApiClient } from '../../lib/useApi.js';
 import { Dialog } from '../../ui/Dialog.jsx';
 import { DropdownMenu, MenuHeader, MenuItem, MenuSeparator } from '../../ui/DropdownMenu.jsx';
 import { IconButton } from '../../ui/IconButton.jsx';
+import { Tooltip } from '../../ui/Tooltip.jsx';
 import { Button } from '../Button.jsx';
 import { useAskAi } from './AskAiProvider.jsx';
 import { AskTurn } from './AskTurn.jsx';
 
-export const PROMPT = 'Find, write, schedule, or ask anything';
+export const HEADING = 'What can I help you with today?';
+export const PROMPT = 'Find, write, schedule, or ask anything…';
 
 export const SUGGESTIONS = [
   'What needs a reply today?',
@@ -26,10 +21,11 @@ export const SUGGESTIONS = [
 ];
 
 /**
- * The Ask AI side panel (PRD F8, PLAN §13.9): a centred prompt and suggestion chips until the
- * first question, then plain-text answers with numbered sources and preview cards. Your words
- * are trusted input to the Planner; anything that would change something comes back as a card
- * and waits for your click. Chats are kept; recent ones open from the clock menu.
+ * The Ask AI side panel (PRD F8, PLAN §15): one question and one input; while a plan runs, the
+ * Planner's progress line; then only what the ask needs (an email list, a summary, a card) and
+ * the answer line composed by code. Your words are trusted input to the Planner; anything that
+ * would change something comes back as a card and waits for your click. Cards can be edited
+ * before approval; edits become your own words.
  */
 export function AskPanel() {
   const client = useApiClient();
@@ -41,6 +37,7 @@ export function AskPanel() {
   const [live, setLive] = useState(null);
   const [error, setError] = useState(null);
   const [busyCard, setBusyCard] = useState(null);
+  const [edits, setEdits] = useState({});
   const [deleting, setDeleting] = useState(false);
   const bottom = useRef(null);
   const input = useRef(null);
@@ -103,6 +100,30 @@ export function AskPanel() {
     }
   }
 
+  /** Card edits become user-sourced values on the stored approval; the card shows them at once. */
+  async function edit(approvalId, changes) {
+    await client.patch(`/approvals/${approvalId}`, changes);
+    setEdits((current) => ({ ...current, [approvalId]: { ...current[approvalId], ...changes } }));
+  }
+
+  const withEdits = (message) => {
+    if (message.role !== 'assistant' || !message.content.cards?.length) return message;
+    return {
+      ...message,
+      content: {
+        ...message.content,
+        cards: message.content.cards.map((card) => {
+          const changed = edits[card.approvalId];
+          if (!changed) return card;
+          const fields = { ...card.fields };
+          for (const [name, value] of Object.entries(changed))
+            fields[name] = { value, sources: [{ type: 'user' }] };
+          return { ...card, fields };
+        }),
+      },
+    };
+  };
+
   async function remove() {
     setDeleting(false);
     setError(null);
@@ -117,9 +138,9 @@ export function AskPanel() {
 
   const empty = !chatId && !live;
   return (
-    <aside aria-label="Ask AI" className="panel flex w-[380px] shrink-0 flex-col">
+    <aside aria-label="Ask AI" className="panel flex w-[400px] shrink-0 flex-col">
       <header className="flex h-14 shrink-0 items-center gap-1 px-4">
-        <Sparkle aria-hidden="true" size={18} className="text-accent" />
+        <Sparkle aria-hidden="true" size={18} weight="fill" className="text-accent" />
         <h2 className="min-w-0 flex-1 truncate pl-1 text-md font-medium tracking-tight">
           {chat?.title ?? 'Ask AI'}
         </h2>
@@ -153,8 +174,11 @@ export function AskPanel() {
 
       <div className="min-h-0 flex-1 overflow-y-auto border-t border-line px-4 py-4">
         {empty ? (
-          <div className="flex h-full flex-col items-center justify-center gap-4 text-center">
-            <p className="text-md font-medium">{PROMPT}</p>
+          <div className="flex h-full flex-col items-center justify-center gap-5 text-center">
+            <span className="ask-gradient-text" aria-hidden="true">
+              <Sparkle size={44} weight="fill" />
+            </span>
+            <h3 className="text-lg font-medium tracking-tight">{HEADING}</h3>
             <ul className="flex flex-wrap justify-center gap-1.5" aria-label="Suggestions">
               {SUGGESTIONS.map((text) => (
                 <li key={text}>
@@ -177,9 +201,10 @@ export function AskPanel() {
             {messages.map((message) => (
               <AskTurn
                 key={message.id}
-                message={message}
+                message={withEdits(message)}
                 decided={decided}
                 onDecide={decide}
+                onEdit={edit}
                 busy={busyCard !== null}
               />
             ))}
@@ -199,7 +224,7 @@ export function AskPanel() {
         )}
       </div>
 
-      <form onSubmit={send} className="shrink-0 border-t border-line px-4 py-3">
+      <form onSubmit={send} className="shrink-0 px-4 pb-4">
         {emailId && (
           <p className="mb-1.5 flex items-center gap-1 text-xs text-secondary">
             <span className="min-w-0 flex-1 truncate">About the email you opened this from.</span>
@@ -212,12 +237,12 @@ export function AskPanel() {
             />
           </p>
         )}
-        <div className="flex items-end gap-1 rounded-sm border border-line-strong bg-panel-solid pr-1 focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/40">
+        <div className="flex items-end gap-1.5 rounded-xl border border-line-strong bg-panel-solid py-1.5 pr-1.5 pl-3 shadow-[inset_3px_0_0_var(--ask-b)] focus-within:border-accent">
           <textarea
             ref={input}
             data-inset-focus=""
             aria-label="Message"
-            rows={2}
+            rows={1}
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             onKeyDown={(e) => {
@@ -226,18 +251,20 @@ export function AskPanel() {
                 send();
               }
             }}
-            placeholder="Ask anything… Shift+Enter for a new line"
-            className="min-h-10 w-full resize-none bg-transparent px-3 py-2 text-base text-ink outline-none placeholder:text-tertiary"
+            placeholder={PROMPT}
+            className="max-h-40 min-h-7 w-full resize-none bg-transparent py-1 text-base text-ink outline-none placeholder:text-tertiary"
             disabled={live !== null}
           />
-          <IconButton
-            label="Send"
-            keys={['↵']}
-            icon={PaperPlaneRight}
-            type="submit"
-            className="mb-1"
-            disabled={!draft.trim() || live !== null}
-          />
+          <Tooltip label="Send" keys={['↵']}>
+            <button
+              type="submit"
+              aria-label="Send"
+              disabled={!draft.trim() || live !== null}
+              className="ask-arrow flex size-7 shrink-0 items-center justify-center rounded-full transition-opacity duration-150 ease-out-soft disabled:opacity-35"
+            >
+              <ArrowUp size={14} weight="bold" />
+            </button>
+          </Tooltip>
         </div>
       </form>
 

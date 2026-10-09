@@ -22,13 +22,17 @@ export class SearchEmailsTool extends Tool {
     super({
       name: 'search_emails',
       description:
-        'Find emails by sender, direction, time range, risk or whether they need a reply. Returns typed facts and the Reader summary of each match, newest first.',
+        'Find emails by sender (name, address or domain), direction, time range, risk or whether they need a reply. Returns typed facts, newest first; contacts the user writes to come first.',
       args: z.strictObject({
         from: z
-          .email()
-          .or(z.string().regex(/^[a-z0-9.-]+\.[a-z]{2,}$/i))
+          .string()
+          .trim()
+          .min(1)
+          .max(120)
           .optional()
-          .describe('Sender address or domain, exactly as the user gave it.'),
+          .describe(
+            'The sender as the user named them: a name ("Neha", "Neha Kulkarni"), an address or a domain, exactly as the user wrote it. Matching happens in code.',
+          ),
         direction: z
           .enum(['inbound', 'outbound'])
           .optional()
@@ -63,7 +67,7 @@ export class SearchEmailsTool extends Tool {
     const limit = value('limit') ?? 10;
     const matches = [];
     const records = this.#emails.search({
-      from: value('from'),
+      sender: value('from'),
       direction: value('direction'),
       since: value('since'),
       until: value('until'),
@@ -79,8 +83,11 @@ export class SearchEmailsTool extends Tool {
       matches.push({ ...facts, summary: form?.summary ?? null });
       if (matches.length === limit) break;
     }
+    // Distinct sender addresses in rank order (contacts first): the answer line says when a
+    // name matched more than one person. Addresses only; names never leave the database.
+    const senders = [...new Set(matches.map((m) => m.from.address).filter(Boolean))];
     return new TaggedValue(
-      { count: matches.length, emails: matches },
+      { count: matches.length, emails: matches, senders },
       [{ type: 'inbox' }, ...matches.map((m) => ({ type: 'email', id: m.id }))],
       'user-only',
     );

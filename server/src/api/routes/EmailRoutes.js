@@ -23,6 +23,12 @@ import { validate } from '../validate.js';
  * view); the Reader summary is AI output of an untrusted email and the UI shows it as plain
  * text, labelled as such.
  */
+/** Rows for `ids`, kept in the order the ids were given (as the search returned them). */
+function inGivenOrder(ids, listByIds) {
+  const rank = new Map(ids.map((id, index) => [id, index]));
+  return listByIds(ids).sort((a, b) => rank.get(a.gmailId) - rank.get(b.gmailId));
+}
+
 export class EmailRoutes {
   #deps;
 
@@ -55,8 +61,14 @@ export class EmailRoutes {
     const router = Router();
 
     router.get('/emails', (request, response) => {
-      const { label, risk, cursor, limit } = validate(EmailListQuerySchema, request.query);
-      const { items, nextCursor } = emails.page({ ruleId: label, level: risk, cursor, limit });
+      const { label, risk, cursor, limit, ids } = validate(EmailListQuerySchema, request.query);
+      // An Ask AI result names emails by id; the browser fetches their rows here, in that order.
+      const { items, nextCursor } = ids
+        ? {
+            items: inGivenOrder(ids.split(',').slice(0, 50), (list) => emails.listByIds(list)),
+            nextCursor: null,
+          }
+        : emails.page({ ruleId: label, level: risk, cursor, limit });
       response.json({
         items: items.map((item) => ({
           ...item,

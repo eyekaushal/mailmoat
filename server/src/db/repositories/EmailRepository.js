@@ -109,32 +109,51 @@ export class EmailRepository {
 
   /**
    * Metadata search for the agent's `search_emails` tool, newest first.
-   * @param {{ from?: string, direction?: 'inbound'|'outbound', since?: string, until?: string, limit?: number }} filter
-   *   `from` matches the address or the domain; `since`/`until` are ISO times
+   * @param {{ from?: string, sender?: string, direction?: 'inbound'|'outbound', since?: string,
+   *   until?: string, limit?: number }} filter
+   *   `from` matches the address or the domain exactly; `sender` is a name, address or domain as
+   *   the user typed it (every word must appear in the display name, address or domain; PLAN
+   *   §15.1 decision 1), with contacts the user has written to ranked first; `since`/`until`
+   *   are ISO times
    * @returns {import('../../sync/EmailMetadataMapper.js').EmailRecord[]}
    */
-  search({ from, direction, since, until, limit = 200 } = {}) {
+  search({ from, sender, direction, since, until, limit = 200 } = {}) {
     const where = [];
     const params = [];
     if (from) {
-      where.push('(from_addr = ? OR from_domain = ?)');
+      where.push('(e.from_addr = ? OR e.from_domain = ?)');
       params.push(from.toLowerCase(), from.toLowerCase());
     }
+    const words = sender ? sender.toLowerCase().split(/\s+/).filter(Boolean) : [];
+    for (const word of words) {
+      // The name is attacker-controlled text, used here only as a match key; nothing from it
+      // leaves the database.
+      where.push(
+        "instr(lower(coalesce(e.from_name, '')) || ' ' || e.from_addr || ' ' || e.from_domain, ?) > 0",
+      );
+      params.push(word);
+    }
     if (direction) {
-      where.push('direction = ?');
+      where.push('e.direction = ?');
       params.push(direction);
     }
     if (since) {
-      where.push('date >= ?');
+      where.push('e.date >= ?');
       params.push(since);
     }
     if (until) {
-      where.push('date <= ?');
+      where.push('e.date <= ?');
       params.push(until);
     }
     const clause = where.length > 0 ? `WHERE ${where.join(' AND ')}` : '';
+    const order = words.length > 0 ? 'known DESC, e.date DESC' : 'e.date DESC';
     return this.#db
-      .all(`SELECT * FROM emails ${clause} ORDER BY date DESC LIMIT ?`, [...params, limit])
+      .all(
+        `SELECT e.*, (c.sent_count > 0) AS known FROM emails e
+         LEFT JOIN contacts c ON c.address = e.from_addr
+         ${clause} ORDER BY ${order} LIMIT ?`,
+        [...params, limit],
+      )
       .map((row) => this.#toRecord(row));
   }
 

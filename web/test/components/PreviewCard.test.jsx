@@ -60,6 +60,32 @@ describe('PreviewCard', () => {
     expect(onDecide.mock.calls.map(([action]) => action)).toEqual(['approve', 'reject']);
   });
 
+  it('edits fields in place and sends only what changed, as arrays where the field was one', async () => {
+    const onEdit = vi.fn(async () => {});
+    render(<PreviewCard card={card} onDecide={() => {}} onEdit={onEdit} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Edit' }));
+    expect(screen.queryByRole('button', { name: 'Send' })).toBeNull();
+    fireEvent.change(screen.getByLabelText('To'), {
+      target: { value: 'bob@example.com, amy@example.com' },
+    });
+    fireEvent.change(screen.getByLabelText('Body'), {
+      target: { value: 'Your flight is at 10:00.' },
+    });
+    fireEvent.change(screen.getByLabelText('Subject'), { target: { value: 'Flight details' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Done' }));
+    await screen.findByRole('button', { name: 'Send' });
+    expect(onEdit).toHaveBeenCalledWith({
+      to: ['bob@example.com', 'amy@example.com'],
+      body: 'Your flight is at 10:00.',
+    });
+    // Cancel throws the draft away.
+    fireEvent.click(screen.getByRole('button', { name: 'Edit' }));
+    fireEvent.change(screen.getByLabelText('Subject'), { target: { value: 'Changed' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+    expect(screen.getByText('Flight details')).toBeTruthy();
+    expect(onEdit).toHaveBeenCalledTimes(1);
+  });
+
   it('has no buttons without a decision handler and disables them while busy', () => {
     const { rerender } = render(<PreviewCard card={card} />);
     expect(screen.queryByRole('button')).toBeNull();
