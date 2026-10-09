@@ -22,6 +22,11 @@ const RAW = {
     text: 'Thanks, got it.',
   }),
   broken: Buffer.from(`X: ${'a'.repeat(3_000_000)}\r\n\r\n`),
+  draftMsg: rawEmail({
+    from: 'kaushal@gmail.com',
+    subject: 'Re: Launch deck',
+    text: 'Dear Rahul, I will review it.',
+  }),
 };
 
 let db;
@@ -108,6 +113,27 @@ describe('GET /api/threads/:id', () => {
     ).toBe(false);
   });
 
+  it('shows a Gmail draft as a draft with its draft id, never as mail that went anywhere', async () => {
+    storeEmail(repos, 'first');
+    gmail.addMessage({
+      id: 'draftMsg',
+      threadId: 't1',
+      labelIds: ['DRAFT'],
+      receivedAt: new Date('2026-10-01T12:00:00Z'),
+    });
+    gmail.drafts = [{ draftId: 'r-77', messageId: 'draftMsg', threadId: 't1' }];
+    const { messages } = (await api.get('/api/threads/t1')).json;
+    expect(messages.at(-1)).toMatchObject({
+      gmailId: 'draftMsg',
+      direction: 'outbound',
+      isDraft: true,
+      draftId: 'r-77',
+      verdict: null,
+      text: 'Dear Rahul, I will review it.',
+    });
+    expect(messages[0]).toMatchObject({ isDraft: false, draftId: null });
+  });
+
   it('reports an unparsable message as unreadable instead of hiding the thread', async () => {
     gmail.addMessage({
       id: 'broken',
@@ -118,6 +144,8 @@ describe('GET /api/threads/:id', () => {
     expect(messages.at(-1)).toEqual({
       gmailId: 'broken',
       direction: 'inbound',
+      isDraft: false,
+      draftId: null,
       date: '2026-10-01T11:00:00.000Z',
       isRead: false,
       verdict: null,

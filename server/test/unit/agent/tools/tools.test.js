@@ -210,6 +210,28 @@ describe('create_draft, send_email and reply', () => {
     expect(result.value).toEqual({ messageId: 'sent-1' });
   });
 
+  it('send_email threads a composer reply and removes the draft it started from (PLAN §14)', async () => {
+    const gmail = recordingGmail();
+    const discarded = [];
+    const tool = new SendEmailTool({
+      gmail,
+      drafts: { discard: async (id) => discarded.push(id) },
+    });
+    await run(tool, {
+      to: ['bob@example.com'],
+      subject: 'Re: Lunch',
+      body: 'Friday works.',
+      in_reply_to: '<m1@example.com>',
+      thread_id: 't-9',
+      draft_id: 'draft-old',
+    });
+    const [name, raw, threadId] = gmail.calls[0];
+    expect(name).toBe('sendMessage');
+    expect(raw).toContain('In-Reply-To: <m1@example.com>\r\n');
+    expect(threadId).toBe('t-9');
+    expect(discarded).toEqual(['draft-old']);
+  });
+
   it('both reject bad recipients, empty bodies and header injection', () => {
     const tool = new CreateDraftTool({ gmail: recordingGmail() });
     expect(() => tool.parseArgs({ ...message, to: [] })).toThrow(ToolError);

@@ -77,6 +77,21 @@ describe('GmailSync', () => {
     expect(processed).toEqual(['new']);
   });
 
+  it('follows labels Gmail changed on its own: archived or read there leaves the inbox here', async () => {
+    gmail.addMessage({ id: 'old' });
+    const { sync } = buildSync();
+    await sync.initialize();
+    gmail.addMessage({ id: 'a' });
+    await sync.poll();
+    expect(emails.get('a')).toMatchObject({ labels: ['INBOX', 'UNREAD'], isRead: false });
+    gmail.changeLabels('a', ['INBOX']);
+    gmail.changeLabels('a', []);
+    gmail.changeLabels('unknown', []);
+    await expect(sync.poll()).resolves.toMatchObject({ newMessages: 0 });
+    expect(emails.get('a')).toMatchObject({ labels: [], isRead: true });
+    expect(emails.page().items).toEqual([]);
+  });
+
   it('never processes a message twice, including after a restart', async () => {
     const { sync } = buildSync();
     await sync.initialize();

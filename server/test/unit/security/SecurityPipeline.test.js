@@ -90,7 +90,7 @@ function store(gmailId, direction = 'inbound') {
     hasListUnsubscribe: false,
     unsubscribeUrl: null,
     oneClick: false,
-    labels: [],
+    labels: ['INBOX'],
     isRead: false,
   };
   new EmailRepository(db).insertIfAbsent(record, { pending: true });

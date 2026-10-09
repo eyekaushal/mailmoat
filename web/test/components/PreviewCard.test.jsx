@@ -34,6 +34,24 @@ describe('PreviewCard', () => {
     expect(screen.getByText(/Some content comes from an email/)).toBeTruthy();
   });
 
+  it('shows a composer reply as "Reply" with Send, hiding its threading plumbing (PLAN §14)', () => {
+    const reply = {
+      ...card,
+      fields: {
+        ...card.fields,
+        in_reply_to: { value: '<m1@acme-corp.com>', sources: [{ type: 'user' }] },
+        thread_id: { value: 't-1', sources: [{ type: 'user' }] },
+        draft_id: { value: 'r-77', sources: [{ type: 'user' }] },
+      },
+    };
+    render(<PreviewCard card={reply} onDecide={() => {}} />);
+    expect(screen.getByText('Reply')).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Send' })).toBeTruthy();
+    expect(screen.queryByText('<m1@acme-corp.com>')).toBeNull();
+    expect(screen.queryByText('r-77')).toBeNull();
+    expect(screen.getByText('bob@example.com')).toBeTruthy();
+  });
+
   it('labels the confirm button by kind and reports the decision', () => {
     const onDecide = vi.fn();
     render(<PreviewCard card={{ ...card, kind: 'event' }} onDecide={onDecide} />);

@@ -56,7 +56,7 @@ function store(
       hasListUnsubscribe: Boolean(url),
       unsubscribeUrl: url,
       oneClick,
-      labels: [],
+      labels: ['INBOX'],
       isRead,
     },
     { pending: false },

@@ -15,7 +15,7 @@ export class ThreadRoutes {
 
   /**
    * @param {{
-   *   gmail: Pick<import('../../google/GmailClient.js').GmailClient, 'getThread'|'getRawMessage'>,
+   *   gmail: Pick<import('../../google/GmailClient.js').GmailClient, 'getThread'|'getRawMessage'|'listDrafts'>,
    *   ingestor: Pick<import('../../security/ingest/EmailIngestor.js').EmailIngestor, 'ingest'>,
    *   emails: Pick<import('../../db/repositories/EmailRepository.js').EmailRepository, 'has'|'setSnippet'>,
    *   verdicts: Pick<import('../../db/repositories/VerdictRepository.js').VerdictRepository, 'get'>,
@@ -32,20 +32,30 @@ export class ThreadRoutes {
     router.get('/threads/:id', async (request, response) => {
       const { id } = validate(GmailIdParamSchema, request.params);
       const thread = await gmail.getThread(id);
-      const messages = await Promise.all(thread.messages.map((message) => this.#view(message)));
+      // Gmail returns a thread's drafts as messages; they are shown as drafts, never as mail
+      // that went anywhere (PLAN §14.1 decision 3), with the draft id to continue or delete.
+      const drafts = thread.messages.some((message) => message.labelIds.includes('DRAFT'))
+        ? new Map((await gmail.listDrafts()).map((draft) => [draft.messageId, draft.draftId]))
+        : new Map();
+      const messages = await Promise.all(
+        thread.messages.map((message) => this.#view(message, drafts.get(message.id) ?? null)),
+      );
       response.json({ threadId: thread.threadId, messages });
     });
     return router;
   }
 
-  async #view(message) {
+  async #view(message, draftId) {
     const { gmail, ingestor, emails, verdicts } = this.#deps;
+    const isDraft = message.labelIds.includes('DRAFT');
     const base = {
       gmailId: message.id,
-      direction: message.labelIds.includes('SENT') ? 'outbound' : 'inbound',
+      direction: isDraft || message.labelIds.includes('SENT') ? 'outbound' : 'inbound',
+      isDraft,
+      draftId,
       date: message.internalDate.toISOString(),
       isRead: !message.labelIds.includes('UNREAD'),
-      verdict: verdicts.get(message.id) ?? null,
+      verdict: isDraft ? null : (verdicts.get(message.id) ?? null),
     };
     const { raw } = await gmail.getRawMessage(message.id);
     let email;

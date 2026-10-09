@@ -47,7 +47,7 @@ function store(gmailId, { direction = 'inbound', level = 'SAFE' } = {}) {
     hasListUnsubscribe: false,
     unsubscribeUrl: null,
     oneClick: false,
-    labels: [],
+    labels: ['INBOX'],
     isRead: false,
   };
   emails.insertIfAbsent(record, { pending: false });
@@ -272,5 +272,58 @@ describe('DraftService.pruneStale', () => {
     settings.set('draftRetentionDays', 1);
     gmail.deleteDraft = async () => {};
     expect(await service().pruneStale()).toEqual({ deleted: 2, failed: 0 });
+  });
+});
+
+describe('DraftService composer paths (PLAN §14)', () => {
+  it('compose writes with the Drafter and saves nothing', async () => {
+    store('m1');
+    const result = await service().compose({ gmailId: 'm1', instructions: 'Say yes' });
+    expect(result.text).toContain('Friday at 5 pm, works for me.');
+    expect(result.body.sources).toEqual([{ type: 'email', id: 'm1' }]);
+    expect(gmail.calls).toEqual([]);
+    expect(repository.list()).toEqual([]);
+    expect(audit).toEqual([
+      expect.objectContaining({ actor: 'user', event: 'draft_composed', subject: 'm1' }),
+    ]);
+    await expect(service().compose({ gmailId: 'm1', instructions: null })).resolves.toBeTruthy();
+    store('danger', { level: 'DANGEROUS' });
+    await expect(service().compose({ gmailId: 'danger' })).rejects.toThrow(DraftError);
+  });
+
+  it("saveReply stores the user's own text as a draft to the sender and replaces the old draft", async () => {
+    store('m1');
+    const body = TaggedValue.fromUser('Dear Rahul, yes.');
+    const { draftId } = await service().saveReply({
+      gmailId: 'm1',
+      text: 'Dear Rahul, yes.',
+      body,
+      replacesDraftId: 'draft-0',
+    });
+    expect(draftId).toBe('draft-1');
+    expect(gmail.calls.map(([name]) => name)).toEqual(['createDraft', 'deleteDraft']);
+    const { headers, body: text } = parseMime(gmail.calls[0][1].raw);
+    expect(headers.To).toBe('rahul@acme-corp.com');
+    expect(text).toBe('Dear Rahul, yes.');
+    expect(drafterCalls).toEqual([]);
+    expect(repository.list()).toMatchObject([{ draftId: 'draft-1', status: 'DRAFTED' }]);
+  });
+
+  it('envelope names where a reply goes, and discard forgives a draft already gone', async () => {
+    store('m1');
+    await expect(service().envelope('m1')).resolves.toEqual({
+      to: 'rahul@acme-corp.com',
+      subject: 'Re: Quick question — Friday?',
+      inReplyTo: '<abc@acme-corp.com>',
+      threadId: 't-m1',
+      level: 'SAFE',
+    });
+    repository.save({ draftId: 'draft-7', gmailId: 'm1', at: NOW });
+    gmail.deleteDraft = async () => {
+      throw Object.assign(new Error('gone'), { code: 404 });
+    };
+    await service().discard('draft-7');
+    expect(repository.get('draft-7').status).toBe('DELETED');
+    expect(audit.at(-1)).toMatchObject({ event: 'draft_deleted', data: { draftId: 'draft-7' } });
   });
 });

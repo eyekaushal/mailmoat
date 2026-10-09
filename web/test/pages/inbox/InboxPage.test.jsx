@@ -209,25 +209,28 @@ describe('InboxPage', () => {
       'GET /emails/counts': counts,
       'GET /emails': { items: [row('a'), row('b', { subject: 'Keep me' })], nextCursor: null },
       'POST /emails/a/archive': { gmailId: 'a', done: true, decision: 'ALLOW', reason: 'ok' },
-      'POST /emails/b/draft-reply': (body) =>
-        body.allowSuspicious
-          ? { draftId: 'd' }
-          : new Response(JSON.stringify({ error: 'This email is SUSPICIOUS' }), {
-              status: 403,
-              headers: { 'content-type': 'application/json' },
-            }),
+      'GET /emails/b': {
+        email: { ...row('b'), threadId: 't1' },
+        verdict: row('b').verdict,
+        readerForm: null,
+        signals: [],
+        rules: [],
+        sender: { trusted: false, sentCount: 0, receivedCount: 1 },
+      },
+      'GET /threads/t1': { threadId: 't1', messages: [] },
+      'POST /emails/b/read': { gmailId: 'b', done: true },
     });
-    renderPage(<InboxPage />, { server, path: '/inbox', route: '/inbox' });
+    renderPage(<InboxPage />, { server, path: '/inbox', route: '/inbox/:gmailId?' });
     await waitFor(() => expect(screen.getAllByRole('button', { name: 'Archive' })).toHaveLength(2));
     fireEvent.click(screen.getAllByRole('button', { name: 'Archive' })[0]);
     await waitFor(() => expect(screen.getByRole('status').textContent).toBe('Archived.'));
     expect(screen.queryByText('Quarterly deck')).toBeNull();
     expect(screen.getByText('Keep me')).toBeTruthy();
+    // Hover Reply opens the email with its composer; nothing is drafted by itself.
     fireEvent.click(screen.getByRole('button', { name: 'Reply' }));
-    await waitFor(() =>
-      expect(screen.getByRole('status').textContent).toContain('This email is SUSPICIOUS'),
-    );
-    expect(screen.getByRole('status').className).toContain('text-danger');
+    const dialog = await screen.findByRole('dialog');
+    expect(dialog.textContent).toContain('Write it myself');
+    expect(server.calls.some((c) => c.path.includes('draft'))).toBe(false);
   });
 
   it('opens an email in the main column and comes back to the same tab', async () => {

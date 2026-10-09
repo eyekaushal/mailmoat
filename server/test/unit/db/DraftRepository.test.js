@@ -23,7 +23,7 @@ function storeEmail(gmailId, date = '2026-10-02T09:00:00.000Z') {
       hasListUnsubscribe: false,
       unsubscribeUrl: null,
       oneClick: false,
-      labels: [],
+      labels: ['INBOX'],
       isRead: false,
     },
     { pending: false },

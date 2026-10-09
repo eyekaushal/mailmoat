@@ -28,7 +28,7 @@ function storeEmail(gmailId, { direction = 'inbound', date = '2026-10-02T09:00:0
       hasListUnsubscribe: false,
       unsubscribeUrl: null,
       oneClick: false,
-      labels: [],
+      labels: ['INBOX'],
       isRead: false,
     },
     { pending: false },

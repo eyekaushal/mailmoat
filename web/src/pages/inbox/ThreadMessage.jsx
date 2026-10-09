@@ -1,4 +1,5 @@
 import { Paperclip } from '@phosphor-icons/react';
+import { Button } from '../../components/Button.jsx';
 import { DisarmedLink } from '../../components/DisarmedLink.jsx';
 import { dateTime, shortDate } from '../../lib/dates.js';
 import { Avatar } from '../../ui/Avatar.jsx';
@@ -19,10 +20,53 @@ export function previewOf(message) {
  * Expanded: 40 px avatar, name, address, date, the AI summary (opened message only, labelled),
  * the plain visible text, links as `text → host` (clickable only when this message is SAFE) and
  * attachment names. Nothing here is HTML; nothing is fetched from the network.
+ * A Gmail draft in the thread is a "Draft, not sent" block (PLAN §14.1 decision 3): the text,
+ * no risk tag, and Continue (the composer) or Delete draft.
  * @param {{ message: object, expanded: boolean, onToggle: () => void, opened?: boolean,
- *   summary?: string | null, now?: Date }} props
+ *   summary?: string | null, now?: Date, onContinue?: (message: object) => void,
+ *   onDeleteDraft?: (message: object) => void }} props
  */
-export function ThreadMessage({ message, expanded, onToggle, opened = false, summary, now }) {
+export function ThreadMessage({
+  message,
+  expanded,
+  onToggle,
+  opened = false,
+  summary,
+  now,
+  onContinue,
+  onDeleteDraft,
+}) {
+  if (message.isDraft) {
+    return (
+      <li className="px-5 py-4">
+        <div className="rounded-md bg-surface-2 px-4 py-3">
+          <p className="flex items-center gap-2 text-sm text-secondary">
+            <span className="font-medium">Draft, not sent</span>
+            <span aria-hidden="true">·</span>
+            <time dateTime={message.date} className="tabular-nums">
+              {dateTime(message.date, now)}
+            </time>
+          </p>
+          <pre className="mt-2 font-sans text-md break-words whitespace-pre-wrap">
+            {message.text || '(empty draft)'}
+          </pre>
+          <div className="mt-3 flex gap-2">
+            {onContinue && (
+              <Button variant="secondary" onClick={() => onContinue(message)}>
+                Continue
+              </Button>
+            )}
+            {onDeleteDraft && message.draftId && (
+              <Button variant="ghost" onClick={() => onDeleteDraft(message)}>
+                Delete draft
+              </Button>
+            )}
+          </div>
+        </div>
+      </li>
+    );
+  }
+
   const name = message.from?.name || message.from?.address || 'Unknown sender';
   const address = message.from?.name ? message.from.address : null;
   const inbound = message.direction === 'inbound';

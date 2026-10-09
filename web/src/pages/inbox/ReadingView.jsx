@@ -7,7 +7,7 @@ import {
   UserCheck,
   UserMinus,
 } from '@phosphor-icons/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router';
 import { useSWRConfig } from 'swr';
 import { Button } from '../../components/Button.jsx';
@@ -20,6 +20,7 @@ import { Dialog } from '../../ui/Dialog.jsx';
 import { IconButton } from '../../ui/IconButton.jsx';
 import { Tag, labelFor, riskLabelFor } from '../../ui/Tag.jsx';
 import { MeetingCard } from './MeetingCard.jsx';
+import { ReplyComposer } from './ReplyComposer.jsx';
 import { ThreadMessage } from './ThreadMessage.jsx';
 
 /** Which messages start open: the newest one, and the one the user clicked if it is older. */
@@ -41,15 +42,23 @@ export function ReadingView({ gmailId, onClose, now }) {
   const ask = useAskAi();
   const { data, error, mutate } = useApi(`/emails/${gmailId}`);
   const threadId = data?.email.threadId ?? null;
-  const { data: thread, error: threadError } = useApi(threadId ? `/threads/${threadId}` : null);
+  const {
+    data: thread,
+    error: threadError,
+    mutate: mutateThread,
+  } = useApi(threadId ? `/threads/${threadId}` : null);
   const [expanded, setExpanded] = useState(null);
   const [notice, setNotice] = useState(null);
   const [busy, setBusy] = useState(null);
   const [proposal, setProposal] = useState(null);
   const [confirm, setConfirm] = useState(null);
-  // Security Center links here with `?trace=1`, so the explanation opens with the email.
+  // Security Center links here with `?trace=1`, so the explanation opens with the email; the
+  // inbox's hover Reply links with `?reply=1`, so the composer opens with it.
   const [params] = useSearchParams();
   const [whyOpen, setWhyOpen] = useState(params.get('trace') === '1');
+  const [composer, setComposer] = useState(null);
+  const composerKey = useRef(0);
+  const [replyWanted, setReplyWanted] = useState(params.get('reply') === '1');
   const { data: trace } = useApi(whyOpen ? `/emails/${gmailId}/trace` : null);
 
   // Opening an email reads it: the unread dot and the tab counts follow. Best effort; a refusal
@@ -92,26 +101,27 @@ export function ReadingView({ gmailId, onClose, now }) {
     }
   }
 
-  const createDraft = (allowSuspicious) =>
-    run('draft', async () => {
-      await client.post(`/emails/${gmailId}/draft-reply`, { allowSuspicious });
-      return 'Draft saved in Gmail Drafts. Nothing is sent until you send it.';
-    });
-
-  function draftReply() {
+  /** Reply (PLAN §14): the composer, fresh or continuing a Gmail draft. Never a one-click draft. */
+  function openComposer(initial = null) {
     if (!data || busy || !canReply) return;
-    if (level === 'SUSPICIOUS') {
-      setConfirm({
-        title: 'Reply to a suspicious email?',
-        description:
-          'The draft is written from an email that was flagged. Read it carefully before you send anything.',
-        action: 'Draft anyway',
-        run: () => createDraft(true),
-      });
-      return;
-    }
-    createDraft(false);
+    setNotice(null);
+    composerKey.current += 1;
+    setComposer({ key: composerKey.current, initial });
   }
+
+  useEffect(() => {
+    if (!replyWanted || !data || !canReply) return;
+    setReplyWanted(false);
+    composerKey.current += 1;
+    setComposer({ key: composerKey.current, initial: null });
+  }, [replyWanted, data, canReply]);
+
+  const deleteDraft = (message) =>
+    run('draft', async () => {
+      await client.delete(`/drafts/${message.draftId}`);
+      await mutateThread();
+      return 'Draft deleted.';
+    });
 
   function archive() {
     if (!data || busy) return;
@@ -166,7 +176,7 @@ export function ReadingView({ gmailId, onClose, now }) {
       if (event.metaKey || event.ctrlKey || event.altKey || isTyping(event.target)) return;
       if (event.key === 'r') {
         event.preventDefault();
-        draftReply();
+        openComposer();
       } else if (event.key === 'e') {
         event.preventDefault();
         archive();
@@ -222,7 +232,7 @@ export function ReadingView({ gmailId, onClose, now }) {
             }
             keys={canReply ? ['r'] : undefined}
             icon={ArrowBendUpLeft}
-            onClick={draftReply}
+            onClick={() => openComposer()}
             disabled={busy !== null || !canReply}
           />
           <IconButton
@@ -298,6 +308,12 @@ export function ReadingView({ gmailId, onClose, now }) {
                 opened={message.gmailId === gmailId}
                 summary={message.gmailId === gmailId ? readerForm?.summary : null}
                 now={now}
+                onContinue={
+                  canReply
+                    ? (draft) => openComposer({ text: draft.text ?? '', draftId: draft.draftId })
+                    : undefined
+                }
+                onDeleteDraft={deleteDraft}
               />
             ))}
           </ol>
@@ -326,6 +342,24 @@ export function ReadingView({ gmailId, onClose, now }) {
           </section>
         )}
       </div>
+
+      {composer && (
+        <ReplyComposer
+          key={composer.key}
+          open
+          onOpenChange={(isOpen) => {
+            if (!isOpen) setComposer(null);
+          }}
+          gmailId={gmailId}
+          level={level}
+          initial={composer.initial}
+          onDone={async (result) => {
+            setNotice(result);
+            await mutateThread();
+            await mutateAll((key) => typeof key === 'string' && key.startsWith('/approvals'));
+          }}
+        />
+      )}
 
       <Dialog
         open={confirm !== null}

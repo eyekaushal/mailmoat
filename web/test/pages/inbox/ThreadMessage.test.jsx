@@ -35,6 +35,39 @@ function show(element) {
   );
 }
 
+describe('ThreadMessage drafts (PLAN §14)', () => {
+  it('renders a Gmail draft as "Draft, not sent" with Continue and Delete draft, no risk words', () => {
+    const onContinue = vi.fn();
+    const onDeleteDraft = vi.fn();
+    const draft = message({
+      gmailId: 'dr',
+      direction: 'outbound',
+      isDraft: true,
+      draftId: 'r-77',
+      verdict: null,
+      text: 'Dear Rahul, I will review it.',
+    });
+    show(
+      <ThreadMessage
+        message={draft}
+        expanded={false}
+        onToggle={() => {}}
+        onContinue={onContinue}
+        onDeleteDraft={onDeleteDraft}
+        now={now}
+      />,
+    );
+    expect(screen.getByText('Draft, not sent')).toBeTruthy();
+    expect(screen.getByText('Dear Rahul, I will review it.')).toBeTruthy();
+    expect(screen.queryByText(/Not checked|Suspicious|Dangerous/)).toBeNull();
+    expect(screen.queryByRole('button', { expanded: false })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Continue' }));
+    expect(onContinue).toHaveBeenCalledWith(draft);
+    fireEvent.click(screen.getByRole('button', { name: 'Delete draft' }));
+    expect(onDeleteDraft).toHaveBeenCalledWith(draft);
+  });
+});
+
 describe('ThreadMessage', () => {
   it('collapsed: sender, one-line preview and date on one row that expands on click', () => {
     const onToggle = vi.fn();

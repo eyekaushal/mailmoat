@@ -32,6 +32,9 @@ const FIELD_LABELS = {
   text: 'Memory',
 };
 
+/** Threading and cleanup arguments of a composer reply: not content, so not shown. */
+const HIDDEN_FIELDS = new Set(['in_reply_to', 'thread_id', 'draft_id']);
+
 function labelFor(name) {
   return FIELD_LABELS[name] ?? name.replaceAll('_', ' ');
 }
@@ -77,8 +80,13 @@ function describeSource(source) {
  * }} props
  */
 export function PreviewCard({ card, onDecide, busy = false, aside, children }) {
-  const { title, confirm, Icon } = KIND_META[card.kind] ?? KIND_META.action;
-  const fields = Object.entries(card.fields ?? {});
+  const meta = KIND_META[card.kind] ?? KIND_META.action;
+  // A send that answers an email is a reply to the user, with Send as its one action.
+  const isReply = card.kind === 'email' && card.fields?.in_reply_to !== undefined;
+  const { title, confirm, Icon } = isReply
+    ? { title: 'Reply', confirm: 'Send', Icon: ArrowBendUpLeft }
+    : meta;
+  const fields = Object.entries(card.fields ?? {}).filter(([name]) => !HIDDEN_FIELDS.has(name));
   const fromEmail = fields.some(([, field]) =>
     field.sources?.some((source) => source.type === 'email'),
   );

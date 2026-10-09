@@ -202,7 +202,7 @@ Mirrors the Inbox Zero "AI Assistant" page (tabs **Rules / Test / History**), bu
 | ID | Requirement |
 |---|---|
 | F4.1 | **Rules tab:** table of rules with enable toggle, name, description, action badges (Label / Archive / Draft reply). Security rules show a lock icon and cannot be disabled. |
-| F4.2 | Each non-security rule lets the user pick actions from an allowed set (e.g. only To Reply can have "Draft reply"). |
+| F4.2 | Each non-security rule lets the user pick actions from an allowed set (e.g. only To Reply can have "Draft reply"). **Default for To Reply is label only** (B28b, `PLAN.md §14`): AI writes a reply only when the user asks, from the composer or Ask AI. |
 | F4.3 | **Test tab:** paste an email (raw or text) or pick a recent one → shows the full pipeline trace: hidden content found, signals fired, Reader form, verdict + reasons, matched rule, actions that would run. No side effects. |
 | F4.4 | **History tab:** list of processed emails with matched rule, actions taken, verdict; filter by rule and verdict; "why?" expands the reasons. |
 | F4.5 | **Process past emails** button re-runs rules on the last N days (default 7) with a progress bar. |
@@ -215,8 +215,8 @@ Mirrors the Inbox Zero "AI Assistant" page (tabs **Rules / Test / History**), bu
 | ID | Requirement |
 |---|---|
 | F5.1 | Tab bar across the top: **All · To Reply · Awaiting · FYI · Newsletter · Marketing · Calendar · Receipt · Notification · Cold · ⚠ Suspicious · ⛔ Dangerous**, each with an unread count. |
-| F5.2 | List rows show sender, subject, snippet, time, category badge and a risk badge (colour + icon, not colour alone). |
-| F5.3 | Opening an email shows: risk banner with top 3 reasons, the Reader summary (marked "AI summary of an untrusted email"), plain visible text, disarmed links (`text → real-domain`), and actions (Draft reply, Archive, Mark trusted, Report not-phishing). |
+| F5.2 | List rows show sender, subject, snippet, time, category badge and a risk badge (colour + icon, not colour alone). **One row per conversation**, like Gmail's Inbox tab: the newest received message speaks for the thread and a count shows how many messages it holds; a conversation is listed while a received message still carries Gmail's INBOX label (archiving, here or in Gmail, removes it). Label tabs are Gmail label views (B28b). |
+| F5.3 | Opening an email shows: risk banner with top 3 reasons, the Reader summary (marked "AI summary of an untrusted email"), plain visible text, disarmed links (`text → real-domain`), and actions (Reply, Archive, Mark trusted, Report not-phishing). Gmail drafts in the thread appear as "Draft, not sent" blocks with Continue and Delete draft, never as messages (B28b). |
 | F5.4 | ~~"View original" renders sanitised HTML in a sandboxed iframe~~ Removed in the redesign (`PLAN.md §13.4`, R04): the reading view is plain text only and raw HTML never leaves the server. |
 | F5.5 | Labels are also applied in Gmail, so the same organisation appears natively in Gmail's sidebar. |
 
@@ -226,9 +226,9 @@ Mirrors the Inbox Zero "AI Assistant" page (tabs **Rules / Test / History**), bu
 
 | ID | Requirement |
 |---|---|
-| F6.1 | For emails matched by **To Reply** with "Draft reply" on, the text is written by a **quarantined drafting call** (small model, no tools). It sees only that thread's visible text, the formal-tone instructions and the user's name. The Planner never sees the email or the draft text. The output is tainted, so it can go only to that thread's participants (see `SECURITY_APPROACH.md §7.3`). |
+| F6.1 | When the user asks (the composer's "Draft with AI", Ask AI, or a rule whose "Draft reply" action they switched on), the text is written by a **quarantined drafting call** (small model, no tools). It sees only that thread's visible text, the formal-tone instructions and the user's name. The Planner never sees the email or the draft text. The output is tainted, so it can go only to that thread's participants (see `SECURITY_APPROACH.md §7.3`). |
 | F6.2 | Tone is fixed **formal**: greeting with the sender's name, clear paragraphs, polite closing ("Best regards,"), no slang, no emoji, no em dashes; matches the formal example in the notes PDF. |
-| F6.3 | Drafts are created in **Gmail Drafts** and listed in the dashboard. Nothing is sent without explicit approval in the dashboard. |
+| F6.3 | **Reply composer** (B28b, `PLAN.md §14`): Reply offers "Write it myself" or "Draft with AI"; the text is editable either way; **Save to Drafts** keeps it in Gmail Drafts, **Send for approval** creates a `send_email` approval (always ASK). Mail is sent only from the Approvals page, by clicking Send on the card, which also removes the Gmail draft it started from. Nothing is ever sent without that click. |
 | F6.4 | Policy: drafts are **never** created for DANGEROUS mail; for SUSPICIOUS mail only on explicit user request, with a warning. |
 | F6.5 | Unsent AI drafts older than 14 days are deleted (setting). |
 | F6.6 | Draft footer "Drafted by mailmoat" — off by default (setting). |

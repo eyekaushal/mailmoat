@@ -86,7 +86,7 @@ function store(
     hasListUnsubscribe: false,
     unsubscribeUrl: null,
     oneClick: false,
-    labels: [],
+    labels: ['INBOX'],
     isRead: false,
   };
   emails.insertIfAbsent(record, { pending });
@@ -182,7 +182,7 @@ describe('RuleEngine.list / update', () => {
       isSecurity: false,
       label: 'To Reply',
       enabled: true,
-      actions: ['label', 'draft_reply'],
+      actions: ['label'],
       allowedActions: ['label', 'archive', 'draft_reply'],
     });
     expect(list.find((r) => r.id === 'dangerous')).toMatchObject({
@@ -279,8 +279,10 @@ describe('RuleEngine.process', () => {
     ]);
   });
 
-  it('To Reply drafts a reply once, even when the rules run again', async () => {
+  it('To Reply drafts a reply once when the user switched the draft action on, even when the rules run again', async () => {
     const e = engine({ pipelineResult: analysis({ form: form({ needs_reply: true }) }) });
+    // Label only by default (PLAN §14.1); drafting is the user's explicit choice.
+    e.update('to_reply', { actions: ['label', 'draft_reply'] });
     const record = store('m1');
     const first = await e.process(record);
     expect(first.rules[0]).toMatchObject({

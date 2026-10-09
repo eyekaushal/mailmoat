@@ -24,9 +24,10 @@ export function groupByDay(items, now) {
  * The rows of one tab or one search (PLAN §13.5). `query` is the first page's path; both
  * `GET /emails` and `GET /search` page with `&cursor=`. Row actions go through the server, so the
  * Policy Engine still decides; the outcome is one quiet line above the list, never a toast.
- * @param {{ query: string, terms?: string[], now?: Date, onOpen: (gmailId: string) => void }} props
+ * @param {{ query: string, terms?: string[], now?: Date, onOpen: (gmailId: string) => void,
+ *   onReply: (gmailId: string) => void }} props `onReply` opens the email with its composer
  */
-export function EmailList({ query, terms = [], now, onOpen }) {
+export function EmailList({ query, terms = [], now, onOpen, onReply }) {
   const client = useApiClient();
   const { mutate: mutateAll } = useSWRConfig();
   const { data: first, error } = useApi(query);
@@ -78,12 +79,6 @@ export function EmailList({ query, terms = [], now, onOpen }) {
       return 'Archived.';
     });
 
-  const reply = (email) =>
-    act(async () => {
-      await client.post(`/emails/${email.gmailId}/draft-reply`, {});
-      return 'Draft saved in Gmail Drafts. Nothing is sent until you send it.';
-    });
-
   const trust = (email) =>
     act(async () => {
       await client.post(`/emails/${email.gmailId}/trust-sender`, { trusted: true });
@@ -125,7 +120,7 @@ export function EmailList({ query, terms = [], now, onOpen }) {
                 now={now}
                 onOpen={() => onOpen(email.gmailId)}
                 onArchive={() => archive(email)}
-                onReply={() => reply(email)}
+                onReply={() => onReply(email.gmailId)}
                 onTrust={() => trust(email)}
               />
             ))}

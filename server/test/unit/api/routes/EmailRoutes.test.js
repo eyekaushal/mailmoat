@@ -13,8 +13,9 @@ import { ContactRepository } from '../../../../src/db/repositories/ContactReposi
 import { EmailRepository } from '../../../../src/db/repositories/EmailRepository.js';
 import { RuleRepository } from '../../../../src/db/repositories/RuleRepository.js';
 import { VerdictRepository } from '../../../../src/db/repositories/VerdictRepository.js';
-import { MeetingError } from '../../../../src/core/errors.js';
+import { DraftError, MeetingError } from '../../../../src/core/errors.js';
 import { PolicyEngine } from '../../../../src/policy/PolicyEngine.js';
+import { SendRule } from '../../../../src/policy/rules/SendRule.js';
 import { OrganizeRule } from '../../../../src/policy/rules/OrganizeRule.js';
 import { PredefinedRules } from '../../../../src/rules/PredefinedRules.js';
 import { startApi } from '../../../helpers/apiServer.js';
@@ -26,6 +27,8 @@ let api;
 let archived;
 let readIds;
 let drafted;
+let requested;
+let discarded;
 let proposed;
 
 beforeEach(async () => {
@@ -50,6 +53,8 @@ beforeEach(async () => {
   archived = [];
   readIds = [];
   drafted = [];
+  requested = [];
+  discarded = [];
   proposed = [];
   const logger = new Logger({ level: 'error', sink: () => {} });
   const auditLog = new AuditLog(repos.audit);
@@ -62,16 +67,46 @@ beforeEach(async () => {
       new EmailRoutes({
         ...repos,
         policy: new PolicyEngine({
-          rules: [new OrganizeRule()],
+          rules: [new OrganizeRule(), new SendRule()],
           emails: repos.emails,
           verdicts: repos.verdicts,
           logger,
         }),
         executor: new ActionExecutor({ registry, auditLog }),
         drafts: {
-          createReply: async (input) => {
+          compose: async (input) => {
             drafted.push(input);
+            return { text: 'Dear Rahul,\n\nYes.\n\nBest regards,\nKaushal' };
+          },
+          saveReply: async (input) => {
+            drafted.push({
+              saved: input.text,
+              origin: input.body.sources,
+              replaces: input.replacesDraftId,
+            });
             return { draftId: 'd1' };
+          },
+          envelope: async (gmailId) => {
+            const record = repos.emails.get(gmailId);
+            const level = repos.verdicts.get(gmailId)?.level ?? 'SUSPICIOUS';
+            if (level === 'DANGEROUS')
+              throw new DraftError('No reply is drafted for a DANGEROUS email');
+            return {
+              to: record.fromAddr,
+              subject: 'Re: Hello',
+              inReplyTo: '<m1@acme-corp.com>',
+              threadId: record.threadId,
+              level,
+            };
+          },
+          discard: async (draftId) => {
+            discarded.push(draftId);
+          },
+        },
+        approvals: {
+          request: async ({ call, reason }) => {
+            requested.push({ call, reason });
+            return { id: 'ap-1' };
           },
         },
         meetings: {
@@ -198,7 +233,13 @@ describe('GET /api/emails', () => {
   it('carries the stored subject, snippet and initials from the display name', async () => {
     const record = storeEmail(repos, 'a', { fromName: 'Rahul Mehta' });
     repos.emails.insertIfAbsent(
-      { ...record, gmailId: 'b', subject: 'Deck for Friday', snippet: 'Attached is the deck…' },
+      {
+        ...record,
+        gmailId: 'b',
+        threadId: 't-b',
+        subject: 'Deck for Friday',
+        snippet: 'Attached is the deck…',
+      },
       { pending: false },
     );
     const { items } = (await api.get('/api/emails')).json;
@@ -291,9 +332,11 @@ describe('GET /api/emails/:id and /trace', () => {
 });
 
 describe('POST /api/emails/:id actions', () => {
-  it('archives through the Policy Engine and the executor, recording the action', async () => {
+  it('archives through the Policy Engine and the executor, recording the action and leaving the inbox', async () => {
     storeEmail(repos, 'a');
     const res = await api.post('/api/emails/a/archive');
+    expect(repos.emails.get('a').labels).toEqual([]);
+    expect(repos.emails.page().items).toEqual([]);
     expect(res.status).toBe(200);
     expect(res.json).toEqual({
       gmailId: 'a',
@@ -317,15 +360,78 @@ describe('POST /api/emails/:id actions', () => {
     expect((await api.post('/api/emails/nope/read')).status).toBe(404);
   });
 
-  it('drafts a reply and proposes/saves meetings via the services, validating input', async () => {
+  it('composes with AI without saving, saves the edited text as a draft, and deletes drafts', async () => {
+    storeEmail(repos, 'a');
+    const composed = await api.post('/api/emails/a/compose', { instructions: 'Say yes' });
+    expect(composed.status).toBe(200);
+    expect(composed.json).toEqual({ gmailId: 'a', text: expect.stringContaining('Yes.') });
+    expect(drafted).toEqual([{ gmailId: 'a', instructions: 'Say yes', allowSuspicious: false }]);
+    expect((await api.post('/api/emails/a/compose', { extra: 1 })).status).toBe(400);
+
+    const saved = await api.post('/api/emails/a/save-reply', {
+      body: 'Dear Rahul, yes.',
+      origin: 'ai',
+      draftId: 'old-draft',
+    });
+    expect(saved.status).toBe(201);
+    expect(saved.json).toEqual({ gmailId: 'a', draftId: 'd1' });
+    // An edited AI draft keeps the email's taint next to the user's.
+    expect(drafted[1]).toEqual({
+      saved: 'Dear Rahul, yes.',
+      origin: [{ type: 'user' }, { type: 'email', id: 'a' }],
+      replaces: 'old-draft',
+    });
+    expect((await api.post('/api/emails/a/save-reply', { body: '' })).status).toBe(400);
+
+    expect((await api.delete('/api/drafts/old-draft')).json).toEqual({
+      draftId: 'old-draft',
+      deleted: true,
+    });
+    expect(discarded).toEqual(['old-draft']);
+  });
+
+  it('turns "send for approval" into a send_email approval and never sends (PLAN §14)', async () => {
     storeEmail(repos, 'a');
     storeEmail(repos, 'risky', { level: 'SUSPICIOUS' });
-    const draft = await api.post('/api/emails/a/draft-reply', { instructions: 'Say yes' });
-    expect(draft.status).toBe(201);
-    expect(draft.json).toEqual({ gmailId: 'a', draftId: 'd1' });
-    expect(drafted).toEqual([{ gmailId: 'a', instructions: 'Say yes', allowSuspicious: false }]);
-    expect((await api.post('/api/emails/a/draft-reply', { extra: 1 })).status).toBe(400);
+    storeEmail(repos, 'bad', { level: 'DANGEROUS' });
 
+    const asked = await api.post('/api/emails/a/reply-request', {
+      body: 'Dear Rahul, yes.',
+      origin: 'user',
+      draftId: 'd-old',
+    });
+    expect(asked.status).toBe(201);
+    expect(asked.json).toEqual({
+      approvalId: 'ap-1',
+      decision: 'ASK',
+      reason: 'Sending an email needs your approval',
+    });
+    const { call } = requested[0];
+    expect(call.tool).toBe('send_email');
+    expect(call.emailIds).toEqual(['a']);
+    expect(call.args.to.value).toEqual(['rahul@acme-corp.com']);
+    expect(call.args.to.sources).toEqual([{ type: 'user' }]);
+    expect(call.args.subject.value).toBe('Re: Hello');
+    expect(call.args.body.sources).toEqual([{ type: 'user' }]);
+    expect(call.args.in_reply_to.value).toBe('<m1@acme-corp.com>');
+    expect(call.args.thread_id.value).toBe('t-a');
+    expect(call.args.draft_id.value).toBe('d-old');
+
+    const warned = await api.post('/api/emails/risky/reply-request', { body: 'Hi', origin: 'ai' });
+    expect(warned.json.reason).toMatch(/SUSPICIOUS/);
+    expect(requested[1].call.args.body.sources).toEqual([
+      { type: 'user' },
+      { type: 'email', id: 'risky' },
+    ]);
+
+    expect((await api.post('/api/emails/bad/reply-request', { body: 'Hi' })).status).toBe(400);
+    expect(requested).toHaveLength(2);
+    expect(repos.audit.recent({ event: 'action_performed' })).toHaveLength(0);
+  });
+
+  it('proposes and saves meetings via the services, validating input', async () => {
+    storeEmail(repos, 'a');
+    storeEmail(repos, 'risky', { level: 'SUSPICIOUS' });
     expect((await api.post('/api/emails/risky/propose-meeting')).status).toBe(400);
     const ok = await api.post('/api/emails/risky/propose-meeting', { allowRisky: true });
     expect(ok.json).toEqual({ title: 'Catch-up', slots: [] });

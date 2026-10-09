@@ -82,7 +82,8 @@ export class PredefinedRules {
         isSecurity: false,
         appliesTo: 'inbound',
         label: 'To Reply',
-        defaultActions: ['label', 'draft_reply'],
+        // Label only (PLAN §14.1): a draft is written only when the user asks for one.
+        defaultActions: ['label'],
         allowedActions: ORGANISE_OR_DRAFT,
         matches: (f) => f.form?.needs_reply === true && !f.lastInThreadFromUser,
       },
