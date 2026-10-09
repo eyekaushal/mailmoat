@@ -2,6 +2,7 @@
 export function emptyTurn() {
   return {
     text: '',
+    progress: '',
     intent: 'none',
     status: 'running',
     steps: [],
@@ -15,7 +16,7 @@ export function emptyTurn() {
 export function applyEvent(turn, event) {
   switch (event.type) {
     case 'status':
-      return { ...turn, statusText: event.text };
+      return { ...turn, statusText: event.text, progress: event.text };
     case 'step': {
       const others = turn.steps.filter((s) => s.step !== event.step);
       return {

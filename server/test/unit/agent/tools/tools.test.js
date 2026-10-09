@@ -40,6 +40,7 @@ describe('search_emails', () => {
     gmailId: '2',
     fromAddr: 'news@list.example',
     fromDomain: 'list.example',
+    fromName: 'List Bot',
     date: '2026-10-06T09:00:00.000Z',
   };
   const repos = fakeRepos([
@@ -84,8 +85,26 @@ describe('search_emails', () => {
     ).toBe(2);
   });
 
+  it('finds senders by name, address or domain as the user typed them (PLAN §15.1)', async () => {
+    expect((await run(tool, { from: 'Rahul' })).value.emails.map((e) => e.id)).toEqual([
+      '18f3a',
+      '3',
+    ]);
+    expect((await run(tool, { from: 'rahul mehta' })).value.count).toBe(2);
+    expect((await run(tool, { from: 'rahul@acme.example' })).value.count).toBe(2);
+    expect((await run(tool, { from: 'nobody' })).value).toEqual({
+      count: 0,
+      emails: [],
+      senders: [],
+    });
+    const result = await run(tool, { from: 'list.example' });
+    expect(result.value.senders).toEqual(['news@list.example']);
+    expect(JSON.stringify(result.value)).not.toContain('Rahul Mehta');
+  });
+
   it('rejects bad filters', () => {
-    expect(() => tool.parseArgs({ from: 'rahul' })).toThrow(ToolError);
+    expect(() => tool.parseArgs({ from: '' })).toThrow(ToolError);
+    expect(() => tool.parseArgs({ from: 'x'.repeat(121) })).toThrow(ToolError);
     expect(() => tool.parseArgs({ limit: 0 })).toThrow(ToolError);
     expect(() => tool.parseArgs({ since: 'yesterday' })).toThrow(ToolError);
   });
