@@ -56,7 +56,7 @@ export function ReadingView({ gmailId, onClose, now }) {
   // inbox's hover Reply links with `?reply=1`, so the composer opens with it.
   const [params] = useSearchParams();
   const [whyOpen, setWhyOpen] = useState(params.get('trace') === '1');
-  const [composer, setComposer] = useState(null);
+  const [composerState, setComposer] = useState(null);
   const composerKey = useRef(0);
   const [replyWanted, setReplyWanted] = useState(params.get('reply') === '1');
   const { data: trace } = useApi(whyOpen ? `/emails/${gmailId}/trace` : null);
@@ -109,12 +109,9 @@ export function ReadingView({ gmailId, onClose, now }) {
     setComposer({ key: composerKey.current, initial });
   }
 
-  useEffect(() => {
-    if (!replyWanted || !data || !canReply) return;
-    setReplyWanted(false);
-    composerKey.current += 1;
-    setComposer({ key: composerKey.current, initial: null });
-  }, [replyWanted, data, canReply]);
+  // `?reply=1` opens the composer as soon as the email is readable; closing it clears the wish.
+  const composer =
+    composerState ?? (replyWanted && data && canReply ? { key: 0, initial: null } : null);
 
   const deleteDraft = (message) =>
     run('draft', async () => {
@@ -348,7 +345,9 @@ export function ReadingView({ gmailId, onClose, now }) {
           key={composer.key}
           open
           onOpenChange={(isOpen) => {
-            if (!isOpen) setComposer(null);
+            if (isOpen) return;
+            setComposer(null);
+            setReplyWanted(false);
           }}
           gmailId={gmailId}
           level={level}
