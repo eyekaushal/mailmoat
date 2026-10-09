@@ -70,7 +70,7 @@ function store(
     hasListUnsubscribe: false,
     unsubscribeUrl: null,
     oneClick: false,
-    labels: [],
+    labels: ['INBOX'],
     isRead: false,
   };
   emails.insertIfAbsent(record, { pending: false });

@@ -57,6 +57,14 @@ export function EmailRow({ email, terms, now, onOpen, onArchive, onReply, onTrus
         <span className={`truncate ${email.isRead ? '' : 'font-medium'}`}>
           <Highlight text={sender} terms={terms} />
         </span>
+        {email.messageCount > 1 && (
+          <span
+            aria-label={`${email.messageCount} messages`}
+            className="shrink-0 text-sm text-tertiary tabular-nums"
+          >
+            {email.messageCount}
+          </span>
+        )}
       </span>
       {label && <Tag label={label} />}
       <span className="min-w-0 flex-1 truncate">

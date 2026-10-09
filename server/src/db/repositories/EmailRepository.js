@@ -198,20 +198,30 @@ export class EmailRepository {
    * @throws {ValidationError} for a malformed cursor
    */
   page({ ruleId, level, cursor, limit = 50 } = {}) {
-    const where = [];
+    // One row per conversation, spoken for by its newest matching message (PLAN §14.1
+    // decision 7). "All" is Gmail's Inbox tab: received mail still carrying the INBOX label.
+    // A label tab is Gmail's label view: everything the rule touched, archived or sent included
+    // (Awaiting Reply lists the user's own mail).
+    const inner = [];
     const params = [];
     if (ruleId) {
-      where.push(
-        'EXISTS (SELECT 1 FROM rule_runs r WHERE r.gmail_id = e.gmail_id AND r.rule_id = ?)',
+      inner.push(
+        'EXISTS (SELECT 1 FROM rule_runs r WHERE r.gmail_id = x.gmail_id AND r.rule_id = ?)',
       );
       params.push(ruleId);
     } else {
-      where.push("e.direction = 'inbound'");
+      inner.push("x.direction = 'inbound'", `x.labels LIKE '%"INBOX"%'`);
     }
     if (level) {
-      where.push('v.level = ?');
+      inner.push('EXISTS (SELECT 1 FROM verdicts w WHERE w.gmail_id = x.gmail_id AND w.level = ?)');
       params.push(level);
     }
+    // SQLite's bare-column rule: with one MAX() the other columns come from that same row.
+    const where = [
+      `e.gmail_id IN (SELECT gmail_id FROM (
+         SELECT x.gmail_id, MAX(x.date) FROM emails x WHERE ${inner.join(' AND ')}
+         GROUP BY x.thread_id))`,
+    ];
     if (cursor) {
       const { date, gmailId } = EmailRepository.#decodeCursor(cursor);
       where.push('(e.date < ? OR (e.date = ? AND e.gmail_id < ?))');
@@ -230,12 +240,15 @@ export class EmailRepository {
    * @returns {{ all: number, byRule: Record<string, number>, byLevel: Record<string, number> }}
    */
   unreadCounts() {
+    // Conversations, like the list: an unread message counts its thread once. "All" counts
+    // the inbox; a rule counts its label view.
+    const inbox = `e.direction = 'inbound' AND e.is_read = 0 AND e.labels LIKE '%"INBOX"%'`;
     const all = this.#db.get(
-      "SELECT COUNT(*) AS n FROM emails WHERE direction = 'inbound' AND is_read = 0",
+      `SELECT COUNT(DISTINCT thread_id) AS n FROM emails e WHERE ${inbox}`,
     ).n;
     const byRule = {};
     for (const row of this.#db.all(
-      `SELECT r.rule_id, COUNT(*) AS n FROM rule_runs r
+      `SELECT r.rule_id, COUNT(DISTINCT e.thread_id) AS n FROM rule_runs r
        JOIN emails e ON e.gmail_id = r.gmail_id
        WHERE e.is_read = 0 AND r.status = 'done' GROUP BY r.rule_id`,
     )) {
@@ -243,13 +256,36 @@ export class EmailRepository {
     }
     const byLevel = {};
     for (const row of this.#db.all(
-      `SELECT v.level, COUNT(*) AS n FROM verdicts v
+      `SELECT v.level, COUNT(DISTINCT e.thread_id) AS n FROM verdicts v
        JOIN emails e ON e.gmail_id = v.gmail_id
-       WHERE e.is_read = 0 GROUP BY v.level`,
+       WHERE ${inbox} GROUP BY v.level`,
     )) {
       byLevel[row.level] = row.n;
     }
     return { all, byRule, byLevel };
+  }
+
+  /**
+   * Gmail's current labels for a stored message (history sync, or a change the app just made).
+   * The read flag follows the UNREAD label.
+   * @param {string} gmailId @param {string[]} labels Gmail label ids
+   */
+  setLabels(gmailId, labels) {
+    this.#db.run('UPDATE emails SET labels = ?, is_read = ? WHERE gmail_id = ?', [
+      JSON.stringify(labels),
+      Number(!labels.includes('UNREAD')),
+      gmailId,
+    ]);
+  }
+
+  /** @param {string} gmailId @param {string} label */
+  removeLabel(gmailId, label) {
+    const record = this.get(gmailId);
+    if (record)
+      this.setLabels(
+        gmailId,
+        record.labels.filter((id) => id !== label),
+      );
   }
 
   /**
@@ -292,7 +328,8 @@ export class EmailRepository {
               json_extract(rf.json, '$.summary') AS summary,
               json_extract(rf.json, '$.needs_reply') AS needs_reply,
               (SELECT json_group_array(r.rule_id) FROM rule_runs r
-                WHERE r.gmail_id = e.gmail_id AND r.status = 'done') AS rule_ids
+                WHERE r.gmail_id = e.gmail_id AND r.status = 'done') AS rule_ids,
+              (SELECT COUNT(*) FROM emails t WHERE t.thread_id = e.thread_id) AS message_count
        FROM emails e
        LEFT JOIN verdicts v ON v.gmail_id = e.gmail_id
        LEFT JOIN reader_forms rf ON rf.gmail_id = e.gmail_id
@@ -309,6 +346,7 @@ export class EmailRepository {
       subject: row.subject ?? '',
       snippet: row.snippet ?? '',
       rules: JSON.parse(row.rule_ids),
+      messageCount: row.message_count,
       category: row.category,
       summary: row.summary,
       needsReply: row.needs_reply === 1,

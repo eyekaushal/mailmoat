@@ -42,8 +42,10 @@ export class GmailClient {
   }
 
   /**
-   * IDs of messages added since `startHistoryId`.
-   * @returns {Promise<{ messageIds: string[], historyId: string, nextPageToken?: string }>}
+   * IDs of messages added since `startHistoryId`, plus the current labels of messages whose
+   * labels changed (archived or read in Gmail itself), so the local inbox follows Gmail's.
+   * @returns {Promise<{ messageIds: string[], labelChanges: { id: string, labelIds: string[] }[],
+   *   historyId: string, nextPageToken?: string }>}
    * @throws {HistoryExpiredError} when Gmail no longer keeps history that old
    */
   async listHistory(startHistoryId, pageToken) {
@@ -51,14 +53,23 @@ export class GmailClient {
       const { data } = await this.#users().history.list({
         userId: 'me',
         startHistoryId,
-        historyTypes: ['messageAdded'],
+        historyTypes: ['messageAdded', 'labelAdded', 'labelRemoved'],
         pageToken,
       });
       const ids = (data.history ?? []).flatMap((entry) =>
         (entry.messagesAdded ?? []).map((added) => added.message.id),
       );
+      // Gmail lists a label change with the message's labels as of that change; the last one
+      // in the page is the current state.
+      const latest = new Map();
+      for (const entry of data.history ?? []) {
+        for (const change of [...(entry.labelsAdded ?? []), ...(entry.labelsRemoved ?? [])]) {
+          if (change.message?.id) latest.set(change.message.id, change.message.labelIds ?? []);
+        }
+      }
       return {
         messageIds: [...new Set(ids)],
+        labelChanges: [...latest].map(([id, labelIds]) => ({ id, labelIds })),
         historyId: data.historyId,
         nextPageToken: data.nextPageToken ?? undefined,
       };
@@ -202,6 +213,31 @@ export class GmailClient {
       requestBody: { message: { raw: raw.toString('base64url'), threadId } },
     });
     return data.id;
+  }
+
+  /**
+   * Every draft in the account, so a thread's draft messages can be continued or deleted by id.
+   * @returns {Promise<{ draftId: string, messageId: string, threadId: string | null }[]>}
+   */
+  async listDrafts() {
+    const drafts = [];
+    let pageToken;
+    do {
+      const { data } = await this.#users().drafts.list({
+        userId: 'me',
+        maxResults: 100,
+        pageToken,
+      });
+      for (const draft of data.drafts ?? []) {
+        drafts.push({
+          draftId: draft.id,
+          messageId: draft.message?.id,
+          threadId: draft.message?.threadId ?? null,
+        });
+      }
+      pageToken = data.nextPageToken;
+    } while (pageToken);
+    return drafts;
   }
 
   async deleteDraft(draftId) {

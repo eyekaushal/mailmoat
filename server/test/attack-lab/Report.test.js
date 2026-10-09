@@ -21,7 +21,7 @@ const result = (id, level, overrides = {}) => ({
     reasons: ['why'],
     signals: ['S5'],
     readerFailed: false,
-    labels: [],
+    labels: ['INBOX'],
   },
   violations: [],
   failures: [],

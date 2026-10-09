@@ -12,6 +12,9 @@ export class FakeGmail {
   historyExpired = false;
   metadataCalls = 0;
   deletedIds = new Set();
+  /** @type {{ draftId: string, messageId: string, threadId: string | null }[]} */
+  drafts = [];
+  deletedDrafts = [];
 
   addMessage({
     id,
@@ -44,14 +47,36 @@ export class FakeGmail {
     };
   }
 
+  /** Gmail itself changed a message's labels (archived, read): one history entry, no new mail. */
+  changeLabels(id, labelIds) {
+    const message = this.messages.get(id);
+    if (message) message.labelIds = labelIds;
+    this.historyId += 1;
+    this.history.push({ historyId: this.historyId, id, labelIds });
+  }
+
   async listHistory(startHistoryId) {
     if (this.historyExpired) {
       throw new HistoryExpiredError('expired');
     }
-    const messageIds = this.history
-      .filter((entry) => entry.historyId > Number(startHistoryId))
-      .map((entry) => entry.id);
-    return { messageIds, historyId: String(this.historyId), nextPageToken: undefined };
+    const entries = this.history.filter((entry) => entry.historyId > Number(startHistoryId));
+    return {
+      messageIds: entries.filter((entry) => !entry.labelIds).map((entry) => entry.id),
+      labelChanges: entries
+        .filter((entry) => entry.labelIds)
+        .map(({ id, labelIds }) => ({ id, labelIds })),
+      historyId: String(this.historyId),
+      nextPageToken: undefined,
+    };
+  }
+
+  async listDrafts() {
+    return this.drafts.map((draft) => ({ ...draft }));
+  }
+
+  async deleteDraft(draftId) {
+    this.deletedDrafts.push(draftId);
+    this.drafts = this.drafts.filter((draft) => draft.draftId !== draftId);
   }
 
   async getThread(threadId) {

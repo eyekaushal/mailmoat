@@ -1,13 +1,16 @@
 import { Router } from 'express';
 import {
-  DraftReplySchema,
+  ComposeReplySchema,
+  DraftIdParamSchema,
   EmailListQuerySchema,
   GmailIdParamSchema,
   NotPhishingSchema,
   ProposeMeetingSchema,
+  ReplyTextSchema,
   SaveMeetingSchema,
   TrustSenderSchema,
 } from '@mailmoat/shared/schemas/api';
+import { EmailFacts } from '../../agent/EmailFacts.js';
 import { TaggedValue } from '../../agent/TaggedValue.js';
 import { NotFoundError } from '../../core/errors.js';
 import { Avatar } from '../Avatar.js';
@@ -32,7 +35,8 @@ export class EmailRoutes {
    *   audit: Pick<import('../../db/repositories/AuditLogRepository.js').AuditLogRepository, 'recent'>,
    *   policy: Pick<import('../../policy/PolicyEngine.js').PolicyEngine, 'decide'>,
    *   executor: Pick<import('../../actions/ActionExecutor.js').ActionExecutor, 'perform'>,
-   *   drafts: Pick<import('../../features/DraftService.js').DraftService, 'createReply'>,
+   *   drafts: Pick<import('../../features/DraftService.js').DraftService, 'compose'|'saveReply'|'envelope'|'discard'>,
+   *   approvals: Pick<import('../../actions/ApprovalService.js').ApprovalService, 'request'>,
    *   meetings: Pick<import('../../features/MeetingService.js').MeetingService, 'propose'|'save'>,
    *   gmail: Pick<import('../../google/GmailClient.js').GmailClient, 'getRawMessage'>,
    *   ingestor: Pick<import('../../security/ingest/EmailIngestor.js').EmailIngestor, 'ingest'>,
@@ -46,7 +50,7 @@ export class EmailRoutes {
   }
 
   router() {
-    const { emails, verdicts, rules, contacts, audit, drafts, meetings, auditLog, now } =
+    const { emails, verdicts, rules, contacts, audit, drafts, meetings, auditLog, now, approvals } =
       this.#deps;
     const router = Router();
 
@@ -121,7 +125,10 @@ export class EmailRoutes {
 
     router.post('/emails/:id/archive', async (request, response) => {
       const record = this.#record(request.params);
-      response.json(await this.#organise('archive', record));
+      const result = await this.#organise('archive', record);
+      // Gmail archives by dropping INBOX; the local inbox follows at once.
+      if (result.done) emails.removeLabel(record.gmailId, 'INBOX');
+      response.json(result);
     });
 
     // Opening an email marks it read, in Gmail through the same reversible action the rules use
@@ -129,19 +136,71 @@ export class EmailRoutes {
     router.post('/emails/:id/read', async (request, response) => {
       const record = this.#record(request.params);
       const result = await this.#organise('mark_read', record);
-      if (result.done) emails.setRead(record.gmailId, true);
+      if (result.done) emails.removeLabel(record.gmailId, 'UNREAD');
       response.json(result);
     });
 
-    router.post('/emails/:id/draft-reply', async (request, response) => {
+    // The reply composer (PLAN §14): AI writes only here, on request, and nothing is saved.
+    router.post('/emails/:id/compose', async (request, response) => {
       const record = this.#record(request.params);
-      const { instructions, allowSuspicious } = validate(DraftReplySchema, request.body ?? {});
-      const { draftId } = await drafts.createReply({
+      const { instructions, allowSuspicious } = validate(ComposeReplySchema, request.body ?? {});
+      const { text } = await drafts.compose({
         gmailId: record.gmailId,
         instructions,
         allowSuspicious,
       });
-      response.status(201).json({ gmailId: record.gmailId, draftId });
+      response.json({ gmailId: record.gmailId, text });
+    });
+
+    // "Save to Drafts": the composer's text as a Gmail draft, replacing the one it came from.
+    router.post('/emails/:id/save-reply', async (request, response) => {
+      const record = this.#record(request.params);
+      const { body, origin, draftId } = validate(ReplyTextSchema, request.body ?? {});
+      const text = body;
+      const { draftId: saved } = await drafts.saveReply({
+        gmailId: record.gmailId,
+        text,
+        body: this.#tagReply(text, origin, record),
+        replacesDraftId: draftId,
+      });
+      response.status(201).json({ gmailId: record.gmailId, draftId: saved });
+    });
+
+    // "Send for approval": nothing is sent here. The reply becomes a `send_email` call that the
+    // Policy Engine always marks ASK; it waits on the Approvals page (PLAN §14.1 decision 5).
+    router.post('/emails/:id/reply-request', async (request, response) => {
+      const record = this.#record(request.params);
+      const { body, origin, draftId } = validate(ReplyTextSchema, request.body ?? {});
+      const envelope = await drafts.envelope(record.gmailId);
+      const user = TaggedValue.fromUser;
+      const call = {
+        step: 0,
+        tool: 'send_email',
+        emailIds: [record.gmailId],
+        args: {
+          to: user([envelope.to]),
+          subject: user(envelope.subject),
+          body: this.#tagReply(body, origin, record),
+          ...(envelope.inReplyTo ? { in_reply_to: user(envelope.inReplyTo) } : {}),
+          thread_id: user(envelope.threadId),
+          ...(draftId ? { draft_id: user(draftId) } : {}),
+        },
+      };
+      const decision = this.#deps.policy.decide(call);
+      if (decision.outcome === 'DENY') {
+        response.status(403).json({ decision: 'DENY', reason: decision.reason });
+        return;
+      }
+      const { id } = await approvals.request({ call, reason: decision.reason });
+      response
+        .status(201)
+        .json({ approvalId: id, decision: decision.outcome, reason: decision.reason });
+    });
+
+    router.delete('/drafts/:draftId', async (request, response) => {
+      const { draftId } = validate(DraftIdParamSchema, request.params);
+      await drafts.discard(draftId);
+      response.json({ draftId, deleted: true });
     });
 
     router.post('/emails/:id/propose-meeting', async (request, response) => {
@@ -187,6 +246,17 @@ export class EmailRoutes {
       response.json({ gmailId: record.gmailId, verdict: verdicts.get(record.gmailId) });
     });
     return router;
+  }
+
+  /**
+   * The composer's words carry their origin: typed text is the user's own; an AI draft, edited
+   * or not, keeps the email's taint so it can only go back to that thread (PLAN §14.1 decision 6).
+   */
+  #tagReply(text, origin, record) {
+    const typed = TaggedValue.fromUser(text);
+    return origin === 'ai'
+      ? TaggedValue.combine(text, [typed, EmailFacts.tag(text, record)])
+      : typed;
   }
 
   #record(params) {

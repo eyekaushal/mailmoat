@@ -56,10 +56,21 @@ export const SearchQuerySchema = z.object({
   q: z.string().trim().min(1).max(500),
   cursor: z.string().max(2000).optional(),
 });
-export const DraftReplySchema = z.strictObject({
+/** The composer's "Draft with AI" (PLAN §14): the Drafter writes, nothing is saved. */
+export const ComposeReplySchema = z.strictObject({
   instructions: z.string().trim().max(2000).nullable().default(null),
   allowSuspicious: z.boolean().default(false),
 });
+/**
+ * The composer's text, for Save to Drafts or Send for approval. `origin` says where the words
+ * came from so the server can tag them: typed by the user, or an (edited) AI draft.
+ */
+export const ReplyTextSchema = z.strictObject({
+  body: z.string().trim().min(1).max(20_000),
+  origin: z.enum(['user', 'ai']).default('user'),
+  draftId: z.string().min(1).max(64).nullable().default(null),
+});
+export const DraftIdParamSchema = z.object({ draftId: z.string().min(1).max(64) });
 export const ProposeMeetingSchema = z.strictObject({ allowRisky: z.boolean().default(false) });
 export const SaveMeetingSchema = z.strictObject({
   title: z.string().trim().min(1).max(200),

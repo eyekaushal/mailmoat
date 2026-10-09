@@ -80,6 +80,10 @@ export class GmailSync {
     do {
       const page = await this.#gmail.listHistory(startHistoryId, pageToken);
       stored += await this.#importer.import(page.messageIds, { pending: true });
+      // Archived or read in Gmail itself: the local inbox follows (PLAN §14.1 decision 7).
+      for (const { id, labelIds } of page.labelChanges ?? []) {
+        if (this.#emails.has(id)) this.#emails.setLabels(id, labelIds);
+      }
       latestHistoryId = page.historyId ?? latestHistoryId;
       pageToken = page.nextPageToken;
     } while (pageToken);

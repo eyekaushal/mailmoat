@@ -8,10 +8,11 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 const FOOTER = 'Drafted by mailmoat';
 
 /**
- * Formal draft replies (PRD F6). The text comes from the quarantined Drafter; this class decides
- * whether a draft may exist at all (never for DANGEROUS mail, SUSPICIOUS only on explicit
- * request), taints the text to the thread's participants, and saves it as a Gmail draft
- * addressed to the sender only. Nothing is ever sent from here.
+ * Formal draft replies (PRD F6, PLAN §14). The text comes from the quarantined Drafter or from
+ * the user; this class decides whether a reply may exist at all (never for DANGEROUS mail,
+ * SUSPICIOUS only on explicit request), taints Drafter text to the thread's participants, and
+ * saves drafts addressed to the sender only. Nothing is ever sent from here: sending is a
+ * `send_email` approval built from `envelope()`.
  */
 export class DraftService {
   #deps;
@@ -34,14 +35,128 @@ export class DraftService {
   }
 
   /**
+   * The Drafter writes a reply and it is saved to Gmail Drafts at once (Ask AI's `reply` tool).
    * @param {{ gmailId: string, instructions?: string | null, allowSuspicious?: boolean }} input
    *   `allowSuspicious` only when the user asked for this draft themselves (F6.4)
    * @returns {Promise<{ draftId: string, body: import('../agent/TaggedValue.js').TaggedValue }>}
    * @throws {DraftError} when no draft may be created; Drafter and Gmail errors pass through
    */
   async createReply({ gmailId, instructions = null, allowSuspicious = false }) {
-    const { gmail, ingestor, drafter, emails, verdicts, repository, settings, auditLog, now } =
-      this.#deps;
+    const { text, body, record, email, level } = await this.#write({
+      gmailId,
+      instructions,
+      allowSuspicious,
+    });
+    const draftId = await this.#save({
+      record,
+      email,
+      text,
+      body,
+      level,
+      instructions,
+      actor: allowSuspicious || instructions ? 'user' : 'system',
+    });
+    return { draftId, body };
+  }
+
+  /**
+   * The composer's "Draft with AI" (PLAN §14.1 decision 4): the Drafter writes the text and
+   * nothing is saved; the user edits it, then saves or sends it for approval.
+   * @param {{ gmailId: string, instructions?: string | null, allowSuspicious?: boolean }} input
+   * @returns {Promise<{ text: string, body: import('../agent/TaggedValue.js').TaggedValue,
+   *   record: object, email: object, level: string }>}
+   */
+  async compose({ gmailId, instructions = null, allowSuspicious = false }) {
+    const written = await this.#write({ gmailId, instructions, allowSuspicious });
+    this.#deps.auditLog.record({
+      actor: 'user',
+      event: 'draft_composed',
+      subject: gmailId,
+      decision: written.level,
+      data: { withInstructions: Boolean(instructions), readers: written.body.toJSON().readers },
+    });
+    return written;
+  }
+
+  /** The Drafter's text for this email, tainted to its participants; nothing stored or logged. */
+  async #write({ gmailId, instructions, allowSuspicious }) {
+    const { drafter, settings } = this.#deps;
+    const { record, email, level } = await this.#open(gmailId, { allowSuspicious });
+    const userName = settings.get('userName', null);
+    const draft = await drafter.draft({ email, instructions, userName });
+    const text = DraftService.#clean(draft.body);
+    const body = EmailFacts.tag(text, record);
+    // Invariant 3 as a gate: the text may only ever travel back to this email's participants.
+    if (!body.isReadableBy(record.fromAddr))
+      throw new DraftError('Draft is not addressed to the sender');
+    return { text, body, record, email, level };
+  }
+
+  /**
+   * The composer's "Save to Drafts": the user's (possibly edited) text as a Gmail draft.
+   * @param {{ gmailId: string, text: string, body: import('../agent/TaggedValue.js').TaggedValue,
+   *   replacesDraftId?: string | null }} input `body` carries the text's provenance
+   * @returns {Promise<{ draftId: string }>}
+   */
+  async saveReply({ gmailId, text, body, replacesDraftId = null }) {
+    const { record, email, level } = await this.#open(gmailId, { allowSuspicious: true });
+    if (!body.isReadableBy(record.fromAddr))
+      throw new DraftError('Draft is not addressed to the sender');
+    const draftId = await this.#save({
+      record,
+      email,
+      text,
+      body,
+      level,
+      instructions: null,
+      actor: 'user',
+    });
+    if (replacesDraftId) await this.discard(replacesDraftId);
+    return { draftId };
+  }
+
+  /**
+   * Where a reply to this email goes (PLAN §14.1 decision 5): the sender, the "Re:" subject,
+   * the Message-ID and the thread. The approval's `send_email` call is built from this.
+   * @param {string} gmailId
+   * @returns {Promise<{ to: string, subject: string, inReplyTo: string | null, threadId: string, level: string }>}
+   */
+  async envelope(gmailId) {
+    const { record, email, level } = await this.#open(gmailId, { allowSuspicious: true });
+    return {
+      to: record.fromAddr,
+      subject: DraftService.#replySubject(email.subject),
+      inReplyTo: email.messageId ?? null,
+      threadId: record.threadId,
+      level,
+    };
+  }
+
+  /**
+   * Removes a Gmail draft (the composer's "Delete draft", or a draft a reply was sent from).
+   * A draft already gone from Gmail is simply marked gone.
+   * @param {string} draftId
+   */
+  async discard(draftId) {
+    const { gmail, repository, auditLog } = this.#deps;
+    try {
+      await gmail.deleteDraft(draftId);
+    } catch (error) {
+      if (!DraftService.#isGone(error)) throw error;
+    }
+    const known = repository.get(draftId);
+    if (known) repository.setStatus(draftId, 'DELETED');
+    auditLog.record({
+      actor: 'user',
+      event: 'draft_deleted',
+      subject: known?.gmailId ?? null,
+      data: { draftId },
+    });
+  }
+
+  /** Loads the email and decides whether it may be answered at all (F6.4, invariant 6). */
+  async #open(gmailId, { allowSuspicious }) {
+    const { gmail, ingestor, emails, verdicts } = this.#deps;
     const record = emails.get(gmailId);
     if (!record) throw new DraftError('Email not found');
     if (record.direction !== 'inbound') throw new DraftError('Only received email can be answered');
@@ -51,17 +166,13 @@ export class DraftService {
     if (level === 'SUSPICIOUS' && !allowSuspicious) {
       throw new DraftError('A SUSPICIOUS email is only drafted when you ask for it');
     }
-
     const { raw } = await gmail.getRawMessage(gmailId);
     const email = await ingestor.ingest(raw);
-    const userName = settings.get('userName', null);
-    const draft = await drafter.draft({ email, instructions, userName });
-    const text = DraftService.#clean(draft.body);
-    const body = EmailFacts.tag(text, record);
-    // Invariant 3 as a gate: the text may only ever travel back to this email's participants.
-    if (!body.isReadableBy(record.fromAddr))
-      throw new DraftError('Draft is not addressed to the sender');
+    return { record, email, level };
+  }
 
+  async #save({ record, email, text, body, level, instructions, actor }) {
+    const { gmail, repository, settings, auditLog, now } = this.#deps;
     const withFooter = settings.get('draftFooter', false) === true ? `${text}\n\n${FOOTER}` : text;
     const mime = MimeMessage.build({
       to: [record.fromAddr],
@@ -71,15 +182,15 @@ export class DraftService {
       date: now(),
     });
     const draftId = await gmail.createDraft({ raw: mime, threadId: record.threadId });
-    repository.save({ draftId, gmailId, at: now() });
+    repository.save({ draftId, gmailId: record.gmailId, at: now() });
     auditLog.record({
-      actor: allowSuspicious || instructions ? 'user' : 'system',
+      actor,
       event: 'draft_created',
-      subject: gmailId,
+      subject: record.gmailId,
       decision: level,
       data: { draftId, withInstructions: Boolean(instructions), readers: body.toJSON().readers },
     });
-    return { draftId, body };
+    return draftId;
   }
 
   /** The dashboard list (F6.3). */

@@ -40,7 +40,7 @@ export function storeEmail(
     hasListUnsubscribe: false,
     unsubscribeUrl: null,
     oneClick: false,
-    labels: [],
+    labels: ['INBOX'],
     isRead,
   };
   emails.insertIfAbsent(record, { pending: false });

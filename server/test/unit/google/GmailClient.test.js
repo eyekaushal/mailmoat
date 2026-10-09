@@ -31,13 +31,19 @@ describe('GmailClient', () => {
     const users = {
       history: {
         list: async (params) => {
-          expect(params).toMatchObject({ startHistoryId: '10', historyTypes: ['messageAdded'] });
+          expect(params).toMatchObject({
+            startHistoryId: '10',
+            historyTypes: ['messageAdded', 'labelAdded', 'labelRemoved'],
+          });
           return {
             data: {
               historyId: '15',
               history: [
                 { messagesAdded: [{ message: { id: 'a' } }, { message: { id: 'b' } }] },
                 { messagesAdded: [{ message: { id: 'a' } }] },
+                // Archived in Gmail, then read: the last change carries the current labels.
+                { labelsRemoved: [{ message: { id: 'c', labelIds: ['UNREAD'] } }] },
+                { labelsRemoved: [{ message: { id: 'c', labelIds: [] } }] },
                 {},
               ],
             },
@@ -47,6 +53,7 @@ describe('GmailClient', () => {
     };
     await expect(makeClient(users).client.listHistory('10')).resolves.toEqual({
       messageIds: ['a', 'b'],
+      labelChanges: [{ id: 'c', labelIds: [] }],
       historyId: '15',
       nextPageToken: undefined,
     });

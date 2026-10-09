@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { EmailRow } from '../../../src/pages/inbox/EmailRow.jsx';
 import { riskNote } from '../../../src/ui/RiskDot.jsx';
@@ -38,6 +38,16 @@ function renderRow(props) {
     </TooltipProvider>,
   );
 }
+
+describe('EmailRow conversations', () => {
+  it('shows how many messages a conversation holds, like Gmail, and nothing for one', () => {
+    renderRow({ email: email({ messageCount: 7 }) });
+    expect(screen.getByLabelText('7 messages').textContent).toBe('7');
+    cleanup();
+    renderRow({ email: email({ messageCount: 1 }) });
+    expect(screen.queryByLabelText(/messages/)).toBeNull();
+  });
+});
 
 describe('EmailRow keys', () => {
   it('archives with e and replies with r while the row has focus', () => {

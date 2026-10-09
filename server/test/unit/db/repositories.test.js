@@ -81,7 +81,7 @@ describe('EmailRepository.search', () => {
     hasListUnsubscribe: false,
     unsubscribeUrl: null,
     oneClick: false,
-    labels: [],
+    labels: ['INBOX'],
     isRead: false,
   };
   const insert = (repo, gmailId, fields) =>
@@ -136,7 +136,7 @@ describe('EmailRepository threads and past mail', () => {
     hasListUnsubscribe: false,
     unsubscribeUrl: null,
     oneClick: false,
-    labels: [],
+    labels: ['INBOX'],
     isRead: false,
     pending,
   });
@@ -350,7 +350,13 @@ describe('EmailRepository subject and snippet', () => {
     const repos = { emails: new EmailRepository(db), verdicts: new VerdictRepository(db) };
     const record = storeEmail(repos, 'a');
     repos.emails.insertIfAbsent(
-      { ...record, gmailId: 'b', subject: 'Invoice 42', snippet: 'Please pay by Friday' },
+      {
+        ...record,
+        gmailId: 'b',
+        threadId: 't-b',
+        subject: 'Invoice 42',
+        snippet: 'Please pay by Friday',
+      },
       { pending: false },
     );
     expect(repos.emails.page().items.find((i) => i.gmailId === 'b')).toMatchObject({
@@ -435,6 +441,48 @@ describe('EmailRepository.page and unreadCounts', () => {
       byRule: { fyi: 2 },
       byLevel: { SAFE: 2, DANGEROUS: 1 },
     });
+  });
+});
+
+describe("EmailRepository inbox is Gmail's Inbox tab (PLAN §14.1 decision 7)", () => {
+  it('lists one row per conversation, only while a received message still carries INBOX', () => {
+    const rules = new RuleRepository(db);
+    rules.seed([{ id: 'to_reply', name: 'To Reply', actions: ['label'], isSecurity: false }]);
+    const repos = { emails: new EmailRepository(db), verdicts: new VerdictRepository(db), rules };
+    storeEmail(repos, 'a1', {
+      threadId: 'T',
+      date: '2026-10-01T00:00:00.000Z',
+      ruleIds: ['to_reply'],
+    });
+    storeEmail(repos, 'a2', { threadId: 'T', date: '2026-10-02T00:00:00.000Z' });
+    storeEmail(repos, 'me', {
+      threadId: 'T',
+      direction: 'outbound',
+      date: '2026-10-03T00:00:00.000Z',
+    });
+    storeEmail(repos, 'b', { threadId: 'U', date: '2026-10-04T00:00:00.000Z' });
+    storeEmail(repos, 'gone', { threadId: 'V', date: '2026-10-05T00:00:00.000Z' });
+    repos.emails.removeLabel('gone', 'INBOX');
+
+    const { items } = repos.emails.page();
+    expect(items.map((e) => [e.gmailId, e.messageCount])).toEqual([
+      ['b', 1],
+      ['a2', 3],
+    ]);
+    // The label view keeps everything the rule touched, archived or not.
+    expect(repos.emails.page({ ruleId: 'to_reply' }).items.map((e) => e.gmailId)).toEqual(['a1']);
+    expect(repos.emails.unreadCounts()).toMatchObject({ all: 2, byRule: { to_reply: 1 } });
+  });
+
+  it("follows Gmail's labels: setLabels keeps the read flag in step", () => {
+    const repos = { emails: new EmailRepository(db), verdicts: new VerdictRepository(db) };
+    storeEmail(repos, 'a');
+    repos.emails.setLabels('a', ['INBOX']);
+    expect(repos.emails.get('a')).toMatchObject({ labels: ['INBOX'], isRead: true });
+    repos.emails.setLabels('a', ['UNREAD']);
+    expect(repos.emails.get('a')).toMatchObject({ labels: ['UNREAD'], isRead: false });
+    expect(repos.emails.page().items).toEqual([]);
+    repos.emails.removeLabel('missing', 'INBOX'); // unknown ids are ignored
   });
 });
 

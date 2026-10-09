@@ -36,6 +36,7 @@ export function InboxPage() {
   // `trace` only opens the explanation on one email; it does not belong on the list URL.
   const listParams = new URLSearchParams(params);
   listParams.delete('trace');
+  listParams.delete('reply');
   const suffix = listParams.size > 0 ? `?${listParams}` : '';
   const query = q ? `/search?q=${encodeURIComponent(q)}` : queryForTab(tab);
   const terms = useMemo(() => termsOf(q), [q]);
@@ -122,7 +123,16 @@ export function InboxPage() {
         />
       )}
       <div ref={scroller} className="min-h-0 flex-1 overflow-y-auto border-t border-line">
-        <EmailList key={query} query={query} terms={terms} onOpen={open} />
+        <EmailList
+          key={query}
+          query={query}
+          terms={terms}
+          onOpen={open}
+          onReply={(id) => {
+            if (scroller.current) scrollPositions.set(query, scroller.current.scrollTop);
+            navigate(`/inbox/${id}${suffix ? `${suffix}&reply=1` : '?reply=1'}`);
+          }}
+        />
       </div>
     </div>
   );

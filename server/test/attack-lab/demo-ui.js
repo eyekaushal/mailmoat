@@ -122,6 +122,9 @@ class DemoGmail extends FakeGmail {
     return { id: `demo-draft-${++counter}` };
   }
   async deleteDraft() {}
+  async listDrafts() {
+    return [];
+  }
   async sendMessage() {
     return { id: `demo-sent-${++counter}` };
   }
@@ -204,7 +207,7 @@ const registry = new ToolRegistry([
   new ArchiveTool({ gmail }),
   new MarkReadTool({ gmail }),
   new CreateDraftTool({ gmail }),
-  new SendEmailTool({ gmail }),
+  new SendEmailTool({ gmail, drafts }),
   new ReplyTool({ emails, drafts }),
   new GetFreeBusyTool({ calendar }),
   new CreateCalendarEventTool({ calendar }),
@@ -485,6 +488,7 @@ const app = new App({
       executor,
       drafts,
       meetings,
+      approvals,
       auditLog,
       timeZone,
     }),

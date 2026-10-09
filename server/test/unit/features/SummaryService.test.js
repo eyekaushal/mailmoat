@@ -36,7 +36,7 @@ function store(
       hasListUnsubscribe: false,
       unsubscribeUrl: null,
       oneClick: false,
-      labels: [],
+      labels: ['INBOX'],
       isRead: false,
     },
     { pending: false },

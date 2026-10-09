@@ -241,30 +241,72 @@ describe('ReadingView', () => {
     expect(server.calls.some((c) => c.path === '/emails/a/trace')).toBe(true);
   });
 
-  it('asks before drafting from suspicious mail, drafts with r, archives with e and goes back', async () => {
+  it('r opens the composer; on suspicious mail the AI path asks "Draft anyway"; e archives and goes back', async () => {
     const { server, onClose } = open({
       'GET /emails/a': detail({ verdict: SUSPICIOUS }),
       'GET /threads/t1': thread({ verdict: SUSPICIOUS }),
-      'POST /emails/a/draft-reply': { gmailId: 'a', draftId: 'd1' },
+      'POST /emails/a/compose': { gmailId: 'a', text: 'Dear Rahul, noted.' },
+      'POST /emails/a/reply-request': { approvalId: 'ap-1', decision: 'ASK' },
       'POST /emails/a/archive': { gmailId: 'a', done: true, decision: 'ALLOW', reason: 'ok' },
     });
     await waitFor(() => expect(screen.getByText('Suspicious')).toBeTruthy());
-    expect(screen.getByText('Why was this flagged?')).toBeTruthy();
 
     fireEvent.keyDown(window, { key: 'r' });
     const dialog = await screen.findByRole('dialog');
-    expect(dialog.textContent).toContain('Reply to a suspicious email?');
+    expect(dialog.textContent).toContain('Write it yourself');
+    fireEvent.click(screen.getByRole('button', { name: 'Draft with AI' }));
     fireEvent.click(screen.getByRole('button', { name: 'Draft anyway' }));
-    await waitFor(() =>
-      expect(screen.getByRole('status').textContent).toContain('Draft saved in Gmail Drafts'),
-    );
-    expect(server.calls.find((c) => c.path === '/emails/a/draft-reply').body).toEqual({
+    const editor = await screen.findByLabelText('Reply text');
+    expect(editor.value).toBe('Dear Rahul, noted.');
+    expect(server.calls.find((c) => c.path === '/emails/a/compose').body).toEqual({
+      instructions: null,
       allowSuspicious: true,
     });
+    fireEvent.click(screen.getByRole('button', { name: 'Send for approval' }));
+    await waitFor(() =>
+      expect(screen.getByRole('status').textContent).toContain('Sent for approval'),
+    );
+    expect(server.calls.find((c) => c.path === '/emails/a/reply-request').body).toEqual({
+      body: 'Dear Rahul, noted.',
+      origin: 'ai',
+      draftId: null,
+    });
+    expect(server.calls.some((c) => c.path.includes('draft-reply'))).toBe(false);
 
     fireEvent.keyDown(window, { key: 'e' });
     await waitFor(() => expect(onClose).toHaveBeenCalled());
     expect(server.calls.some((c) => c.path === '/emails/a/archive')).toBe(true);
+  });
+
+  it('opens the composer from ?reply=1 (the inbox hover action)', async () => {
+    open({}, {}, '/inbox/a?reply=1');
+    const dialog = await screen.findByRole('dialog');
+    expect(dialog.textContent).toContain('Write it myself');
+  });
+
+  it('shows a Gmail draft as "Draft, not sent" with Continue and Delete draft, never as a reply', async () => {
+    const draft = message('dr', {
+      direction: 'outbound',
+      isDraft: true,
+      draftId: 'r-77',
+      verdict: null,
+      from: { name: null, address: 'kaushal@gmail.com' },
+      text: 'Dear Rahul, I will review it.',
+    });
+    const { server } = open({
+      'GET /threads/t1': { ...thread(), messages: [...thread().messages, draft] },
+      'DELETE /drafts/r-77': { draftId: 'r-77', deleted: true },
+    });
+    await waitFor(() => expect(screen.getByText('Draft, not sent')).toBeTruthy());
+    expect(screen.queryByText('Not checked')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Continue' }));
+    const editor = await screen.findByLabelText('Reply text');
+    expect(editor.value).toBe('Dear Rahul, I will review it.');
+    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+    fireEvent.click(screen.getByRole('button', { name: 'Delete draft' }));
+    await waitFor(() => expect(screen.getByRole('status').textContent).toBe('Draft deleted.'));
+    expect(server.calls.some((c) => c.method === 'DELETE' && c.path === '/drafts/r-77')).toBe(true);
   });
 
   it('ignores shortcuts while typing and reports a refused archive in place', async () => {
