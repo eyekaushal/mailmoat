@@ -11,6 +11,7 @@ export class UnsubscribeTool extends Tool {
     super({
       name: 'unsubscribe',
       description: 'Unsubscribe from a newsletter or marketing sender using its one-click link.',
+      returns: '{ status: "UNSUBSCRIBED", method }',
       args: z.strictObject({ sender: z.email().describe('The sender address.') }),
     });
     this.#unsubscribes = unsubscribes;

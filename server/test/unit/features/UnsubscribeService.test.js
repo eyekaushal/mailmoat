@@ -5,7 +5,7 @@ import { ArchiveTool } from '../../../src/agent/tools/ArchiveTool.js';
 import { BlockSenderTool } from '../../../src/agent/tools/BlockSenderTool.js';
 import { ToolRegistry } from '../../../src/agent/tools/ToolRegistry.js';
 import { UnsubscribeTool } from '../../../src/agent/tools/UnsubscribeTool.js';
-import { UnsubscribeError } from '../../../src/core/errors.js';
+import { HttpError, UnsubscribeError } from '../../../src/core/errors.js';
 import { Logger } from '../../../src/core/Logger.js';
 import { Database } from '../../../src/db/Database.js';
 import { Migrator } from '../../../src/db/Migrator.js';
@@ -256,8 +256,28 @@ describe('UnsubscribeService.requestUnsubscribe', () => {
   it('reports an endpoint failure without marking the sender unsubscribed', async () => {
     store('n1', { from: 'news@shop.example' });
     http.status = 500;
-    await expect(service().requestUnsubscribe('news@shop.example')).rejects.toThrow(/HTTP 500/);
+    await expect(service().requestUnsubscribe('news@shop.example')).rejects.toThrow(
+      /answered with an error\. Block the sender instead\./,
+    );
     expect(senders.get('news@shop.example').status).toBe('NONE');
+  });
+
+  it('says in plain words when the link points at a site that cannot be reached (PLAN §16)', async () => {
+    // A `.example` host never resolves; SafeHttpClient refuses it before anything is contacted.
+    store('p1', { from: 'newsletter@pragmaticdesigner.example' });
+    http.post = async () => {
+      throw new HttpError('The host could not be resolved');
+    };
+    const error = await service()
+      .requestUnsubscribe('newsletter@pragmaticdesigner.example')
+      .catch((caught) => caught);
+    expect(error).toBeInstanceOf(UnsubscribeError);
+    expect(error.message).toBe(
+      "The sender's unsubscribe link does not work: its site cannot be reached. Block the sender instead.",
+    );
+    expect(error.cause).toBeInstanceOf(HttpError);
+    expect(senders.get('newsletter@pragmaticdesigner.example').status).toBe('NONE');
+    expect(audit.map((a) => a.event)).not.toContain('sender_unsubscribed');
   });
 });
 

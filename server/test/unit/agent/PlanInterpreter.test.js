@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import { Logger } from '../../../src/core/Logger.js';
-import { HandleError, ToolError } from '../../../src/core/errors.js';
+import { ToolError } from '../../../src/core/errors.js';
 import { HandleStore } from '../../../src/agent/HandleStore.js';
-import { PlanInterpreter } from '../../../src/agent/PlanInterpreter.js';
+import { PlanInterpreter, STEP_FAILED } from '../../../src/agent/PlanInterpreter.js';
 import { TaggedValue } from '../../../src/agent/TaggedValue.js';
 import { Tool } from '../../../src/agent/tools/Tool.js';
 import { ToolRegistry } from '../../../src/agent/tools/ToolRegistry.js';
@@ -12,7 +12,7 @@ import { ActionExecutor } from '../../../src/actions/ActionExecutor.js';
 /** A tool that records its tagged args and returns a configurable value. */
 class ProbeTool extends Tool {
   constructor(name, args, result = () => TaggedValue.fromOwnData({ ok: true }, 'inbox')) {
-    super({ name, description: `${name} probe`, args });
+    super({ name, description: `${name} probe`, returns: '{ ok }', args });
     this.calls = [];
     this.result = result;
   }
@@ -272,8 +272,26 @@ describe('PlanInterpreter decisions and failures', () => {
     expect(result.status).toBe('stopped');
     const last = result.steps.at(-1);
     expect(last.decision).toBe('DENY');
-    expect(last.reason).toMatch(reason);
+    // The user reads one plain sentence; the detail is in the audit record (PLAN §16.2 decision 2).
+    expect(last.reason).toBe(STEP_FAILED);
     expect(audit.at(-1)).toMatchObject({ event: 'policy_decision', decision: 'DENY' });
+    expect(audit.at(-1).data.error).toMatch(reason);
+  });
+
+  it('regression (PLAN §16): a Planner path from the old array shape stops with a plain reason', async () => {
+    const { run, audit } = setup();
+    const result = await run([
+      { tool: 'search_emails', args: {} },
+      { tool: 'archive', args: { email_id: { step: 0, field: '0.id' } } },
+    ]);
+    expect(result.status).toBe('stopped');
+    expect(result.steps[1]).toMatchObject({
+      tool: 'archive',
+      decision: 'DENY',
+      reason: STEP_FAILED,
+    });
+    expect(result.steps[1].reason).not.toMatch(/ToolError|field/);
+    expect(audit.at(-1).data.error).toBe('ToolError: Step 0 result has no field "0.id"');
   });
 
   it('denies and stops when a tool throws or returns an untagged value', async () => {
@@ -289,9 +307,9 @@ describe('PlanInterpreter decisions and failures', () => {
     ]);
     expect(broken.status).toBe('stopped');
     expect(broken.steps).toHaveLength(1);
-    expect(broken.steps[0].reason).toBe('ToolError: gmail down');
+    expect(broken.steps[0].reason).toBe(STEP_FAILED);
     const untagged = await run([{ tool: 'search_emails', args: {} }]);
-    expect(untagged.steps[0].reason).toMatch(/untagged/);
+    expect(untagged.steps[0].reason).toBe(STEP_FAILED);
   });
 
   it('denies when a handle loader fails', async () => {
@@ -308,7 +326,7 @@ describe('PlanInterpreter decisions and failures', () => {
       },
       session,
     );
-    expect(result.steps[0].reason).toMatch(HandleError.name);
+    expect(result.steps[0].reason).toBe(STEP_FAILED);
   });
 
   it('audits provenance but never argument values', async () => {

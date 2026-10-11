@@ -263,6 +263,23 @@ body {
   }
 }
 
+/* The message pill (Ask AI composer and the draft box): a full-radius white pill with one
+   hairline that turns into the ask gradient while the user types. The control inside opts out
+   of the global focus ring, so this is the only ring there is. */
+.pill {
+  border: 1.5px solid var(--line-strong);
+  border-radius: 9999px;
+  background: var(--panel-solid);
+  box-shadow: var(--shadow-panel);
+  transition: border-color 150ms var(--ease);
+}
+.pill:focus-within {
+  border-color: transparent;
+  background:
+    linear-gradient(var(--panel-solid), var(--panel-solid)) padding-box,
+    var(--ask-gradient) border-box;
+}
+
 /* Ask AI cards: a hairline gradient border over the solid panel, radius 12. */
 .ask-card {
   border: 1.5px solid transparent;

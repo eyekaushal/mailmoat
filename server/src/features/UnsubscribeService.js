@@ -1,9 +1,10 @@
 import { TaggedValue } from '../agent/TaggedValue.js';
-import { UnsubscribeError } from '../core/errors.js';
+import { HttpError, UnsubscribeError } from '../core/errors.js';
 import { MimeMessage } from '../google/MimeMessage.js';
 
 const ONE_CLICK_BODY = 'List-Unsubscribe=One-Click';
 const ONE_CLICK_HEADERS = Object.freeze({ 'content-type': 'application/x-www-form-urlencoded' });
+const USE_BLOCK = 'Block the sender instead.';
 
 /**
  * @typedef {'unsubscribe'|'unsubscribe_mail'|'block'|'report_spam'} Method what the page offers
@@ -80,14 +81,15 @@ export class UnsubscribeService {
    * @throws {UnsubscribeError} unless the sender is SAFE with a usable link; nothing is contacted otherwise
    */
   async unsubscribe(address) {
-    const { http, emails, verdicts, senders, gmail, auditLog, now } = this.#deps;
+    const { emails, verdicts, senders, gmail, auditLog, now } = this.#deps;
     const sender = address.toLowerCase();
     const [latest] = emails.search({ from: sender, direction: 'inbound', limit: 1 });
     if (!latest) throw new UnsubscribeError('No email from this sender');
     const level = verdicts.get(latest.gmailId)?.level ?? 'SUSPICIOUS';
     if (level !== 'SAFE') throw new UnsubscribeError(`The sender's latest email is ${level}`);
     const url = latest.unsubscribeUrl;
-    if (!url) throw new UnsubscribeError('The sender offers no unsubscribe link');
+    if (!url)
+      throw new UnsubscribeError(`This sender offers no safe unsubscribe link. ${USE_BLOCK}`);
 
     let method;
     if (url.toLowerCase().startsWith('mailto:')) {
@@ -97,10 +99,20 @@ export class UnsubscribeService {
       });
       method = 'mailto';
     } else {
-      if (!latest.oneClick) throw new UnsubscribeError('No one-click unsubscribe offered');
-      const response = await http.post(url, { body: ONE_CLICK_BODY, headers: ONE_CLICK_HEADERS });
+      if (!latest.oneClick) {
+        throw new UnsubscribeError(
+          `This sender offers no one-click unsubscribe link. ${USE_BLOCK}`,
+        );
+      }
+      const response = await this.#post(url);
       if (response.status < 200 || response.status >= 300) {
-        throw new UnsubscribeError(`The unsubscribe endpoint answered HTTP ${response.status}`);
+        this.#deps.logger.warn('unsubscribe endpoint answered with an error', {
+          sender,
+          status: response.status,
+        });
+        throw new UnsubscribeError(
+          `The sender's unsubscribe page answered with an error. ${USE_BLOCK}`,
+        );
       }
       method = 'one_click';
     }
@@ -177,6 +189,24 @@ export class UnsubscribeService {
       data: { archived },
     });
     return { archived };
+  }
+
+  /**
+   * The one-click POST. A link whose host cannot be reached (a dead or made-up domain, a
+   * private address the SSRF check refused) is reported in the user's words (PLAN §16.2
+   * decision 9): nothing is retried and nothing else is contacted.
+   */
+  async #post(url) {
+    try {
+      return await this.#deps.http.post(url, { body: ONE_CLICK_BODY, headers: ONE_CLICK_HEADERS });
+    } catch (error) {
+      if (!(error instanceof HttpError)) throw error;
+      this.#deps.logger.warn('unsubscribe link could not be used', { error: error.message });
+      throw new UnsubscribeError(
+        `The sender's unsubscribe link does not work: its site cannot be reached. ${USE_BLOCK}`,
+        { cause: error },
+      );
+    }
   }
 
   /** ALLOW runs now; ASK is approved by the click; DENY is refused with the policy's reason. */

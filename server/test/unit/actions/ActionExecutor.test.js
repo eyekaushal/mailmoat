@@ -11,6 +11,7 @@ class Probe extends Tool {
     super({
       name: 'archive',
       description: 'p',
+      returns: '{ archived }',
       args: z.strictObject({ email_id: z.string().min(1).describe('id') }),
     });
     this.result = result;

@@ -227,11 +227,12 @@ Mirrors the Inbox Zero "AI Assistant" page (tabs **Rules / Test / History**), bu
 | ID | Requirement |
 |---|---|
 | F6.1 | When the user asks (the composer's "Draft with AI", Ask AI, or a rule whose "Draft reply" action they switched on), the text is written by a **quarantined drafting call** (small model, no tools). It sees only that thread's visible text, the formal-tone instructions and the user's name. The Planner never sees the email or the draft text. The output is tainted, so it can go only to that thread's participants (see `SECURITY_APPROACH.md §7.3`). |
-| F6.2 | Tone is fixed **formal**: greeting with the sender's name, clear paragraphs, polite closing ("Best regards,"), no slang, no emoji, no em dashes; matches the formal example in the notes PDF. |
+| F6.2 | Tone is **formal by default**: greeting with the sender's name, clear paragraphs, polite closing ("Best regards,"), no slang, no emoji, no em dashes; matches the formal example in the notes PDF. The user may pick **semi-formal** or **casual** for one draft, explicitly (`/tone` in the draft box, or "make it casual" in Ask AI). The tone is an enum chosen by code from the user's words, never free text, so neither the Planner nor an email can set it; the rules on payments, credentials, links and attachments hold in every tone (B28d, `PLAN.md §16`). |
 | F6.3 | **Reply composer** (B28b, `PLAN.md §14`): Reply offers "Write it myself" or "Draft with AI"; the text is editable either way; **Save to Drafts** keeps it in Gmail Drafts, **Send for approval** creates a `send_email` approval (always ASK). Mail is sent only from the Approvals page, by clicking Send on the card, which also removes the Gmail draft it started from. Nothing is ever sent without that click. |
 | F6.4 | Policy: drafts are **never** created for DANGEROUS mail; for SUSPICIOUS mail only on explicit user request, with a warning. |
 | F6.5 | Unsent AI drafts older than 14 days are deleted (setting). |
 | F6.6 | Draft footer "Drafted by mailmoat" — off by default (setting). |
+| F6.7 | **Draft conversation box** (B28d, `PLAN.md §16`): under every "Draft, not sent" block, one line with a `/` menu of skills (`/rewrite`, `/humanize`, `/tone`, `/shorter`, `/longer`, `/proofread`, `/complete`). Enter sends the draft as shown, the skill and the user's words to the quarantined Drafter, which sees the previous draft as one more untrusted field; the result replaces the Gmail draft. An email has at most **one open mailmoat draft**: Ask AI's `reply` on an email that already has one revises and replaces it. Nothing is sent from the box; F6.4 applies (never DANGEROUS; SUSPICIOUS asks once). |
 
 > **Design note (F6.1):** Why a separate drafting call instead of the Planner? The Planner has tools and sees the user's other data, so it must never read attacker text. The drafter reads attacker text but has no tools and no other data. An injected email can at most make its own reply bad, and the user reviews every reply before it is sent. The same pattern handles chat requests like "reply to Rahul saying yes": the Planner picks the thread and the intent, and the drafter writes the text.
 
@@ -256,7 +257,7 @@ A chat panel ("Ask mailmoat") similar to Superhuman's AI panel. The user's messa
 | ID | Requirement |
 |---|---|
 | F8.1 | Supported intents in v1: **(a) find/summarise emails** ("what did Rahul send this week?"), **(b) draft or send an email / reply**, **(c) schedule a meeting** ("find time with Mia and Amy after my flight"). Other requests get a polite "not supported yet". |
-| F8.2 | The Planner outputs a JSON plan; the Interpreter executes it; the Planner's message is the progress line shown while it runs, and the **answer is composed in code from typed results** afterwards ("3 emails need a reply", "Done! Your meeting is scheduled for …"). Results render as an email list, a summary or a card, never raw data (B28c, `PLAN.md §15`). |
+| F8.2 | The Planner outputs a JSON plan; the Interpreter executes it; the Planner's message is the progress line shown while it runs, and the **answer is composed in code from typed results** afterwards ("3 emails need a reply", "Done! Your meeting is scheduled for …"). Results render as an email list, a summary or a card, never raw data (B28c, `PLAN.md §15`). Every tool's catalogue entry states what it returns, so a later step references a result by its real path; an email already in context is used by id, not searched for again; a step that fails shows one plain sentence, with the detail in the audit log (B28d, `PLAN.md §16`). |
 | F8.3 | Any side effect is shown as a **preview card** (email: to/cc/subject/body/data sources; event: title/time/attendees) with **Edit** and **Send/Save**. Nothing happens until the user clicks. |
 | F8.4 | Values that came from emails are visibly marked on cards (e.g. "flight time from email: *Your IndiGo booking*"). |
 | F8.5 | Chat history is stored locally; a "New chat" button clears context. |
@@ -270,11 +271,11 @@ A chat panel ("Ask mailmoat") similar to Superhuman's AI panel. The user's messa
 | ID | Requirement |
 |---|---|
 | F9.1 | Page lists senders grouped by address with: email count, read %, last received, risk of the latest mail, and available method. Sort by count or read %; filter by time range. |
-| F9.2 | Button per sender: **Unsubscribe** (SAFE sender with RFC 8058 one-click), **Block** (no safe method), or **Report spam** (SUSPICIOUS/DANGEROUS sender). Plus **Keep** (approve) and **Archive all**. |
+| F9.2 | Button per sender: **Unsubscribe** (SAFE sender with RFC 8058 one-click), **Block** (no safe method), or **Report spam** (SUSPICIOUS/DANGEROUS sender). Plus **Keep** (approve) and **Archive all**. **When Unsubscribe is offered:** only when the sender's latest email is SAFE **and** carries an `https://` `List-Unsubscribe` link with `List-Unsubscribe-Post` one-click, or a `mailto:` `List-Unsubscribe` link. People, notification senders without the header and every flagged sender get Block (B28d, `PLAN.md §16`). |
 | F9.3 | Unsubscribe = HTTPS POST `List-Unsubscribe=One-Click` to an SSRF-checked URL (public IP, https, no userinfo, redirects re-checked). `mailto:` unsubscribe is treated as sending an email (approval). No headless browser in v1. |
 | F9.4 | Block = sender status `BLOCKED`; future mail from the sender is auto-labelled `mailmoat/Blocked` and archived. Blocking a security/account sender (e.g. `accounts.google.com`) shows a warning. |
 | F9.5 | Bulk select + bulk actions with a confirmation dialog showing counts. |
-| F9.6 | All outcomes are logged; "Undo" reverts status (cannot re-subscribe for the user; says so). |
+| F9.6 | All outcomes are logged; "Undo" reverts status (cannot re-subscribe for the user; says so). On the page, outcomes are never printed at the top: a success shows as the row's status word and the tab counts; a failure opens a small popover on the row's button with one plain sentence (written once, on the server) and **Block instead**; a bulk run reports inside its dialog (B28d, `PLAN.md §16`). |
 
 **AC:** No request is ever made to an unsubscribe URL of a SUSPICIOUS/DANGEROUS sender; Block works for senders without `List-Unsubscribe`.
 

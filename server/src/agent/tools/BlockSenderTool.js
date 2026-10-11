@@ -11,6 +11,7 @@ export class BlockSenderTool extends Tool {
     super({
       name: 'block_sender',
       description: 'Block a sender: future emails from this address are archived automatically.',
+      returns: '{ blocked: true }',
       args: z.strictObject({ sender: z.email().describe('The sender address.') }),
     });
     this.#senders = senders;

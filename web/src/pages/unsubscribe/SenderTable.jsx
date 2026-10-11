@@ -12,6 +12,7 @@ import { Avatar } from '../../ui/Avatar.jsx';
 import { Checkbox } from '../../ui/Checkbox.jsx';
 import { DropdownMenu, MenuItem } from '../../ui/DropdownMenu.jsx';
 import { IconButton } from '../../ui/IconButton.jsx';
+import { Popover } from '../../ui/Popover.jsx';
 import { Tooltip } from '../../ui/Tooltip.jsx';
 
 /**
@@ -75,8 +76,10 @@ function ReadBar({ rate }) {
 /**
  * The one button a sender gets. Block asks the Policy Engine why (`/senders/block-warning`) the
  * first time the pointer or focus reaches it, so the tooltip can say it; SWR keeps the answer.
+ * When the last click on this row failed, the reason sits in a popover on the button, in plain
+ * words and quiet ink, with Block as the way out (PLAN §16.2 decision 8).
  */
-function MethodButton({ sender, method, disabled, onClick }) {
+function MethodButton({ sender, method, disabled, onClick, failure, onDismiss, onBlockInstead }) {
   const [wanted, setWanted] = useState(false);
   const isBlock = method.action === 'block';
   const { data } = useApi(
@@ -85,7 +88,7 @@ function MethodButton({ sender, method, disabled, onClick }) {
       : null,
   );
   const why = isBlock && data?.warning ? data.warning : method.hint;
-  return (
+  const button = (
     <Tooltip label={why}>
       <Button
         variant={isBlock ? 'danger' : 'secondary'}
@@ -98,6 +101,25 @@ function MethodButton({ sender, method, disabled, onClick }) {
         {method.label}
       </Button>
     </Tooltip>
+  );
+  return (
+    <Popover
+      open={failure !== null}
+      onOpenChange={(open) => {
+        if (!open) onDismiss();
+      }}
+      label="Why this did not work"
+      anchor={button}
+    >
+      <p className="text-secondary">{failure}</p>
+      {!isBlock && (
+        <div className="mt-2 flex justify-end">
+          <Button variant="secondary" className="h-7 px-2.5 text-sm" onClick={onBlockInstead}>
+            Block instead
+          </Button>
+        </div>
+      )}
+    </Popover>
   );
 }
 
@@ -129,7 +151,8 @@ function SortHeader({ id, label, sort, onSort, className = '' }) {
  *   senders: object[], selected: Set<string>, onToggle: (address: string) => void,
  *   onToggleAll: () => void, sort: 'count' | 'read', onSort: (sort: 'count' | 'read') => void,
  *   onAction: (sender: object, action: 'unsubscribe'|'block'|'keep'|'undo'|'archive-all') => void,
- *   busy: string | null,
+ *   busy: string | null, failure?: { address: string, text: string } | null,
+ *   onDismissFailure?: () => void,
  * }} props
  */
 export function SenderTable({
@@ -141,6 +164,8 @@ export function SenderTable({
   onSort,
   onAction,
   busy,
+  failure = null,
+  onDismissFailure = () => {},
 }) {
   const chosen = senders.filter((s) => selected.has(s.address)).length;
   const allSelected = senders.length > 0 && chosen === senders.length;
@@ -228,6 +253,9 @@ export function SenderTable({
                         method={method}
                         disabled={isBusy}
                         onClick={() => onAction(sender, method.action)}
+                        failure={failure?.address === sender.address ? failure.text : null}
+                        onDismiss={onDismissFailure}
+                        onBlockInstead={() => onAction(sender, 'block')}
                       />
                     </>
                   )}

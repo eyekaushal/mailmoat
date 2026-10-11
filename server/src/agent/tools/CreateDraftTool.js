@@ -30,6 +30,7 @@ export class CreateDraftTool extends Tool {
       name: 'create_draft',
       description:
         'Save a new email as a Gmail draft for the user to review. Use "reply" to answer an existing email.',
+      returns: '{ draftId }',
       args: OutgoingEmailArgs,
     });
     this.#gmail = gmail;

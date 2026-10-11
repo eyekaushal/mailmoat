@@ -11,6 +11,7 @@ export class ArchiveTool extends Tool {
     super({
       name: 'archive',
       description: 'Archive an email (remove it from the inbox; it stays searchable).',
+      returns: '{ archived: true }',
       args: z.strictObject({ email_id: z.string().min(1).describe('The id of the email.') }),
     });
     this.#gmail = gmail;

@@ -22,7 +22,9 @@ export class SearchEmailsTool extends Tool {
     super({
       name: 'search_emails',
       description:
-        'Find emails by sender (name, address or domain), direction, time range, risk or whether they need a reply. Returns typed facts, newest first; contacts the user writes to come first.',
+        'Find emails by sender (name, address or domain), direction, time range, risk or whether they need a reply. Typed facts only, newest first; contacts the user writes to come first.',
+      returns:
+        '{ count, emails: [{ id, from: { address, domain }, date, risk, category, needs_reply, intents, meeting_request }], senders: [address] }. Reference the first email\'s id as { "step": <this step>, "field": "emails.0.id" }; never "0.id".',
       args: z.strictObject({
         from: z
           .string()

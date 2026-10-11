@@ -18,6 +18,7 @@ export class SummariseTool extends Tool {
     super({
       name: 'summarise',
       description: 'Show the user a short, quarantined summary of one email.',
+      returns: '{ summary } (text shown to the user; you never see it)',
       args: z.strictObject({
         email_id: z.string().min(1).describe('The id of an email in context.'),
       }),

@@ -5,6 +5,7 @@ import { useApi, useApiClient } from '../../lib/useApi.js';
 import { Dialog } from '../../ui/Dialog.jsx';
 import { DropdownMenu, MenuHeader, MenuItem, MenuSeparator } from '../../ui/DropdownMenu.jsx';
 import { IconButton } from '../../ui/IconButton.jsx';
+import { MessagePill } from '../../ui/MessagePill.jsx';
 import { Tooltip } from '../../ui/Tooltip.jsx';
 import { Button } from '../Button.jsx';
 import { useAskAi } from './AskAiProvider.jsx';
@@ -237,7 +238,21 @@ export function AskPanel() {
             />
           </p>
         )}
-        <div className="flex items-end gap-1.5 rounded-xl border border-line-strong bg-panel-solid py-1.5 pr-1.5 pl-3 shadow-[inset_3px_0_0_var(--ask-b)] focus-within:border-accent">
+        <MessagePill
+          className="items-end pl-4"
+          trailing={
+            <Tooltip label="Send" keys={['↵']}>
+              <button
+                type="submit"
+                aria-label="Send"
+                disabled={!draft.trim() || live !== null}
+                className="ask-arrow flex size-7 shrink-0 items-center justify-center rounded-full transition-opacity duration-150 ease-out-soft disabled:opacity-35"
+              >
+                <ArrowUp size={14} weight="bold" />
+              </button>
+            </Tooltip>
+          }
+        >
           <textarea
             ref={input}
             data-inset-focus=""
@@ -255,17 +270,7 @@ export function AskPanel() {
             className="max-h-40 min-h-7 w-full resize-none bg-transparent py-1 text-base text-ink outline-none placeholder:text-tertiary"
             disabled={live !== null}
           />
-          <Tooltip label="Send" keys={['↵']}>
-            <button
-              type="submit"
-              aria-label="Send"
-              disabled={!draft.trim() || live !== null}
-              className="ask-arrow flex size-7 shrink-0 items-center justify-center rounded-full transition-opacity duration-150 ease-out-soft disabled:opacity-35"
-            >
-              <ArrowUp size={14} weight="bold" />
-            </button>
-          </Tooltip>
-        </div>
+        </MessagePill>
       </form>
 
       <Dialog

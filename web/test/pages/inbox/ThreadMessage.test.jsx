@@ -66,6 +66,27 @@ describe('ThreadMessage drafts (PLAN §14)', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Delete draft' }));
     expect(onDeleteDraft).toHaveBeenCalledWith(draft);
   });
+
+  it('places the conversation box between the text and the buttons and says when it was revised (PLAN §16)', () => {
+    const draft = message({ gmailId: 'dr', direction: 'outbound', isDraft: true, draftId: 'r-77' });
+    show(
+      <ThreadMessage
+        message={draft}
+        expanded={false}
+        onToggle={() => {}}
+        onContinue={() => {}}
+        now={now}
+        revised
+        revisionBox={<input aria-label="Change this draft" />}
+      />,
+    );
+    expect(screen.getByText('Revised just now')).toBeTruthy();
+    const box = screen.getByLabelText('Change this draft');
+    const text = document.querySelector('pre');
+    const button = screen.getByRole('button', { name: 'Continue' });
+    expect(text.compareDocumentPosition(box) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(box.compareDocumentPosition(button) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
 });
 
 describe('ThreadMessage', () => {

@@ -11,7 +11,8 @@ const FOOTER = 'Drafted by mailmoat';
  * Formal draft replies (PRD F6, PLAN §14). The text comes from the quarantined Drafter or from
  * the user; this class decides whether a reply may exist at all (never for DANGEROUS mail,
  * SUSPICIOUS only on explicit request), taints Drafter text to the thread's participants, and
- * saves drafts addressed to the sender only. Nothing is ever sent from here: sending is a
+ * saves drafts addressed to the sender only. An email has at most one open mailmoat draft: a
+ * new one replaces it (PLAN §16.2 decision 3). Nothing is ever sent from here: sending is a
  * `send_email` approval built from `envelope()`.
  */
 export class DraftService {
@@ -19,7 +20,7 @@ export class DraftService {
 
   /**
    * @param {object} deps
-   * @param {Pick<import('../google/GmailClient.js').GmailClient, 'getRawMessage'|'createDraft'|'deleteDraft'>} deps.gmail
+   * @param {Pick<import('../google/GmailClient.js').GmailClient, 'getRawMessage'|'createDraft'|'deleteDraft'|'listDrafts'>} deps.gmail
    * @param {Pick<import('../security/ingest/EmailIngestor.js').EmailIngestor, 'ingest'>} deps.ingestor
    * @param {Pick<import('../security/reader/Drafter.js').Drafter, 'draft'>} deps.drafter
    * @param {Pick<import('../db/repositories/EmailRepository.js').EmailRepository, 'get'>} deps.emails
@@ -36,16 +37,23 @@ export class DraftService {
 
   /**
    * The Drafter writes a reply and it is saved to Gmail Drafts at once (Ask AI's `reply` tool).
-   * @param {{ gmailId: string, instructions?: string | null, allowSuspicious?: boolean }} input
-   *   `allowSuspicious` only when the user asked for this draft themselves (F6.4)
+   * When the email already has an open mailmoat draft, the Drafter revises that text instead
+   * ("I didn't like it, make it shorter") and the old draft is replaced.
+   * @param {{ gmailId: string, instructions?: string | null, allowSuspicious?: boolean,
+   *   tone?: string | null }} input `allowSuspicious` only when the user asked for this draft
+   *   themselves (F6.4)
    * @returns {Promise<{ draftId: string, body: import('../agent/TaggedValue.js').TaggedValue }>}
    * @throws {DraftError} when no draft may be created; Drafter and Gmail errors pass through
    */
-  async createReply({ gmailId, instructions = null, allowSuspicious = false }) {
+  async createReply({ gmailId, instructions = null, allowSuspicious = false, tone = null }) {
+    const previous = await this.#previous(gmailId);
     const { text, body, record, email, level } = await this.#write({
       gmailId,
       instructions,
       allowSuspicious,
+      tone,
+      previous: previous?.text ?? null,
+      skill: previous ? 'rewrite' : null,
     });
     const draftId = await this.#save({
       record,
@@ -56,6 +64,7 @@ export class DraftService {
       instructions,
       actor: allowSuspicious || instructions ? 'user' : 'system',
     });
+    await this.#replaceOthers(gmailId, draftId);
     return { draftId, body };
   }
 
@@ -78,12 +87,66 @@ export class DraftService {
     return written;
   }
 
+  /**
+   * The draft conversation box (PLAN §16.2 decision 4): the Drafter revises the draft as the user
+   * saw it, with one skill from the closed list and the user's words; the result replaces the
+   * Gmail draft. Nothing is sent.
+   * @param {{ gmailId: string, draftId: string, text: string, skill: string,
+   *   instruction?: string | null, tone?: string | null, allowSuspicious?: boolean }} input
+   * @returns {Promise<{ draftId: string, text: string }>}
+   */
+  async revise({
+    gmailId,
+    draftId,
+    text: previous,
+    skill,
+    instruction = null,
+    tone = null,
+    allowSuspicious = false,
+  }) {
+    const { auditLog } = this.#deps;
+    const { text, body, record, email, level } = await this.#write({
+      gmailId,
+      instructions: instruction,
+      allowSuspicious,
+      tone,
+      previous,
+      skill,
+    });
+    const saved = await this.#save({
+      record,
+      email,
+      text,
+      body,
+      level,
+      instructions: instruction,
+      actor: 'user',
+    });
+    await this.discard(draftId);
+    await this.#replaceOthers(gmailId, saved);
+    auditLog.record({
+      actor: 'user',
+      event: 'draft_revised',
+      subject: gmailId,
+      decision: level,
+      data: { skill, tone, draftId: saved, replaced: draftId },
+    });
+    return { draftId: saved, text };
+  }
+
   /** The Drafter's text for this email, tainted to its participants; nothing stored or logged. */
-  async #write({ gmailId, instructions, allowSuspicious }) {
+  async #write({
+    gmailId,
+    instructions,
+    allowSuspicious,
+    tone = null,
+    previous = null,
+    skill = null,
+  }) {
     const { drafter, settings } = this.#deps;
     const { record, email, level } = await this.#open(gmailId, { allowSuspicious });
     const userName = settings.get('userName', null);
-    const draft = await drafter.draft({ email, instructions, userName });
+    const draft = await drafter.draft({ email, instructions, userName, previous, skill, tone });
     const text = DraftService.#clean(draft.body);
     const body = EmailFacts.tag(text, record);
     // Invariant 3 as a gate: the text may only ever travel back to this email's participants.
@@ -112,7 +175,35 @@ export class DraftService {
       actor: 'user',
     });
     if (replacesDraftId) await this.discard(replacesDraftId);
+    await this.#replaceOthers(gmailId, draftId);
     return { draftId };
+  }
+
+  /**
+   * The open mailmoat draft for an email, with its text, or null. The text comes from Gmail the
+   * way the thread view reads it (draft id → message id → raw → visible text). A draft Gmail no
+   * longer has is marked gone.
+   * @returns {Promise<{ draftId: string, text: string } | null>}
+   */
+  async #previous(gmailId) {
+    const { gmail, ingestor, repository } = this.#deps;
+    const [open] = repository.openFor(gmailId);
+    if (!open) return null;
+    const draft = (await gmail.listDrafts()).find((item) => item.draftId === open.draftId);
+    if (!draft) {
+      repository.setStatus(open.draftId, 'DELETED');
+      return null;
+    }
+    const { raw } = await gmail.getRawMessage(draft.messageId);
+    const message = await ingestor.ingest(raw);
+    return { draftId: open.draftId, text: message.readerText };
+  }
+
+  /** One open mailmoat draft per email: every other one is removed once the new one is saved. */
+  async #replaceOthers(gmailId, keepDraftId) {
+    for (const draft of this.#deps.repository.openFor(gmailId)) {
+      if (draft.draftId !== keepDraftId) await this.discard(draft.draftId);
+    }
   }
 
   /**

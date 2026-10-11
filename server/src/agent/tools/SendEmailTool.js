@@ -24,6 +24,7 @@ export class SendEmailTool extends Tool {
       name: 'send_email',
       description:
         'Send a new email after the user approves it. Recipients must be addresses the user typed.',
+      returns: '{ messageId }',
       args: OutgoingEmailArgs.extend({
         in_reply_to: z.string().max(998).optional().describe('Message-ID being answered.'),
         thread_id: z.string().max(64).optional().describe('Gmail thread the reply belongs to.'),

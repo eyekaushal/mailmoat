@@ -12,6 +12,8 @@ export class ExtractTool extends Tool {
       name: 'extract',
       description:
         'Read email text in a quarantined call and return typed values of one kind (e.g. the flight time in a booking email).',
+      returns:
+        'a list of the requested kind: ["2026-10-14T10:00:00+05:30", ...] for "datetimes", [{ value, currency }, ...] for "amounts"; reference the first as "0"',
       args: z.strictObject({
         handle: z
           .string()
