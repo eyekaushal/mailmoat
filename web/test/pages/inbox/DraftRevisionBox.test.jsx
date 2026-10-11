@@ -41,6 +41,23 @@ describe('DraftRevisionBox (PLAN §16)', () => {
     expect(screen.queryByText('/humanize')).toBeNull();
   });
 
+  it('lists every skill from the + button and keeps the one ring on the pill', () => {
+    const { input } = mount(fakeServer({}));
+    expect(input().getAttribute('data-inset-focus')).toBe('');
+    expect(input().parentElement.className).toContain('pill');
+    fireEvent.click(screen.getByRole('button', { name: 'Skills' }));
+    const menu = screen.getByRole('listbox', { name: 'Skills' });
+    expect(within(menu).getAllByRole('option')).toHaveLength(SKILLS.length);
+    fireEvent.mouseDown(within(menu).getByText('/proofread'));
+    expect(screen.queryByRole('listbox')).toBeNull();
+    expect(screen.getByText('/proofread')).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Skills' }).disabled).toBe(true);
+    fireEvent.click(screen.getByRole('button', { name: 'Remove skill' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Skills' }));
+    fireEvent.keyDown(input(), { key: 'Escape' });
+    expect(screen.queryByRole('listbox')).toBeNull();
+  });
+
   it('posts the draft as shown with the skill and the words, then reports the new draft', async () => {
     const server = fakeServer({ 'POST /emails/a/revise': revised });
     const { input, onRevised } = mount(server);

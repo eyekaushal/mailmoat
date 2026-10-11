@@ -1,9 +1,11 @@
-import { ArrowUp, X } from '@phosphor-icons/react';
+import { ArrowUp, Plus, X } from '@phosphor-icons/react';
 import { DRAFT_SKILLS, DRAFT_TONES } from '@mailmoat/shared/constants/drafts';
 import { useRef, useState } from 'react';
 import { Button } from '../../components/Button.jsx';
 import { useApiClient } from '../../lib/useApi.js';
 import { Dialog } from '../../ui/Dialog.jsx';
+import { IconButton } from '../../ui/IconButton.jsx';
+import { MessagePill } from '../../ui/MessagePill.jsx';
 import { Tooltip } from '../../ui/Tooltip.jsx';
 
 /** What the menu says for each skill; the ids are the server's closed list (PLAN §16.2 decision 5). */
@@ -32,9 +34,13 @@ export const TONES = DRAFT_TONES;
 
 const PLACEHOLDER = 'Change this draft… type / for skills';
 
-/** The menu entries that match what was typed after the slash; the tones once /tone is picked. */
-function options(value, skill, tone) {
+/**
+ * The menu entries: the tones once /tone is picked; every skill when the + was clicked; otherwise
+ * the skills matching what was typed after the slash.
+ */
+function options(value, skill, tone, listing) {
   if (skill?.needsTone && tone === null) return TONES.map((id) => ({ id, hint: null }));
+  if (listing && !skill) return SKILLS;
   if (!value.startsWith('/')) return [];
   const prefix = value.slice(1).toLowerCase();
   return SKILLS.filter((entry) => entry.id.startsWith(prefix));
@@ -58,9 +64,11 @@ export function DraftRevisionBox({ gmailId, draft, level, onRevised }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
   const [asking, setAsking] = useState(false);
+  // The + button lists every skill without typing a slash.
+  const [listing, setListing] = useState(false);
   const suspicious = level === 'SUSPICIOUS';
 
-  const menu = options(value, skill, tone);
+  const menu = options(value, skill, tone, listing);
   const menuOpen = menu.length > 0;
   const words = value.trim();
   const chosen = skill ?? (words && !value.startsWith('/') ? SKILLS[0] : null);
@@ -78,6 +86,7 @@ export function DraftRevisionBox({ gmailId, draft, level, onRevised }) {
       setSkill(option);
     }
     setValue('');
+    setListing(false);
     setHighlight(0);
     input.current?.focus();
   }
@@ -104,6 +113,7 @@ export function DraftRevisionBox({ gmailId, draft, level, onRevised }) {
       if (event.key === 'Escape') {
         event.preventDefault();
         setValue('');
+        setListing(false);
         return;
       }
     }
@@ -174,7 +184,35 @@ export function DraftRevisionBox({ gmailId, draft, level, onRevised }) {
           ))}
         </ul>
       )}
-      <div className="flex items-center gap-1.5 rounded-xl border border-line-strong bg-panel-solid py-1 pr-1.5 pl-3 shadow-[inset_3px_0_0_var(--ask-b)] focus-within:border-accent">
+      <MessagePill
+        leading={
+          <IconButton
+            label="Skills"
+            icon={Plus}
+            size={18}
+            className="size-7 shrink-0 rounded-full"
+            disabled={busy || skill !== null}
+            onClick={() => {
+              setListing((open) => !open);
+              setHighlight(0);
+              input.current?.focus();
+            }}
+          />
+        }
+        trailing={
+          <Tooltip label="Revise" keys={['↵']}>
+            <button
+              type="button"
+              aria-label="Revise"
+              disabled={!canSend}
+              onClick={() => submit()}
+              className="ask-arrow flex size-7 shrink-0 items-center justify-center rounded-full transition-opacity duration-150 ease-out-soft disabled:opacity-35"
+            >
+              <ArrowUp size={14} weight="bold" />
+            </button>
+          </Tooltip>
+        }
+      >
         {chip && (
           <span className="inline-flex h-6 shrink-0 items-center gap-1 rounded-md bg-accent-soft px-2 text-sm font-medium text-accent">
             {chip}
@@ -191,6 +229,7 @@ export function DraftRevisionBox({ gmailId, draft, level, onRevised }) {
         <input
           ref={input}
           type="text"
+          data-inset-focus=""
           aria-label="Change this draft"
           aria-expanded={menuOpen}
           aria-autocomplete="list"
@@ -199,8 +238,10 @@ export function DraftRevisionBox({ gmailId, draft, level, onRevised }) {
           disabled={busy}
           onChange={(event) => {
             setValue(event.target.value);
+            setListing(false);
             setHighlight(0);
           }}
+          onBlur={() => setListing(false)}
           onKeyDown={onKeyDown}
           placeholder={
             skill?.needsTone && tone === null
@@ -211,18 +252,7 @@ export function DraftRevisionBox({ gmailId, draft, level, onRevised }) {
           }
           className="h-7 min-w-0 flex-1 bg-transparent text-base text-ink outline-none placeholder:text-tertiary"
         />
-        <Tooltip label="Revise" keys={['↵']}>
-          <button
-            type="button"
-            aria-label="Revise"
-            disabled={!canSend}
-            onClick={() => submit()}
-            className="ask-arrow flex size-7 shrink-0 items-center justify-center rounded-full transition-opacity duration-150 ease-out-soft disabled:opacity-35"
-          >
-            <ArrowUp size={14} weight="bold" />
-          </button>
-        </Tooltip>
-      </div>
+      </MessagePill>
       {busy && <p className="ask-progress mt-1.5 text-sm text-accent">Revising…</p>}
       {error && (
         <p role="alert" className="mt-1.5 text-sm text-secondary">
