@@ -16,6 +16,7 @@ class SendProbe extends Tool {
     super({
       name: 'send_email',
       description: 'p',
+      returns: '{ sent }',
       args: z.strictObject({
         to: z.array(z.email()).min(1).describe('to'),
         body: z.string().min(1).describe('b'),

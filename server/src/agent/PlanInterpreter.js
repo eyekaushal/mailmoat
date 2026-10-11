@@ -2,6 +2,9 @@ import { isHandleReference, isStepReference } from '@mailmoat/shared/schemas/pla
 import { ToolError } from '../core/errors.js';
 import { TaggedValue } from './TaggedValue.js';
 
+/** What the user reads when a step throws; the technical detail goes to the audit record. */
+export const STEP_FAILED = 'That step could not be completed.';
+
 /**
  * @typedef {{ outcome: 'ALLOW'|'ASK'|'DENY', reason: string }} Decision
  * @typedef {{
@@ -78,9 +81,12 @@ export class PlanInterpreter {
         outcome = await this.#runStep(index, step, results, session);
       } catch (error) {
         // Fail closed (F12.7): whatever went wrong, this step is denied and nothing after it runs.
-        this.#logger.warn('Plan step failed; plan stopped', { step: index, error: error.name });
-        outcome = this.#outcome(index, step.tool, 'DENY', `${error.name}: ${error.message}`);
-        this.#audit(outcome, {});
+        // The user reads one plain sentence (PLAN §16.2 decision 2); the detail stays in the
+        // audit record and the log. Error messages name paths and ids, never email text.
+        const detail = `${error.name}: ${error.message}`;
+        this.#logger.warn('Plan step failed; plan stopped', { step: index, error: detail });
+        outcome = this.#outcome(index, step.tool, 'DENY', STEP_FAILED);
+        this.#audit(outcome, {}, { error: detail });
       }
       steps.push(outcome);
       session.onStep?.({ phase: 'end', ...outcome });
@@ -187,7 +193,7 @@ export class PlanInterpreter {
   }
 
   /** Decision, reason and provenance only: argument values may contain email text. */
-  #audit(outcome, args) {
+  #audit(outcome, args, extra = {}) {
     this.#auditLog.record({
       actor: 'system',
       event: 'policy_decision',
@@ -195,6 +201,7 @@ export class PlanInterpreter {
       decision: outcome.decision,
       reason: outcome.reason,
       data: {
+        ...extra,
         step: outcome.step,
         approvalId: outcome.approvalId,
         args: Object.fromEntries(

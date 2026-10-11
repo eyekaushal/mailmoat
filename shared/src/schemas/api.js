@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { DRAFT_SKILLS, DRAFT_TONES } from '../constants/drafts.js';
 import { RISK_LEVELS } from '../constants/risk-levels.js';
 import { RULE_ACTIONS } from '../constants/rules.js';
 
@@ -77,6 +78,23 @@ export const ReplyTextSchema = z.strictObject({
   draftId: z.string().min(1).max(64).nullable().default(null),
 });
 export const DraftIdParamSchema = z.object({ draftId: z.string().min(1).max(64) });
+/**
+ * The draft conversation box (PLAN §16.2 decision 4): the draft as shown, the skill picked from
+ * the menu, the user's words, and a tone only for `/tone`.
+ */
+export const ReviseDraftSchema = z
+  .strictObject({
+    draftId: z.string().min(1).max(64),
+    text: z.string().trim().min(1).max(20_000),
+    skill: z.enum(DRAFT_SKILLS),
+    instruction: z.string().trim().max(1_000).nullable().default(null),
+    tone: z.enum(DRAFT_TONES).nullable().default(null),
+    allowSuspicious: z.boolean().default(false),
+  })
+  .refine((input) => input.skill !== 'tone' || input.tone !== null, {
+    message: 'Pick a tone',
+    path: ['tone'],
+  });
 export const ProposeMeetingSchema = z.strictObject({ allowRisky: z.boolean().default(false) });
 export const SaveMeetingSchema = z.strictObject({
   title: z.string().trim().min(1).max(200),

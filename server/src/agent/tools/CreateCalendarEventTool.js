@@ -14,6 +14,7 @@ export class CreateCalendarEventTool extends Tool {
     super({
       name: 'create_calendar_event',
       description: 'Create a calendar event with invitations, after the user approves it.',
+      returns: '{ eventId, link }',
       args: z.strictObject({
         title: z.string().trim().min(1).max(200).describe('Event title.'),
         start: z.iso.datetime({ offset: true }).describe('Start, ISO 8601 with offset.'),

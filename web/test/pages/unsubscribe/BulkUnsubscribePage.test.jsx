@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { BulkUnsubscribePage } from '../../../src/pages/unsubscribe/BulkUnsubscribePage.jsx';
-import { fakeServer, renderPage } from '../../helpers.jsx';
+import { fakeServer, json, renderPage } from '../../helpers.jsx';
 
 const sender = (address, extra = {}) => ({
   address,
@@ -52,11 +52,51 @@ describe('BulkUnsubscribePage', () => {
     expect(screen.getAllByText('25%')).toHaveLength(3);
     fireEvent.click(screen.getByRole('button', { name: 'Unsubscribe' }));
     await waitFor(() =>
-      expect(screen.getByText(/unsubscribed with the one-click link/)).toBeTruthy(),
+      expect(server.calls.find((c) => c.path === '/senders/unsubscribe')?.body).toEqual({
+        address: 'news@shop.example',
+      }),
     );
-    expect(server.calls.find((c) => c.path === '/senders/unsubscribe').body).toEqual({
-      address: 'news@shop.example',
+    // No outcome line anywhere (PLAN §16): the row and the counts tell the story after refresh.
+    await waitFor(() =>
+      expect(server.calls.filter((c) => c.path.startsWith('/senders?')).length).toBe(2),
+    );
+    expect(screen.queryByRole('status')).toBeNull();
+    expect(screen.queryByText(/unsubscribed with/)).toBeNull();
+    expect(document.querySelector('li.text-danger, [aria-label="Outcomes"]')).toBeNull();
+  });
+
+  it('puts a failed unsubscribe in a popover on the button, in plain words, with Block instead (PLAN §16)', async () => {
+    const senders = [
+      sender('newsletter@pragmaticdesigner.example', { name: 'The Pragmatic Designer' }),
+    ];
+    const server = fakeServer({
+      'GET /senders': senders,
+      'GET /senders/block-warning': { warning: null },
+      'POST /senders/unsubscribe': json(
+        {
+          error:
+            "The sender's unsubscribe link does not work: its site cannot be reached. Block the sender instead.",
+        },
+        422,
+      ),
+      'POST /senders/block': { status: 'BLOCKED', warning: null },
     });
+    renderPage(<BulkUnsubscribePage />, { server });
+    await waitFor(() => expect(screen.getByText('The Pragmatic Designer')).toBeTruthy());
+    fireEvent.click(screen.getByRole('button', { name: 'Unsubscribe' }));
+    const popover = await screen.findByRole('dialog', { name: 'Why this did not work' });
+    expect(popover.textContent).toContain('its site cannot be reached. Block the sender instead.');
+    expect(popover.querySelector('.text-danger')).toBeNull();
+    expect(screen.queryByRole('status')).toBeNull();
+    fireEvent.click(within(popover).getByRole('button', { name: 'Block instead' }));
+    const dialog = await screen.findByRole('dialog', { name: /Block newsletter@/ });
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Block' }));
+    await waitFor(() =>
+      expect(server.calls.find((c) => c.path === '/senders/block')?.body).toEqual({
+        address: 'newsletter@pragmaticdesigner.example',
+      }),
+    );
+    expect(screen.queryByRole('dialog')).toBeNull();
   });
 
   it('filters with the Unhandled / Kept / All tabs and shows a decided sender as a word', async () => {
@@ -90,19 +130,33 @@ describe('BulkUnsubscribePage', () => {
     renderPage(<BulkUnsubscribePage />, { server });
     await waitFor(() => expect(screen.getByText('a@x.example')).toBeTruthy());
     fireEvent.click(screen.getByRole('button', { name: 'Keep' }));
-    await waitFor(() => expect(screen.getByText('a@x.example: kept.')).toBeTruthy());
+    await waitFor(() =>
+      expect(server.calls.find((c) => c.path === '/senders/keep')?.body).toEqual({
+        address: 'a@x.example',
+      }),
+    );
+    expect(screen.queryByText(/kept\./)).toBeNull();
 
     openMenu(screen.getByText('a@x.example').closest('tr'));
     const menu = await screen.findByRole('menu');
     expect(within(menu).queryByRole('menuitem', { name: 'Undo' })).toBeNull();
     fireEvent.click(within(menu).getByRole('menuitem', { name: 'Archive all' }));
-    await waitFor(() => expect(screen.getByText('a@x.example: 7 emails archived.')).toBeTruthy());
+    await waitFor(() =>
+      expect(server.calls.some((c) => c.path === '/senders/archive-all')).toBe(true),
+    );
+    expect(screen.queryByText(/archived\./)).toBeNull();
 
     pickTab(/Kept/);
     await waitFor(() => expect(screen.getByText('old@kept.example')).toBeTruthy());
     openMenu(screen.getByText('old@kept.example').closest('tr'));
     fireEvent.click(await screen.findByRole('menuitem', { name: 'Undo' }));
-    await waitFor(() => expect(screen.getByText(/old@kept.example: status reverted/)).toBeTruthy());
+    await waitFor(() =>
+      expect(server.calls.find((c) => c.path === '/senders/undo')?.body).toEqual({
+        address: 'old@kept.example',
+      }),
+    );
+    expect(screen.queryByText(/status reverted/)).toBeNull();
+    expect(screen.queryByRole('status')).toBeNull();
   });
 
   it('puts the policy warning in the Block tooltip and dialog, and respects Cancel', async () => {
@@ -132,7 +186,8 @@ describe('BulkUnsubscribePage', () => {
       within(await screen.findByRole('dialog')).getByRole('button', { name: 'Block' }),
     );
     await waitFor(() => expect(server.calls.some((c) => c.path === '/senders/block')).toBe(true));
-    expect(screen.getByText(/blocked\. Future mail is archived/)).toBeTruthy();
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+    expect(screen.queryByText(/blocked\./)).toBeNull();
   });
 
   it('bulk-unsubscribes only the senders with a safe link, after a dialog with counts', async () => {
@@ -158,12 +213,47 @@ describe('BulkUnsubscribePage', () => {
     expect(dialog.textContent).toContain('Unsubscribe from 2 senders?');
     expect(dialog.textContent).toContain('1 selected sender has no safe way');
     fireEvent.click(within(dialog).getByRole('button', { name: 'Unsubscribe' }));
-    await waitFor(() => expect(screen.getByText('2 of 2 done.')).toBeTruthy());
+    await waitFor(() => expect(screen.queryByRole('toolbar')).toBeNull());
     const posted = server.calls
       .filter((c) => c.path === '/senders/unsubscribe')
       .map((c) => c.body.address);
     expect(posted).toEqual(['a@x.example', 'c@x.example']);
-    expect(screen.queryByRole('toolbar')).toBeNull();
+    // Everything worked: the dialog is gone and nothing is printed.
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(screen.queryByText(/done/)).toBeNull();
+  });
+
+  it('keeps the bulk dialog open with the senders that failed (PLAN §16)', async () => {
+    const server = fakeServer({
+      'GET /senders': [sender('a@x.example'), sender('dead@x.example', { name: 'Dead Link' })],
+      'POST /senders/unsubscribe': (body) =>
+        body.address === 'dead@x.example'
+          ? json(
+              {
+                error:
+                  "The sender's unsubscribe page answered with an error. Block the sender instead.",
+              },
+              422,
+            )
+          : { status: 'UNSUBSCRIBED', method: 'one_click' },
+    });
+    renderPage(<BulkUnsubscribePage />, { server });
+    await waitFor(() => expect(screen.getByLabelText('Select all')).toBeTruthy());
+    fireEvent.click(screen.getByLabelText('Select all'));
+    fireEvent.click(
+      within(screen.getByRole('toolbar')).getByRole('button', { name: 'Unsubscribe' }),
+    );
+    fireEvent.click(
+      within(await screen.findByRole('dialog')).getByRole('button', { name: 'Unsubscribe' }),
+    );
+    const report = await screen.findByRole('dialog', { name: '1 of 2 done' });
+    expect(report.textContent).toContain(
+      "Dead Link: The sender's unsubscribe page answered with an error.",
+    );
+    expect(within(report).queryByRole('button', { name: 'Cancel' })).toBeNull();
+    fireEvent.click(within(report).getByRole('button', { name: 'OK' }));
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+    expect(screen.queryByRole('status')).toBeNull();
   });
 
   it('says so when the selected senders have no safe unsubscribe link', async () => {
@@ -176,10 +266,12 @@ describe('BulkUnsubscribePage', () => {
     fireEvent.click(
       within(screen.getByRole('toolbar')).getByRole('button', { name: 'Unsubscribe' }),
     );
-    expect(screen.queryByRole('dialog')).toBeNull();
-    expect(screen.getByRole('status').textContent).toContain(
+    const dialog = await screen.findByRole('dialog', { name: 'Nothing to do' });
+    expect(dialog.textContent).toContain(
       '1 selected sender has no safe unsubscribe link. Use Block instead',
     );
+    expect(within(dialog).getByRole('button', { name: 'OK' })).toBeTruthy();
+    expect(screen.queryByRole('status')).toBeNull();
     expect(server.calls.some((c) => c.method === 'POST')).toBe(false);
   });
 

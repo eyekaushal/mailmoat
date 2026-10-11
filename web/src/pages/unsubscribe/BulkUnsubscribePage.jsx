@@ -41,25 +41,6 @@ const BULK_VERBS = {
   'archive-all': 'Archive all mail from',
 };
 
-function describe(action, sender, result) {
-  switch (action) {
-    case 'unsubscribe':
-      return result.method === 'mailto'
-        ? `${sender}: unsubscribe email sent.`
-        : `${sender}: unsubscribed with the one-click link.`;
-    case 'block':
-      return `${sender}: blocked. Future mail is archived under mailmoat/Blocked.${result.warning ? ` ${result.warning}` : ''}`;
-    case 'keep':
-      return `${sender}: kept.`;
-    case 'undo':
-      return `${sender}: status reverted.${result.note ? ` ${result.note}` : ' An unsubscribe cannot be undone on the sender’s side.'}`;
-    case 'archive-all':
-      return `${sender}: ${result.archived} emails archived.`;
-    default:
-      return `${sender}: done.`;
-  }
-}
-
 function plural(count, word) {
   return `${count} ${word}${count === 1 ? '' : 's'}`;
 }
@@ -73,7 +54,9 @@ function matches(sender, query) {
 /**
  * PRD F9 on the Inbox Zero table (PLAN §13.8): Unhandled / Kept / All, a time range, search,
  * one safe method per sender and bulk actions. Blocking and every bulk action confirm in a
- * dialog first; the Block dialog repeats the Policy Engine's warning.
+ * dialog first; the Block dialog repeats the Policy Engine's warning. Outcomes are never
+ * printed at the top (PLAN §16.2 decision 8): a success shows as the row's status word and the
+ * tab counts; a failure opens a popover on the row's button; a bulk run reports in its dialog.
  */
 export function BulkUnsubscribePage() {
   const client = useApiClient();
@@ -86,7 +69,7 @@ export function BulkUnsubscribePage() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [selected, setSelected] = useState(new Set());
   const [busy, setBusy] = useState(null);
-  const [log, setLog] = useState([]);
+  const [failure, setFailure] = useState(null);
   const [confirm, setConfirm] = useState(null);
   const params = new URLSearchParams({ sort, limit: String(limit) });
   if (range.since) params.set('since', range.since);
@@ -100,20 +83,13 @@ export function BulkUnsubscribePage() {
     count: (senders ?? []).filter(f.keep).length,
   }));
 
-  function report(ok, text) {
-    setLog((entries) => [{ ok, text }, ...entries].slice(0, 5));
-  }
+  const post = (sender, action) => client.post(ENDPOINT[action], { address: sender.address });
 
-  async function post(sender, action) {
-    const result = await client.post(ENDPOINT[action], { address: sender.address });
-    report(true, describe(action, sender.address, result));
-  }
-
-  async function run(work) {
+  async function run(sender, work) {
     try {
       await work();
     } catch (caught) {
-      report(false, caught.message);
+      setFailure({ address: sender.address, text: caught.message });
     } finally {
       setBusy(null);
       await mutate();
@@ -121,8 +97,9 @@ export function BulkUnsubscribePage() {
   }
 
   async function onAction(sender, action) {
+    setFailure(null);
     setBusy(sender.address);
-    if (action !== 'block') return run(() => post(sender, action));
+    if (action !== 'block') return run(sender, () => post(sender, action));
     let warning;
     try {
       ({ warning } = await client.get(
@@ -130,7 +107,7 @@ export function BulkUnsubscribePage() {
       ));
     } catch (caught) {
       setBusy(null);
-      report(false, caught.message);
+      setFailure({ address: sender.address, text: caught.message });
       return;
     }
     setConfirm({
@@ -140,10 +117,13 @@ export function BulkUnsubscribePage() {
         : 'Future mail from this sender is labelled and archived.',
       actionLabel: 'Block',
       danger: true,
-      onConfirm: () => run(() => post(sender, 'block')),
+      onConfirm: () => run(sender, () => post(sender, 'block')),
       onCancel: () => setBusy(null),
     });
   }
+
+  /** The dialog in report mode: one sentence and Close, nothing else to do. */
+  const tell = (title, text) => setConfirm({ title, description: text, done: true });
 
   function bulk(action) {
     const chosen = (senders ?? []).filter((s) => selected.has(s.address));
@@ -155,8 +135,8 @@ export function BulkUnsubscribePage() {
           : chosen;
     const skipped = chosen.length - targets.length;
     if (targets.length === 0) {
-      report(
-        false,
+      tell(
+        'Nothing to do',
         action === 'unsubscribe'
           ? `${plural(chosen.length, 'selected sender')} ${chosen.length === 1 ? 'has' : 'have'} no safe unsubscribe link. Use Block instead: future mail is archived and the sender is never contacted.`
           : `${plural(chosen.length, 'selected sender')} ${chosen.length === 1 ? 'is' : 'are'} already decided. Undo from the row menu first.`,
@@ -171,20 +151,22 @@ export function BulkUnsubscribePage() {
       actionLabel: BULK_VERBS[action].split(' ')[0],
       danger: action === 'block',
       onConfirm: async () => {
-        let done = 0;
+        const failed = [];
         for (const sender of targets) {
           setBusy(sender.address);
           try {
             await post(sender, action);
-            done += 1;
           } catch (caught) {
-            report(false, `${sender.address}: ${caught.message}`);
+            failed.push(`${sender.name || sender.address}: ${caught.message}`);
           }
         }
         setBusy(null);
-        report(true, `${done} of ${targets.length} done.`);
         setSelected(new Set());
         await mutate();
+        // Every row succeeded: the rows and counts say so. Otherwise the dialog stays with the list.
+        if (failed.length > 0) {
+          tell(`${targets.length - failed.length} of ${targets.length} done`, failed.join(' '));
+        }
       },
     });
   }
@@ -290,15 +272,6 @@ export function BulkUnsubscribePage() {
       )}
 
       <div className="min-h-0 flex-1 overflow-y-auto border-t border-line">
-        {log.length > 0 && (
-          <ul className="space-y-0.5 px-5 py-2 text-sm" aria-label="Outcomes">
-            {log.map((entry, index) => (
-              <li key={index} role="status" className={entry.ok ? 'text-secondary' : 'text-danger'}>
-                {entry.text}
-              </li>
-            ))}
-          </ul>
-        )}
         {error && (
           <p role="alert" className="px-5 py-3 text-sm text-danger">
             {error.message}
@@ -327,6 +300,8 @@ export function BulkUnsubscribePage() {
             onSort={setSort}
             onAction={onAction}
             busy={busy}
+            failure={failure}
+            onDismissFailure={() => setFailure(null)}
           />
         )}
         {senders && senders.length >= limit && limit < MAX && (
@@ -346,21 +321,27 @@ export function BulkUnsubscribePage() {
         title={confirm?.title ?? ''}
         description={confirm?.description}
         actions={
-          <>
-            <Button variant="ghost" onClick={closeConfirm}>
-              Cancel
+          confirm?.done ? (
+            <Button variant="secondary" onClick={closeConfirm}>
+              OK
             </Button>
-            <Button
-              variant={confirm?.danger ? 'danger' : 'primary'}
-              onClick={() => {
-                const { onConfirm } = confirm;
-                setConfirm(null);
-                onConfirm();
-              }}
-            >
-              {confirm?.actionLabel ?? 'Confirm'}
-            </Button>
-          </>
+          ) : (
+            <>
+              <Button variant="ghost" onClick={closeConfirm}>
+                Cancel
+              </Button>
+              <Button
+                variant={confirm?.danger ? 'danger' : 'primary'}
+                onClick={() => {
+                  const { onConfirm } = confirm;
+                  setConfirm(null);
+                  onConfirm();
+                }}
+              >
+                {confirm?.actionLabel ?? 'Confirm'}
+              </Button>
+            </>
+          )
         }
       />
     </div>

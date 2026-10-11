@@ -13,6 +13,7 @@ class DemoTool extends Tool {
     super({
       name: 'archive',
       description: 'Demo.',
+      returns: '{ done: true }',
       args: z.strictObject({
         id: z.string().min(1).describe('An id.'),
         tags: z.array(z.string()).optional().describe('Tags.'),
@@ -28,6 +29,7 @@ describe('Tool', () => {
     expect(new DemoTool().describe()).toEqual({
       name: 'archive',
       description: 'Demo.',
+      returns: '{ done: true }',
       args: [
         { name: 'id', type: 'string', description: 'An id.', required: true },
         { name: 'tags', type: 'list of string', description: 'Tags.', required: false },
@@ -35,6 +37,15 @@ describe('Tool', () => {
         { name: 'count', type: 'integer', description: 'Count.', required: false },
       ],
     });
+  });
+
+  it('must say what it returns, so the Planner can reference result fields (PLAN §16)', () => {
+    expect(() => new Tool({ name: 'archive', description: 'x', args: z.strictObject({}) })).toThrow(
+      /must describe what it returns/,
+    );
+    expect(
+      () => new Tool({ name: 'archive', description: 'x', returns: ' ', args: z.strictObject({}) }),
+    ).toThrow(ToolError);
   });
 
   it('rejects invalid arguments naming only the path', () => {
@@ -46,7 +57,12 @@ describe('Tool', () => {
   });
 
   it('cannot run until a subclass implements execute', async () => {
-    const bare = new Tool({ name: 'archive', description: 'x', args: z.strictObject({}) });
+    const bare = new Tool({
+      name: 'archive',
+      description: 'x',
+      returns: 'nothing',
+      args: z.strictObject({}),
+    });
     await expect(bare.execute({}, {})).rejects.toThrow(ToolError);
   });
 });
@@ -66,7 +82,12 @@ describe('ToolRegistry', () => {
   });
 
   it('refuses tools outside the v1 set and duplicates', () => {
-    const rogue = new Tool({ name: 'forward', description: 'x', args: z.strictObject({}) });
+    const rogue = new Tool({
+      name: 'forward',
+      description: 'x',
+      returns: 'nothing',
+      args: z.strictObject({}),
+    });
     expect(() => new ToolRegistry([rogue])).toThrow(ConfigError);
     expect(
       () => new ToolRegistry([new ArchiveTool({ gmail }), new ArchiveTool({ gmail })]),

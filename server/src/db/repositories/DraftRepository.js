@@ -23,6 +23,21 @@ export class DraftRepository {
     return row && this.#toDraft(row);
   }
 
+  /**
+   * The unsent mailmoat drafts answering one email, newest first (PLAN §16.2 decision 3: a new
+   * draft for the email replaces these).
+   * @param {string} gmailId
+   * @returns {{ draftId: string, gmailId: string, status: string, createdAt: string }[]}
+   */
+  openFor(gmailId) {
+    return this.#db
+      .all(
+        `SELECT * FROM drafts WHERE gmail_id = ? AND status = 'DRAFTED' ORDER BY created_at DESC`,
+        [gmailId],
+      )
+      .map((row) => this.#toDraft(row));
+  }
+
   /** @param {string} draftId @param {'DRAFTED'|'DELETED'} status */
   setStatus(draftId, status) {
     if (!DRAFT_STATUSES.includes(status)) throw new RangeError(`Unknown draft status: ${status}`);

@@ -7,6 +7,7 @@ import {
   NotPhishingSchema,
   ProposeMeetingSchema,
   ReplyTextSchema,
+  ReviseDraftSchema,
   SaveMeetingSchema,
   TrustSenderSchema,
 } from '@mailmoat/shared/schemas/api';
@@ -41,7 +42,7 @@ export class EmailRoutes {
    *   audit: Pick<import('../../db/repositories/AuditLogRepository.js').AuditLogRepository, 'recent'>,
    *   policy: Pick<import('../../policy/PolicyEngine.js').PolicyEngine, 'decide'>,
    *   executor: Pick<import('../../actions/ActionExecutor.js').ActionExecutor, 'perform'>,
-   *   drafts: Pick<import('../../features/DraftService.js').DraftService, 'compose'|'saveReply'|'envelope'|'discard'>,
+   *   drafts: Pick<import('../../features/DraftService.js').DraftService, 'compose'|'saveReply'|'revise'|'envelope'|'discard'>,
    *   approvals: Pick<import('../../actions/ApprovalService.js').ApprovalService, 'request'>,
    *   meetings: Pick<import('../../features/MeetingService.js').MeetingService, 'propose'|'save'>,
    *   gmail: Pick<import('../../google/GmailClient.js').GmailClient, 'getRawMessage'>,
@@ -176,6 +177,15 @@ export class EmailRoutes {
         replacesDraftId: draftId,
       });
       response.status(201).json({ gmailId: record.gmailId, draftId: saved });
+    });
+
+    // The draft conversation box (PLAN §16.2 decision 4): the Drafter revises the draft the user
+    // sees; the result replaces that Gmail draft. Nothing is sent.
+    router.post('/emails/:id/revise', async (request, response) => {
+      const record = this.#record(request.params);
+      const input = validate(ReviseDraftSchema, request.body ?? {});
+      const { draftId, text } = await drafts.revise({ gmailId: record.gmailId, ...input });
+      response.status(201).json({ gmailId: record.gmailId, draftId, text });
     });
 
     // "Send for approval": nothing is sent here. The reply becomes a `send_email` call that the

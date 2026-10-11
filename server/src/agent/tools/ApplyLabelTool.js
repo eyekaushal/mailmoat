@@ -11,6 +11,7 @@ export class ApplyLabelTool extends Tool {
     super({
       name: 'apply_label',
       description: 'Add a Gmail label to an email, creating the label if needed.',
+      returns: '{ labelled: true }',
       args: z.strictObject({
         email_id: z.string().min(1).describe('The id of the email.'),
         label: z

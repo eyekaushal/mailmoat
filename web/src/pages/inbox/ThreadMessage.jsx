@@ -21,10 +21,12 @@ export function previewOf(message) {
  * the plain visible text, links as `text → host` (clickable only when this message is SAFE) and
  * attachment names. Nothing here is HTML; nothing is fetched from the network.
  * A Gmail draft in the thread is a "Draft, not sent" block (PLAN §14.1 decision 3): the text,
- * no risk tag, and Continue (the composer) or Delete draft.
+ * no risk tag, the conversation box given as `revisionBox` (PLAN §16.2 decision 4), and
+ * Continue (the composer) or Delete draft.
  * @param {{ message: object, expanded: boolean, onToggle: () => void, opened?: boolean,
  *   summary?: string | null, now?: Date, onContinue?: (message: object) => void,
- *   onDeleteDraft?: (message: object) => void }} props
+ *   onDeleteDraft?: (message: object) => void, revisionBox?: import('react').ReactNode,
+ *   revised?: boolean }} props
  */
 export function ThreadMessage({
   message,
@@ -35,6 +37,8 @@ export function ThreadMessage({
   now,
   onContinue,
   onDeleteDraft,
+  revisionBox = null,
+  revised = false,
 }) {
   if (message.isDraft) {
     return (
@@ -46,10 +50,17 @@ export function ThreadMessage({
             <time dateTime={message.date} className="tabular-nums">
               {dateTime(message.date, now)}
             </time>
+            {revised && (
+              <>
+                <span aria-hidden="true">·</span>
+                <span>Revised just now</span>
+              </>
+            )}
           </p>
           <pre className="mt-2 font-sans text-md break-words whitespace-pre-wrap">
             {message.text || '(empty draft)'}
           </pre>
+          {revisionBox}
           <div className="mt-3 flex gap-2">
             {onContinue && (
               <Button variant="secondary" onClick={() => onContinue(message)}>

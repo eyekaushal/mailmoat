@@ -11,6 +11,7 @@ export class MarkReadTool extends Tool {
     super({
       name: 'mark_read',
       description: 'Mark an email as read.',
+      returns: '{ read: true }',
       args: z.strictObject({ email_id: z.string().min(1).describe('The id of the email.') }),
     });
     this.#gmail = gmail;

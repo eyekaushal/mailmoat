@@ -20,6 +20,7 @@ import { Dialog } from '../../ui/Dialog.jsx';
 import { IconButton } from '../../ui/IconButton.jsx';
 import { Tag, labelFor, riskLabelFor } from '../../ui/Tag.jsx';
 import { MeetingCard } from './MeetingCard.jsx';
+import { DraftRevisionBox } from './DraftRevisionBox.jsx';
 import { ReplyComposer } from './ReplyComposer.jsx';
 import { ThreadMessage } from './ThreadMessage.jsx';
 
@@ -59,6 +60,8 @@ export function ReadingView({ gmailId, onClose, now }) {
   const [composerState, setComposer] = useState(null);
   const composerKey = useRef(0);
   const [replyWanted, setReplyWanted] = useState(params.get('reply') === '1');
+  // The draft the conversation box just replaced, so its block can say so (PLAN §16).
+  const [revisedId, setRevisedId] = useState(null);
   const { data: trace } = useApi(whyOpen ? `/emails/${gmailId}/trace` : null);
 
   // Opening an email reads it: the unread dot and the tab counts follow. Best effort; a refusal
@@ -311,6 +314,21 @@ export function ReadingView({ gmailId, onClose, now }) {
                     : undefined
                 }
                 onDeleteDraft={deleteDraft}
+                revised={Boolean(message.draftId) && message.draftId === revisedId}
+                revisionBox={
+                  canReply && message.isDraft && message.draftId ? (
+                    <DraftRevisionBox
+                      key={message.draftId}
+                      gmailId={gmailId}
+                      draft={{ draftId: message.draftId, text: message.text ?? '' }}
+                      level={level}
+                      onRevised={async ({ draftId }) => {
+                        setRevisedId(draftId);
+                        await mutateThread();
+                      }}
+                    />
+                  ) : null
+                }
               />
             ))}
           </ol>

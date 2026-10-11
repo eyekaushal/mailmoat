@@ -155,6 +155,9 @@ describe('DraftService.createReply', () => {
         }),
         instructions: null,
         userName: 'Kaushal',
+        previous: null,
+        skill: null,
+        tone: null,
       },
     ]);
 
@@ -223,6 +226,48 @@ describe('DraftService.createReply', () => {
 
     await s.createReply({ gmailId: 'odd', allowSuspicious: true });
     expect(audit[0]).toMatchObject({ actor: 'user', decision: 'SUSPICIOUS' });
+  });
+
+  it('revises and replaces the open draft when the email already has one (PLAN §16)', async () => {
+    store('m1');
+    const s = service();
+    await s.createReply({ gmailId: 'm1' });
+    expect(repository.openFor('m1').map((d) => d.draftId)).toEqual(['draft-1']);
+
+    // The old draft's text reaches the Drafter as the previous draft; the old draft is removed.
+    gmail.createDraft = async (message) => (gmail.calls.push(['createDraft', message]), 'draft-2');
+    gmail.listDrafts = async () => [{ draftId: 'draft-1', messageId: 'msg-1', threadId: 't-m1' }];
+    gmail.getRawMessage = async (id) => ({
+      id,
+      raw: id === 'msg-1' ? rawEmail({ from: 'kaushal@gmail.com', text: 'Old draft text' }) : RAW,
+    });
+    const result = await s.createReply({ gmailId: 'm1', instructions: 'shorter', tone: 'casual' });
+    expect(result.draftId).toBe('draft-2');
+    expect(drafterCalls[1]).toMatchObject({
+      instructions: 'shorter',
+      previous: 'Old draft text',
+      skill: 'rewrite',
+      tone: 'casual',
+    });
+    expect(
+      gmail.calls.map(([name, arg]) => [name, typeof arg === 'string' ? arg : 'mime']),
+    ).toEqual([
+      ['createDraft', 'mime'],
+      ['createDraft', 'mime'],
+      ['deleteDraft', 'draft-1'],
+    ]);
+    expect(repository.openFor('m1').map((d) => d.draftId)).toEqual(['draft-2']);
+    expect(repository.get('draft-1').status).toBe('DELETED');
+  });
+
+  it('forgets a draft Gmail no longer has instead of revising it', async () => {
+    store('m1');
+    repository.save({ draftId: 'draft-0', gmailId: 'm1', at: NOW });
+    gmail.listDrafts = async () => [];
+    await service().createReply({ gmailId: 'm1' });
+    expect(drafterCalls[0]).toMatchObject({ previous: null, skill: null });
+    expect(repository.get('draft-0').status).toBe('DELETED');
+    expect(gmail.calls.map(([name]) => name)).toEqual(['createDraft']);
   });
 
   it('refuses unknown and outbound email', async () => {
@@ -307,6 +352,71 @@ describe('DraftService composer paths (PLAN §14)', () => {
     expect(text).toBe('Dear Rahul, yes.');
     expect(drafterCalls).toEqual([]);
     expect(repository.list()).toMatchObject([{ draftId: 'draft-1', status: 'DRAFTED' }]);
+  });
+
+  it('saveReply also removes an older mailmoat draft for the same email (PLAN §16)', async () => {
+    store('m1');
+    repository.save({ draftId: 'draft-0', gmailId: 'm1', at: NOW });
+    await service().saveReply({
+      gmailId: 'm1',
+      text: 'Dear Rahul, yes.',
+      body: TaggedValue.fromUser('Dear Rahul, yes.'),
+    });
+    expect(gmail.calls.map(([name, arg]) => (name === 'deleteDraft' ? arg : name))).toEqual([
+      'createDraft',
+      'draft-0',
+    ]);
+    expect(repository.openFor('m1').map((d) => d.draftId)).toEqual(['draft-1']);
+  });
+
+  it('revise rewrites the draft as shown with one skill and replaces the Gmail draft', async () => {
+    store('m1');
+    repository.save({ draftId: 'draft-0', gmailId: 'm1', at: NOW });
+    drafterAnswer = 'Hi Rahul Mehta,\n\nFriday at 5 works.\n\nThanks,\nKaushal';
+    const result = await service().revise({
+      gmailId: 'm1',
+      draftId: 'draft-0',
+      text: 'Dear Rahul Mehta,\n\nFriday at 5 pm works for me.\n\nBest regards,\nKaushal',
+      skill: 'tone',
+      tone: 'casual',
+    });
+    expect(result).toEqual({ draftId: 'draft-1', text: drafterAnswer });
+    expect(drafterCalls).toEqual([
+      expect.objectContaining({
+        instructions: null,
+        previous: 'Dear Rahul Mehta,\n\nFriday at 5 pm works for me.\n\nBest regards,\nKaushal',
+        skill: 'tone',
+        tone: 'casual',
+        userName: 'Kaushal',
+      }),
+    ]);
+    const { headers, body } = parseMime(gmail.calls[0][1].raw);
+    expect(headers.To).toBe('rahul@acme-corp.com');
+    expect(body).toBe(drafterAnswer);
+    expect(gmail.calls.map(([name, arg]) => (name === 'deleteDraft' ? arg : name))).toEqual([
+      'createDraft',
+      'draft-0',
+    ]);
+    expect(repository.openFor('m1').map((d) => d.draftId)).toEqual(['draft-1']);
+    expect(audit.map((a) => a.event)).toEqual(['draft_created', 'draft_deleted', 'draft_revised']);
+    expect(audit.at(-1)).toMatchObject({
+      actor: 'user',
+      subject: 'm1',
+      data: { skill: 'tone', tone: 'casual', draftId: 'draft-1', replaced: 'draft-0' },
+    });
+    expect(JSON.stringify(audit)).not.toContain('Friday');
+  });
+
+  it('revise keeps the reply gates: never DANGEROUS, SUSPICIOUS only when allowed', async () => {
+    store('bad', { level: 'DANGEROUS' });
+    store('odd', { level: 'SUSPICIOUS' });
+    const input = { draftId: 'd', text: 'Dear x', skill: 'humanize' };
+    const s = service();
+    await expect(s.revise({ gmailId: 'bad', ...input })).rejects.toThrow(/DANGEROUS/);
+    await expect(s.revise({ gmailId: 'odd', ...input })).rejects.toThrow(/SUSPICIOUS/);
+    expect(gmail.calls).toEqual([]);
+    await s.revise({ gmailId: 'odd', ...input, allowSuspicious: true });
+    expect(gmail.calls.map(([name]) => name)).toEqual(['createDraft', 'deleteDraft']);
   });
 
   it('envelope names where a reply goes, and discard forgives a draft already gone', async () => {

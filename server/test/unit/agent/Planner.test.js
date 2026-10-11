@@ -15,6 +15,7 @@ const TOOLS = [
   {
     name: 'search_emails',
     description: 'Find emails by sender, label or time.',
+    returns: '{ count, emails: [{ id }] }',
     args: [
       { name: 'query', type: 'string', description: 'What to look for.', required: true },
       { name: 'limit', type: 'number', description: 'Max results.', required: false },
@@ -23,6 +24,7 @@ const TOOLS = [
   {
     name: 'summarise',
     description: 'Summarise email text for the user.',
+    returns: '{ summary }',
     args: [
       { name: 'handle', type: 'handle', description: 'The text to summarise.', required: true },
     ],
@@ -30,6 +32,7 @@ const TOOLS = [
   {
     name: 'reply',
     description: 'Draft a reply.',
+    returns: '{ draftId }',
     args: [{ name: 'email_id', type: 'string', description: 'Email to answer.', required: true }],
   },
 ];
@@ -165,6 +168,9 @@ describe('Planner', () => {
     expect(request.system).toMatch(/never see an email's subject/);
     expect(request.system).toContain('## search_emails');
     expect(request.system).toContain('`query` (string, required): What to look for.');
+    expect(request.system).toContain('Returns: { count, emails: [{ id }] }');
+    expect(request.system).toMatch(/`"emails\.0\.id"`, never `"0\.id"`/);
+    expect(request.system).toMatch(/already in the context list, pass its `id` as a literal/);
     expect(request.system).toContain('`limit` (number): Max results.');
   });
 
@@ -249,6 +255,7 @@ describe('Planner', () => {
     expect(() => build([])).toThrow(ConfigError);
     expect(() => build([{ ...TOOLS[0], name: 'forward' }])).toThrow(ConfigError);
     expect(() => build([TOOLS[0], TOOLS[0]])).toThrow(ConfigError);
+    expect(() => build([{ ...TOOLS[0], returns: undefined }])).toThrow(ConfigError);
     expect(() =>
       build([
         { ...TOOLS[0], args: [{ name: 'Bad', type: 's', description: 'd', required: true }] },

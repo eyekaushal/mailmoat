@@ -19,6 +19,8 @@ export class GetEmailFieldsTool extends Tool {
       name: 'get_email_fields',
       description:
         'Typed facts about one email: sender, time, risk, category, request types and proposed meeting times. Never its text.',
+      returns:
+        'the same typed facts as an email in context: { id, from: { address, domain }, date, risk, category, needs_reply, intents, meeting_request }',
       args: z.strictObject({
         email_id: z.string().min(1).describe('The id of an email in context.'),
       }),

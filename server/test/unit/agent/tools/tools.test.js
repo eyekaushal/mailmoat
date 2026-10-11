@@ -274,12 +274,22 @@ describe('create_draft, send_email and reply', () => {
     const drafts = { createReply: async (input) => (calls.push(input), { draftId: 'draft-9' }) };
     const tool = new ReplyTool({ emails: fakeRepos().emails, drafts });
     const result = await run(tool, { email_id: '18f3a', instructions: 'say yes' });
-    expect(calls).toEqual([{ gmailId: '18f3a', instructions: 'say yes' }]);
+    expect(calls).toEqual([{ gmailId: '18f3a', instructions: 'say yes', tone: null }]);
     expect(result.value).toEqual({ draftId: 'draft-9' });
     expect(result.emailIds()).toEqual(['18f3a']);
     expect((await run(tool, { email_id: '18f3a' })).value).toEqual({ draftId: 'draft-9' });
     expect(calls[1].instructions).toBeNull();
     await expect(run(tool, { email_id: 'nope' })).rejects.toThrow(ToolError);
+  });
+
+  it('reply passes a tone from the closed list and refuses any other (PLAN §16)', async () => {
+    const calls = [];
+    const drafts = { createReply: async (input) => (calls.push(input), { draftId: 'draft-9' }) };
+    const tool = new ReplyTool({ emails: fakeRepos().emails, drafts });
+    await run(tool, { email_id: '18f3a', instructions: 'make it casual', tone: 'casual' });
+    expect(calls[0]).toEqual({ gmailId: '18f3a', instructions: 'make it casual', tone: 'casual' });
+    expect(() => run(tool, { email_id: '18f3a', tone: 'rude' })).toThrow(ToolError);
+    expect(tool.describe().returns).toBe('{ draftId }');
   });
 });
 

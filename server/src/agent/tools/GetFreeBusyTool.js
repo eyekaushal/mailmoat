@@ -15,6 +15,7 @@ export class GetFreeBusyTool extends Tool {
       name: 'get_free_busy',
       description:
         "List the busy intervals on the user's calendar between two times (at most 31 days).",
+      returns: '{ busy: [{ start, end }] } as ISO 8601 times',
       args: z.strictObject({
         start: z.iso.datetime({ offset: true }).describe('Range start, ISO 8601 with offset.'),
         end: z.iso.datetime({ offset: true }).describe('Range end, ISO 8601 with offset.'),

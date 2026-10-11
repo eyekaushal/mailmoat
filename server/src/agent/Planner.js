@@ -13,6 +13,7 @@ const CatalogueSchema = z
     z.strictObject({
       name: z.enum(PLAN_TOOLS),
       description: z.string().min(1),
+      returns: z.string().min(1),
       args: z.array(
         z.strictObject({
           name: z.string().regex(ARG_NAME_PATTERN),
@@ -26,7 +27,7 @@ const CatalogueSchema = z
   .min(1);
 
 /**
- * @typedef {{ name: string, description: string, args: { name: string, type: string, description: string, required: boolean }[] }} ToolDescription
+ * @typedef {import('./tools/Tool.js').ToolDescription} ToolDescription
  * @typedef {import('./EmailFacts.js').StoredEmail} PlannerEmail
  * @typedef {{ tool: string, args: Record<string, import('@mailmoat/shared/schemas/plan').PlanArgValue> }} PlanStep
  * @typedef {{ message: string, steps: PlanStep[] }} Plan
@@ -166,7 +167,7 @@ export class Planner {
                     `- \`${arg.name}\` (${arg.type}${arg.required ? ', required' : ''}): ${arg.description}`,
                 )
                 .join('\n');
-        return `## ${tool.name}\n${tool.description}\n${args}`;
+        return `## ${tool.name}\n${tool.description}\n${args}\nReturns: ${tool.returns}`;
       })
       .join('\n\n');
   }

@@ -14,6 +14,7 @@ export class SaveMemoryTool extends Tool {
       name: 'save_memory',
       description:
         "Remember a fact the user explicitly asked to remember, in the user's own words.",
+      returns: '{ memoryId }',
       args: z.strictObject({
         content: z
           .string()
