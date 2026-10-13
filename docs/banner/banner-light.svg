@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" width="1200" height="400" role="img" aria-label="mailmoat: a lighthouse for your inbox">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f7f8fc"/>
+      <stop offset="1" stop-color="#eef2f9"/>
+    </linearGradient>
+    <linearGradient id="beam" gradientUnits="userSpaceOnUse" x1="266" y1="0" x2="1000" y2="0">
+      <stop offset="0.000" stop-color="#ffcf6b" stop-opacity="0.81"/>
+      <stop offset="0.128" stop-color="#ffcf6b" stop-opacity="0.66"/>
+      <stop offset="0.278" stop-color="#ffcf6b" stop-opacity="0.19"/>
+      <stop offset="0.591" stop-color="#ffcf6b" stop-opacity="0.06"/>
+      <stop offset="1.000" stop-color="#ffcf6b" stop-opacity="0.00"/>
+    </linearGradient>
+    <clipPath id="frame"><rect width="1200" height="400" rx="24"/></clipPath>
+  </defs>
+  <g clip-path="url(#frame)">
+    <rect width="1200" height="400" fill="url(#bg)"/>
+    <circle cx="90" cy="60" r="1.2" fill="#2a4a7f" fill-opacity="0.24499999999999997"/><circle cx="160" cy="300" r="0.9" fill="#2a4a7f" fill-opacity="0.175"/><circle cx="1040" cy="70" r="1.1" fill="#2a4a7f" fill-opacity="0.21"/><circle cx="1130" cy="330" r="0.8" fill="#2a4a7f" fill-opacity="0.175"/><circle cx="640" cy="40" r="0.9" fill="#2a4a7f" fill-opacity="0.13999999999999999"/><circle cx="880" cy="360" r="1" fill="#2a4a7f" fill-opacity="0.175"/><circle cx="300" cy="350" r="0.8" fill="#2a4a7f" fill-opacity="0.13999999999999999"/><circle cx="980" cy="210" r="0.7" fill="#2a4a7f" fill-opacity="0.13999999999999999"/>
+    <rect x="0.5" y="0.5" width="1199" height="399" rx="24" fill="none" stroke="rgba(29,29,31,0.08)"/>
+    <g transform="translate(150 102) scale(3.0625)">
+
+  <defs>
+    <linearGradient id="n-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1c2f57"/>
+      <stop offset="1" stop-color="#0b1430"/>
+    </linearGradient>
+    <linearGradient id="n-sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1f4f7a"/>
+      <stop offset="1" stop-color="#102c4c"/>
+    </linearGradient>
+    <linearGradient id="n-beam" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffcf6b" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#ffcf6b" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="n-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ffe29a" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#ffe29a" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="n-clip"><rect x="0" y="0" width="64" height="64" rx="16"/></clipPath>
+  </defs>
+  <g clip-path="url(#n-clip)">
+    <rect width="64" height="64" fill="url(#n-sky)"/>
+    <!-- stars -->
+    <circle cx="12" cy="12" r="0.9" fill="#fff" fill-opacity="0.8"/>
+    <circle cx="20" cy="22" r="0.6" fill="#fff" fill-opacity="0.6"/>
+    <circle cx="52" cy="10" r="0.8" fill="#fff" fill-opacity="0.7"/>
+    <circle cx="9" cy="30" r="0.6" fill="#fff" fill-opacity="0.5"/>
+    <!-- sea -->
+    <rect x="0" y="46" width="64" height="18" fill="url(#n-sea)"/>
+    <path d="M0 47c4 0 4 2 8 2s4-2 8-2 4 2 8 2 4-2 8-2 4 2 8 2 4-2 8-2 4 2 8 2 4-2 8-2" fill="none" stroke="#8ec5e8" stroke-opacity="0.55" stroke-width="1.4"/>
+    <!-- rock -->
+    <path d="M18 50l6-5h16l6 5z" fill="#2a3a52"/>
+    <path d="M24 45h16l-3-2H27z" fill="#3b4f6b"/>
+    <!-- beam -->
+    <path d="M38 19L64 11v18z" fill="url(#n-beam)"/>
+    <circle cx="32" cy="19" r="11" fill="url(#n-glow)"/>
+    <!-- tower: lit face and shadow face -->
+    <path d="M27.5 26h4.5v18h-7z" fill="#f4ead3"/>
+    <path d="M32 26h4.5l2.5 18H32z" fill="#cdbf9f"/>
+    <path d="M27.9 31h4.1v4h-4.6zM32 31h4.3l.5 4H32zM27 38h5v4h-5.6zM32 38h4.9l.5 4H32z" fill="#c8463a"/>
+    <path d="M32 38h4.9l.5 4H32zM32 31h4.3l.5 4H32z" fill="#000" fill-opacity="0.18"/>
+    <!-- gallery, lantern, cap -->
+    <rect x="25" y="23.5" width="14" height="3" rx="1.2" fill="#243655"/>
+    <rect x="28" y="16" width="8" height="7.5" rx="1.5" fill="#ffcf6b"/>
+    <rect x="28" y="16" width="4" height="7.5" fill="#fff" fill-opacity="0.25"/>
+    <path d="M26.5 15.5h11l-5.5-4z" fill="#243655"/>
+  </g>
+
+    </g>
+    <path d="M266.4 160.2 L1260.0 -145.5 L1260.0 542.4 Z" fill="url(#beam)"/>
+    <text x="500" y="178" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="104" font-weight="700" letter-spacing="-4" fill="#1d1d1f">mailmoat</text>
+    <text x="504" y="226" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="21" letter-spacing="6" fill="#2a4a7f">A LIGHTHOUSE FOR YOUR INBOX.</text>
+    <text x="504" y="270" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="20" fill="#5b6472">Labels, replies, meetings and clean-up for Gmail, on your own Mac.</text>
+    <text x="504" y="298" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="20" fill="#5b6472">Built so a bad email cannot hijack it, and phishing is caught and explained.</text>
+  </g>
+</svg>

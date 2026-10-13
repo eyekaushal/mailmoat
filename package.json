@@ -1,6 +1,6 @@
 {
   "name": "mailmoat",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Local-first AI email assistant that phishing can't talk into anything.",
   "license": "MIT",
